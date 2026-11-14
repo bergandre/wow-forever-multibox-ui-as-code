@@ -1,107 +1,62 @@
 
 DecursiveDB = {
 ["global"] = {
-["LastVersionAnnounce"] = 1794502626,
-["delayedDebuffOccurences"] = 116,
-["delayedUnDebuffOccurences"] = 61,
+["LastVersionAnnounce"] = 1794661320,
+["delayedDebuffOccurences"] = 216,
+["delayedUnDebuffOccurences"] = 141,
 ["NonRelease"] = "2.9.0-RC4",
 ["t_SpellIDsSoundReg"] = {
-[7046] = {
+[6917] = {
+["enabled"] = true,
+["spellType"] = 8,
+["from"] = "history",
+},
+[7045] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 4,
 },
-[7125] = {
+[6728] = {
 ["enabled"] = true,
 ["from"] = "history",
-["spellType"] = 8,
-},
-[3264] = {
-["enabled"] = true,
 ["spellType"] = 1,
+},
+[7046] = {
+["enabled"] = true,
 ["from"] = "history",
+["spellType"] = 4,
 },
 [7047] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 4,
 },
-[7048] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
-},
-[970] = {
+[6222] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 1,
 },
-[6907] = {
+[7048] = {
 ["enabled"] = true,
-["spellType"] = 16,
 ["from"] = "history",
+["spellType"] = 4,
 },
 [7049] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 4,
 },
-[6136] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 1,
-},
 [7050] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 4,
 },
-[11831] = {
-["enabled"] = true,
-["spellType"] = 1,
-["from"] = "history",
-},
-[6909] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
-},
-[7051] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
-},
-[744] = {
-["enabled"] = true,
-["spellType"] = 8,
-["from"] = "history",
-},
-[12747] = {
-["enabled"] = true,
-["spellType"] = 1,
-["from"] = "history",
-},
-[17364] = {
+[8067] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 1,
-},
-[7068] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
 },
 [7053] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
-},
-[8014] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 16,
-},
-[7038] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 4,
@@ -111,17 +66,182 @@ DecursiveDB = {
 ["from"] = "history",
 ["spellType"] = 4,
 },
+[7057] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[19973] = {
+["enabled"] = true,
+["spellType"] = 1,
+["from"] = "history",
+},
+[172] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[7124] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[8014] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 16,
+},
 [8078] = {
 ["enabled"] = true,
 ["spellType"] = 1,
 ["from"] = "history",
+},
+[2944] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 16,
+},
+[6873] = {
+["enabled"] = true,
+["spellType"] = 1,
+["from"] = "history",
+},
+[17213] = {
+["enabled"] = true,
+["spellType"] = 4,
+["from"] = "history",
+},
+[3264] = {
+["enabled"] = true,
+["spellType"] = 1,
+["from"] = "history",
+},
+[7068] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[6942] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
 },
 [3583] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 8,
 },
-[6942] = {
+[8363] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 8,
+},
+[17364] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[7074] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[8245] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[992] = {
+["enabled"] = true,
+["spellType"] = 1,
+["from"] = "history",
+},
+[770] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[8382] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 8,
+},
+[18545] = {
+["enabled"] = true,
+["spellType"] = 8,
+["from"] = "history",
+},
+[11436] = {
+["enabled"] = true,
+["spellType"] = 1,
+["from"] = "history",
+},
+[8267] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[7125] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 8,
+},
+[6984] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[8398] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[8272] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[589] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[3815] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 8,
+},
+[11831] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[113] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[8275] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 8,
+},
+[7040] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[970] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[18972] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[8281] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 1,
@@ -131,17 +251,7 @@ DecursiveDB = {
 ["from"] = "history",
 ["spellType"] = 4,
 },
-[7040] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
-},
-[770] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 1,
-},
-[7041] = {
+[6922] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 4,
@@ -151,25 +261,70 @@ DecursiveDB = {
 ["from"] = "history",
 ["spellType"] = 1,
 },
-[6222] = {
+[19276] = {
+["enabled"] = true,
+["spellType"] = 16,
+["from"] = "history",
+},
+[7051] = {
 ["enabled"] = true,
 ["from"] = "history",
-["spellType"] = 1,
-},
-[18266] = {
-["enabled"] = true,
 ["spellType"] = 4,
-["from"] = "history",
 },
-[3600] = {
+[7041] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[20792] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 1,
 },
-[18545] = {
+[6907] = {
 ["enabled"] = true,
-["spellType"] = 8,
+["spellType"] = 16,
 ["from"] = "history",
+},
+[3409] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 8,
+},
+[13752] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[6909] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[8052] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[3439] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 16,
+},
+[7044] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
+},
+[16458] = {
+["enabled"] = true,
+["spellType"] = 16,
+["from"] = "history",
+},
+[7038] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 4,
 },
 [8806] = {
 ["enabled"] = true,
@@ -181,14 +336,39 @@ DecursiveDB = {
 ["from"] = "history",
 ["spellType"] = 4,
 },
-[172] = {
+[11983] = {
+["enabled"] = true,
+["spellType"] = 1,
+["from"] = "history",
+},
+[8056] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 1,
 },
-[19973] = {
+[12747] = {
 ["enabled"] = true,
 ["spellType"] = 1,
+["from"] = "history",
+},
+[3600] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[6136] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[8058] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 1,
+},
+[744] = {
+["enabled"] = true,
+["spellType"] = 8,
 ["from"] = "history",
 },
 [7043] = {
@@ -196,60 +376,15 @@ DecursiveDB = {
 ["from"] = "history",
 ["spellType"] = 4,
 },
-[8067] = {
+[18266] = {
 ["enabled"] = true,
-["from"] = "history",
-["spellType"] = 1,
-},
-[7057] = {
-["enabled"] = true,
-["from"] = "history",
 ["spellType"] = 4,
-},
-[16458] = {
-["enabled"] = true,
-["spellType"] = 16,
 ["from"] = "history",
-},
-[7044] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
 },
 [7127] = {
 ["enabled"] = true,
 ["from"] = "history",
 ["spellType"] = 1,
-},
-[6917] = {
-["enabled"] = true,
-["spellType"] = 8,
-["from"] = "history",
-},
-[7074] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 1,
-},
-[7045] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
-},
-[7124] = {
-["enabled"] = true,
-["from"] = "history",
-["spellType"] = 4,
-},
-[6873] = {
-["enabled"] = true,
-["spellType"] = 1,
-["from"] = "history",
-},
-[6922] = {
-["enabled"] = true,
-["spellType"] = 4,
-["from"] = "history",
 },
 },
 },

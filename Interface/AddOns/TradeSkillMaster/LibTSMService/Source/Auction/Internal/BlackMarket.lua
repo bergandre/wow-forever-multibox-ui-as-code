@@ -24,7 +24,7 @@ local COPPER_PER_GOLD = 100 * 100
 
 ---Start the black market code.
 function BlackMarket.Start()
-	if not LibTSMService.IsRetail() and not LibTSMService.IsForever() then
+	if not LibTSMService.IsRetail() and not LibTSMService.IsForever() and not LibTSMService.IsMistsClassic() then
 		return
 	end
 	Event.Register("BLACK_MARKET_ITEM_UPDATE", private.ScanBMAH)

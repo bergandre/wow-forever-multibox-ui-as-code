@@ -9,7 +9,10 @@ local GroupItemDB = LibTSMTypes:DefineInternalClassType("GroupItemDB")
 local GroupItemMap = LibTSMTypes:IncludeClassType("GroupItemMap")
 local Path = LibTSMTypes:Include("Group.Path")
 local Database = LibTSMTypes:From("LibTSMDatabase"):Include("Database")
-local private = {}
+local Table = LibTSMTypes:From("LibTSMUtil"):Include("Lua.Table")
+local private = {
+	groupPathUpdatesTemp = {},
+}
 
 
 
@@ -51,6 +54,7 @@ end
 -- ============================================================================
 
 function GroupItemDB:Load(items)
+	wipe(self._numItems)
 	self._db:TruncateAndBulkInsertStart()
 	for itemString, groupPath in pairs(items) do
 		self._db:BulkInsertNewRow(itemString, groupPath)
@@ -164,22 +168,25 @@ function GroupItemDB:SetGroup(itemString, groupPath)
 	end
 end
 
----Moves items from one group to another.
----@param oldPath GroupPathValue The old group path
----@param newPath GroupPathValue The new group path
----@param itemsMoved string[] A table to store the list of items moved
-function GroupItemDB:Move(oldPath, newPath, itemsMoved)
-	for _ in self:WithQueryUpdatesPaused() do
+---Moves the items of groups to their new group paths.
+---@param changes table<GroupPathValue,GroupPathValue> The new group path for each old group path
+---@param itemsMoved table<string,GroupPathValue> A table to store the new group path of each item moved
+function GroupItemDB:Move(changes, itemsMoved)
+	assert(not next(private.groupPathUpdatesTemp))
+	for oldPath, newPath in pairs(changes) do
+		local numItems = 0
 		local query = self._db:NewAutoReleaseQuery()
-			:AutoPauseDBQueryUpdates()
 			:Equal("groupPath", oldPath)
 		for uuid, itemString in query:Iterator("itemString") do
-			tinsert(itemsMoved, itemString)
-			self._db:UpdateRow(uuid, "groupPath", newPath)
+			itemsMoved[itemString] = newPath
+			private.groupPathUpdatesTemp[uuid] = newPath
+			numItems = numItems + 1
 		end
-		self:_DecrementNumItems(oldPath, #itemsMoved)
-		self:_IncrementNumItems(newPath, #itemsMoved)
+		self:_DecrementNumItems(oldPath, numItems)
+		self:_IncrementNumItems(newPath, numItems)
 	end
+	self._db:BulkUpdateRows("groupPath", private.groupPathUpdatesTemp)
+	Table.WipeAndDeallocate(private.groupPathUpdatesTemp)
 end
 
 

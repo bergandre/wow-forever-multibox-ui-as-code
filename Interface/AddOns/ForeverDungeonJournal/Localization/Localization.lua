@@ -50,6 +50,7 @@ FDJ.Locales.enUS = {
     REQUIRED_PREREQUISITE = "Required prerequisite",
     OBJECTIVE = "Objective",
     STARTS_AT = "Starts at",
+    OBTAIN = "Obtain",
     TURN_IN = "Turn in",
     NOTES = "Notes",
     SHARE = "Share",
@@ -142,6 +143,10 @@ FDJ.Locales.enUS = {
     LF_ARMOR_TIP = "Hides armor pieces of other types. Weapons, shields, rings, necks, trinkets and cloaks always stay.",
     CHAIN_REQUIRED = "Requires a quest chain first.",
     CHAIN_STEP = "You are on step %d of %d.",
+    GUIDE = "Guide",
+    HOW_TO_COMPLETE = "How to complete",
+    GUIDE_TIP = "Click to show the steps to complete this quest",
+    GUIDE_STEP = "Guide: step %d of %d",
     SHOW_NEXT_STEP_MAP = "Show next step on Map",
     LF_SHOW = "Show results",
     LF_SHOW_TIP = "Opens a page listing every boss, in every dungeon, that drops loot matching the filters above.",
@@ -197,7 +202,7 @@ FDJ.Locales.enUS = {
     RPG_CONFIRM_TEXT = "In this mode dungeons will be locked until you kill the final boss. You can always change mode in the options panel.",
     RPG_CONFIRM_OK = "Ok",
     RPG_CONFIRM_BACK = "Choose again",
-    RPG_INTRO_TEXT = "Dungeons stay locked until you kill their final boss.",
+    RPG_INTRO_TEXT = "Dungeons stay locked until you kill their final boss.\nYou can still choose to show quests in the Options panel.", -- introline (2.0.17, text 2.0.18)
     RPG_INTRO_KEEP = "Keep RPG Mode",
     RPG_INTRO_OPTIONS = "Disable in Options",
     MODE_RPG_ENABLE = "Enable in Options",
@@ -359,6 +364,7 @@ FDJ.Locales.deDE = {
     REQUIRED_PREREQUISITE = "Benötigte Vorquest",
     OBJECTIVE = "Ziel",
     STARTS_AT = "Startet bei",
+    OBTAIN = "Erhalten",
     TURN_IN = "Abgeben bei",
     NOTES = "Hinweise",
     SHARE = "Teilen",
@@ -448,6 +454,10 @@ FDJ.Locales.deDE = {
     LF_ARMOR_TIP = "Blendet Rüstungsteile anderer Typen aus. Waffen, Schilde, Ringe, Halsketten, Schmuckstücke und Umhänge bleiben immer sichtbar.",
     CHAIN_REQUIRED = "Erfordert zuerst eine Questreihe.",
     CHAIN_STEP = "Du bist bei Schritt %d von %d.",
+    GUIDE = "Anleitung",
+    HOW_TO_COMPLETE = "So schließt du sie ab",
+    GUIDE_TIP = "Klicken, um die Schritte zum Abschließen dieser Quest anzuzeigen",
+    GUIDE_STEP = "Anleitung: Schritt %d von %d",
     SHOW_NEXT_STEP_MAP = "Nächsten Schritt auf Karte zeigen",
     LF_SHOW = "Ergebnisse",
     LF_SHOW_TIP = "Öffnet eine Seite mit allen Bossen aus allen Dungeons, die zur Auswahl passende Beute fallen lassen.",
@@ -508,7 +518,7 @@ FDJ.Locales.deDE = {
     RPG_CONFIRM_TEXT = "In diesem Modus bleiben Dungeons gesperrt, bis du den Endboss besiegst. Du kannst den Modus jederzeit in den Optionen ändern.",
     RPG_CONFIRM_OK = "Ok",
     RPG_CONFIRM_BACK = "Erneut wählen",
-    RPG_INTRO_TEXT = "Dungeons bleiben gesperrt, bis du ihren Endboss besiegst.",
+    RPG_INTRO_TEXT = "Dungeons bleiben gesperrt, bis du ihren Endboss besiegst.\nDu kannst die Quests trotzdem in den Optionen anzeigen lassen.", -- introline (2.0.17, text 2.0.18)
     RPG_INTRO_KEEP = "RPG-Modus behalten",
     RPG_INTRO_OPTIONS = "In den Optionen deaktivieren",
     MODE_RPG_ENABLE = "In den Optionen aktivieren",
@@ -917,6 +927,21 @@ function FDJ.LocalizeDungeonField(internalName, field, fallback)
 end
 
 function FDJ.LocalizeQuestField(questID, field, fallback)
+    -- Quest lists, trackers and prerequisite pages must use the same title as
+    -- the player's client. Only query it for the matching journal language;
+    -- another language still uses the verified static translations below.
+    if field == "name" and FDJ.GetLanguage() ~= "itIT"
+        and FDJ.CanUseClientLocalizedText() and type(questID) == "number"
+        and questID > 0 and questID < 1000000 and C_QuestLog then
+        local getter = C_QuestLog.GetTitleForQuestID or C_QuestLog.GetQuestInfo
+        if type(getter) == "function" then
+            local ok, title = pcall(getter, questID)
+            if ok and not (type(issecretvalue) == "function" and issecretvalue(title))
+                and type(title) == "string" and title ~= "" then
+                return title
+            end
+        end
+    end
     local content = ContentTable()
     local entry = content and content.quests and content.quests[questID]
     local value = entry and entry[field]

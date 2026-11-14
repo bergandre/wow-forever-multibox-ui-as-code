@@ -984,18 +984,20 @@ function ScrollTable.__protected:_HandleMoreDialogClick(menuDialog, id1, id2, id
 		local commonGroupPath = ""
 		local groupItemsIter = Iterator.Acquire(pairs(self._createGroupsData))
 			:Filter(private.GroupItemsIteratorFilter)
-		for itemString, groupPath in groupItemsIter do
-			if commonGroupPath == "" then
-				assert(groupPath ~= "")
-				commonGroupPath = groupPath
-			elseif groupPath ~= commonGroupPath then
-				commonGroupPath = nil
+		for _ in GroupOperation.WithDBRebuildPaused() do
+			for itemString, groupPath in groupItemsIter do
+				if commonGroupPath == "" then
+					assert(groupPath ~= "")
+					commonGroupPath = groupPath
+				elseif groupPath ~= commonGroupPath then
+					commonGroupPath = nil
+				end
+				if not Group.Exists(groupPath) then
+					GroupOperation.CreateGroup(groupPath)
+				end
+				Group.SetItemGroup(itemString, groupPath)
+				numNewItems = numNewItems + 1
 			end
-			if not Group.Exists(groupPath) then
-				GroupOperation.CreateGroup(groupPath)
-			end
-			Group.SetItemGroup(itemString, groupPath)
-			numNewItems = numNewItems + 1
 		end
 		if commonGroupPath and commonGroupPath ~= "" then
 			ChatMessage.PrintfUser(L["%d items were added from the table to %s."], numNewItems, ChatMessage.ColorUserAccentText(Group.FormatPath(commonGroupPath)))

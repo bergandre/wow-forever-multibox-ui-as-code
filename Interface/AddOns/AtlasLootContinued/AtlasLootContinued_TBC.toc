@@ -1,7 +1,7 @@
 # /dump select(4, GetBuildInfo());
 ## Interface: 20506
 ## Author: Okrah, Lag
-## Version: 12920
+## Version: 12957
 
 ## Title: AtlasLoot Continued |cFF22B14C[Core]|r
 ## Title-deDE: AtlasLoot Continued |cFF22B14C[Kern]|r

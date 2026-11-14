@@ -98,7 +98,11 @@ Warrior + priest are multiboxed together (dungeons as a duo). Priest macros use 
 
 - `tsm-*.py`, `tsm-export-inventory.lua`, `inventory.json` — TSM analysis/sync (run with WoW closed
   when they write SavedVariables). `tsm-analyze.py --item` for item questions.
-- `.claude/skills/profession-plan` — profession leveling planner.
+- `.claude/skills/wow-profession-plan` — profession leveling planner.
+- `.claude/skills/wow-dungeon-quests` — dungeon quest-chain notes → `notes/dungeons/<slug>.md`.
+  Quest completion is not in SavedVariables; use the skill's in-game `/run` check macro.
+  Zygor dungeon quest guides skip class quests (e.g. warrior Brutal Armor). `yt-dlp` is installed
+  (search works; auto-subs often HTTP 429).
 
 ## Commits
 

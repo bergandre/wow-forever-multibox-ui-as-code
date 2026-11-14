@@ -1,7 +1,7 @@
 
 AtlasLootDB = {
 ["global"] = {
-["__addonrevision"] = 12920,
+["__addonrevision"] = 12957,
 },
 ["profileKeys"] = {
 ["Karums Warrior"] = "Karums Warrior",

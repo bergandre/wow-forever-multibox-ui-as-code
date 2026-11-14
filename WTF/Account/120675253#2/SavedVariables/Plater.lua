@@ -22608,9 +22608,9 @@ false,
 ["nameplateShowFriendlyGuardians"] = "Interface/AddOns/Plater/Plater_OptionsPanel.lua:1346",
 ["NamePlateHorizontalScale"] = "Interface/AddOns/Plater/Plater_OptionsPanel.lua:1346",
 ["nameplateShowFriendlyBuffs"] = "Interface/AddOns/Plater/Plater.lua:4693",
-["nameplateShowFriendlyPlayers"] = "Interface/AddOns/Plater/Plater.lua:4546",
+["nameplateShowFriendlyPlayers"] = "Interface/AddOns/Plater/Plater.lua:2569",
 ["nameplateShowFriends"] = "Interface/AddOns/Plater/Plater.lua:1614",
-["nameplateStackingTypes"] = "Interface/AddOns/Plater/Plater.lua:4546",
+["nameplateStackingTypes"] = "Interface/AddOns/Plater/Plater.lua:2569",
 },
 ["aura_cache_by_name"] = {
 },
@@ -25831,9 +25831,10 @@ true,
 "Dreadwing Raven",
 "Waycrest Manor",
 },
-[120651] = {
-"Entidad desconocida",
-"Plaga Abrumadora",
+[213338] = {
+"Forgebound Mender",
+"The Stonevault",
+"enUS",
 },
 [166266] = {
 "Spare Parts",
@@ -25847,10 +25848,9 @@ true,
 "T'lonja",
 "Atal'Dazar",
 },
-[213338] = {
-"Forgebound Mender",
-"The Stonevault",
-"enUS",
+[120651] = {
+"Entidad desconocida",
+"Plaga Abrumadora",
 },
 [171384] = {
 "Research Scribe",
@@ -25873,13 +25873,13 @@ true,
 "The Stonevault",
 "enUS",
 },
-[115406] = {
-"Caballo",
-"Regreso a Karazhan",
-},
 [133436] = {
 "Venture Co. Skyscorcher",
 "The MOTHERLODE!!",
+},
+[115406] = {
+"Caballo",
+"Regreso a Karazhan",
 },
 [136330] = {
 "Soul Thorns",
@@ -25922,22 +25922,22 @@ true,
 "Crecimiento desenfrenado",
 "El Sempibrote",
 },
-[115407] = {
-"Torre",
-"Regreso a Karazhan",
+[134284] = {
+"Fallen Deathspeaker",
+"The Underrot",
 },
 [135052] = {
 "Blight Toad",
 "Waycrest Manor",
 },
-[134284] = {
-"Fallen Deathspeaker",
-"The Underrot",
-},
 [212412] = {
 "Sootsnout",
 "Darkflame Cleft",
 "enUS",
+},
+[212778] = {
+"Minion of Ghur'sha",
+"Throne of the Tides",
 },
 [168572] = {
 "Fungi Stormer",
@@ -25947,9 +25947,9 @@ true,
 "Ojo de la reina",
 "Ciudad de los Hilos",
 },
-[40320] = {
-"Valiona",
-"Grim Batol",
+[115407] = {
+"Torre",
+"Regreso a Karazhan",
 },
 [224609] = {
 "Destructor crepuscular",
@@ -26501,13 +26501,13 @@ true,
 "Sanctum of Domination",
 "enUS",
 },
-[205435] = {
-"Destripador de época",
-"El Alba del Infinito",
-},
 [81236] = {
 "Técnico de Riel siniestro",
 "Depósito Riel siniestro",
+},
+[205435] = {
+"Destripador de época",
+"El Alba del Infinito",
 },
 [176521] = {
 "Stygian Abductor",
@@ -26547,28 +26547,26 @@ true,
 "Forsworn Castigator",
 "Spires of Ascension",
 },
-[81407] = {
-"Bombardero Riel siniestro",
-"Depósito Riel siniestro",
+[163618] = {
+"Zolramus Necromancer",
+"The Necrotic Wake",
+},
+[196202] = {
+"Educador de Algeth'ar",
+"Academia Algeth'ar",
+},
+[163862] = {
+"Defender of Many Eyes",
+"Plaguefall",
 },
 [210810] = {
 "Menial Laborer",
 "Darkflame Cleft",
 "enUS",
 },
-[163618] = {
-"Zolramus Necromancer",
-"The Necrotic Wake",
-},
-[235631] = {
-"Crawler Mine",
-"The MOTHERLODE!!",
-"enUS",
-},
-[136139] = {
-"Mechanized Peacekeeper",
-"The MOTHERLODE!!",
-"enUS",
+[81407] = {
+"Bombardero Riel siniestro",
+"Depósito Riel siniestro",
 },
 [186246] = {
 "Buitre desgarrador",
@@ -26596,8 +26594,8 @@ true,
 "Valarjar Thundercaller",
 "Halls of Valor",
 },
-[127315] = {
-"Reanimation Totem",
+[122965] = {
+"Vol'kaal",
 "Atal'Dazar",
 },
 [10489] = {
@@ -26610,13 +26608,14 @@ true,
 "Scholomance",
 "enUS",
 },
-[122965] = {
-"Vol'kaal",
-"Atal'Dazar",
+[235631] = {
+"Crawler Mine",
+"The MOTHERLODE!!",
+"enUS",
 },
-[163862] = {
-"Defender of Many Eyes",
-"Plaguefall",
+[127315] = {
+"Reanimation Totem",
+"Atal'Dazar",
 },
 [150169] = {
 "Toxic Lurker",
@@ -26831,19 +26830,19 @@ true,
 "Subterranean Proto-Dragon",
 "Halls of Infusion",
 },
-[165560] = {
-"Gormling Larva",
-"Mists of Tirna Scithe",
+[167566] = {
+"Bleakwing Assassin",
+"Castle Nathria",
+"enUS",
 },
 [210818] = {
 "Lowly Moleherd",
 "Darkflame Cleft",
 "enUS",
 },
-[167566] = {
-"Bleakwing Assassin",
-"Castle Nathria",
-"enUS",
+[165560] = {
+"Gormling Larva",
+"Mists of Tirna Scithe",
 },
 [154014] = {
 "Imprisoned Cabalist",
@@ -26916,9 +26915,9 @@ true,
 "Defensora refti",
 "Salas de Infusión",
 },
-[122970] = {
-"Shadowblade Stalker",
-"Atal'Dazar",
+[170490] = {
+"Atal'ai High Priest",
+"De Other Side",
 },
 [144293] = {
 "Waste Processing Unit",
@@ -26930,9 +26929,9 @@ true,
 "Theater of Pain",
 "enUS",
 },
-[170490] = {
-"Atal'ai High Priest",
-"De Other Side",
+[122970] = {
+"Shadowblade Stalker",
+"Atal'Dazar",
 },
 [114526] = {
 "Suplente fantasmal",
@@ -26983,32 +26982,32 @@ true,
 "Sable de maná",
 "Corte de Estrellas",
 },
-[144296] = {
-"Spider Tank",
-"Operation: Mechagon",
-"enUS",
+[190345] = {
+"Geomante primalista",
+"Salas de Infusión",
 },
 [144295] = {
 "Mechagon Mechanic",
 "Operation: Mechagon",
 "enUS",
 },
-[190345] = {
-"Geomante primalista",
-"Salas de Infusión",
-},
-[75506] = {
-"Partidaria de Sombraluna",
-"Cementerios de Sombraluna",
-},
 [167998] = {
 "Portal Guardian",
 "Theater of Pain",
 "enUS",
 },
+[75506] = {
+"Partidaria de Sombraluna",
+"Cementerios de Sombraluna",
+},
 [104270] = {
 "Ensamblaje de los Guardianes",
 "Corte de Estrellas",
+},
+[144296] = {
+"Spider Tank",
+"Operation: Mechagon",
+"enUS",
 },
 [122971] = {
 "Dazar'ai Juggernaut",
@@ -27027,21 +27026,21 @@ true,
 "Nightfall Curseblade",
 "The Dawnbreaker",
 },
-[136186] = {
-"Tidesage Spiritualist",
-"Shrine of the Storm",
-},
-[166302] = {
-"Corpse Harvester",
-"The Necrotic Wake",
+[137521] = {
+"Irontide Powdershot",
+"Siege of Boralus",
 },
 [177816] = {
 "Especialista en interrogatorios",
 "Tazavesh, el Mercado Velado",
 },
-[137521] = {
-"Irontide Powdershot",
-"Siege of Boralus",
+[208521] = {
+"Pumpkin Soldier",
+"Scarlet Monastery",
+},
+[166302] = {
+"Corpse Harvester",
+"The Necrotic Wake",
 },
 [122972] = {
 "Dazar'ai Augur",
@@ -27200,13 +27199,13 @@ true,
 "Witherbark",
 "The Everbloom",
 },
-[229252] = {
-"Hiena mechaoscura",
-"Operación: Compuerta",
-},
 [168717] = {
 "Forsworn Justicar",
 "Spires of Ascension",
+},
+[229252] = {
+"Hiena mechaoscura",
+"Operación: Compuerta",
 },
 [190359] = {
 "Skulking Zealot",
@@ -27817,25 +27816,25 @@ true,
 "Centinela guardián",
 "Academia Algeth'ar",
 },
-[208521] = {
-"Pumpkin Soldier",
-"Scarlet Monastery",
-},
 [114783] = {
 "Doncella reformada",
 "Regreso a Karazhan",
+},
+[136186] = {
+"Tidesage Spiritualist",
+"Shrine of the Storm",
 },
 [167963] = {
 "Headless Client",
 "De Other Side",
 },
-[167962] = {
-"Defunct Dental Drill",
-"De Other Side",
-},
 [213893] = {
 "Taumaturga oscura del ocaso",
 "El Rompealbas",
+},
+[167962] = {
+"Defunct Dental Drill",
+"De Other Side",
 },
 [196263] = {
 "Nokhud Neophyte",
@@ -28061,13 +28060,14 @@ true,
 "Rigged Plagueborer",
 "Plaguefall",
 },
-[196202] = {
-"Educador de Algeth'ar",
-"Academia Algeth'ar",
-},
 [10425] = {
 "Crimson Battle Mage",
 "Stratholme",
+"enUS",
+},
+[136139] = {
+"Mechanized Peacekeeper",
+"The MOTHERLODE!!",
 "enUS",
 },
 [167612] = {
@@ -28360,9 +28360,9 @@ true,
 "Mano de establo espectral",
 "Regreso a Karazhan",
 },
-[212778] = {
-"Minion of Ghur'sha",
-"Throne of the Tides",
+[40320] = {
+"Valiona",
+"Grim Batol",
 },
 [58569] = {
 "Purificador Escarlata",
@@ -28726,16 +28726,16 @@ true,
 ["Cast - Important by Color [P]"] = 2,
 ["Aura - Invalidate Unit"] = 1,
 ["Add - Important [P]"] = 4,
-["Cast - Heroic Leap [P]"] = 3,
+["Cast - Shining Green [P]"] = 3,
 ["Unit - Main Target"] = 11,
 ["Aura - Blink Time Left"] = 13,
-["Cast - On Going Cast [P]"] = 2,
+["Cast - Heroic Leap [P]"] = 3,
 ["Add - Tag Number [P]"] = 2,
 ["Unit Power"] = 1,
 ["Add - Explode on Die [P]"] = 1,
 ["Cast - Special Ability [P]"] = 3,
 ["Cast - Glowing [P]"] = 10,
-["Cast - Shining Green [P]"] = 3,
+["Cast - On Going Cast [P]"] = 2,
 ["Cast - Spark Color [P]"] = 2,
 ["Cast - Heal Stun [P]"] = 2,
 ["Cast - AoE With Range [P]"] = 2,
@@ -28845,9 +28845,9 @@ true,
 ["nameplateShowEnemyMinus"] = "1",
 ["nameplateShowFriendlyPlayers"] = "1",
 ["nameplateShowFriends"] = "1",
-["nameplateStackingTypes"] = "",
+["nameplateStackingTypes"] = "A",
 },
-["login_counter"] = 2592,
+["login_counter"] = 2611,
 ["show_aggro_flash"] = true,
 ["bossmod_aura_height"] = 32,
 ["plater_resources_show"] = false,
@@ -33805,10 +33805,10 @@ true,
 false,
 "cyan",
 },
-[95843] = {
+[212681] = {
 true,
 false,
-"blue",
+"darkorange",
 },
 [176523] = {
 true,
@@ -33820,40 +33820,40 @@ true,
 false,
 "blue",
 },
-[212681] = {
+[150165] = {
 true,
 false,
-"darkorange",
+"indigo",
 },
 [95842] = {
 true,
 false,
 "cyan",
 },
-[150165] = {
+[151657] = {
 true,
 false,
-"indigo",
+"magenta",
+},
+[212826] = {
+true,
+false,
+"blue",
 },
 [122965] = {
 true,
 false,
 "mediumpurple",
 },
-[151657] = {
-true,
-false,
-"magenta",
-},
 [139422] = {
 true,
 false,
 "gold",
 },
-[212826] = {
+[152905] = {
 true,
 false,
-"blue",
+"fuchsia",
 },
 [127315] = {
 true,
@@ -33875,10 +33875,10 @@ true,
 false,
 "blue",
 },
-[152905] = {
+[154744] = {
 true,
 false,
-"fuchsia",
+"blue",
 },
 [190342] = {
 true,
@@ -33890,15 +33890,15 @@ true,
 false,
 "blue",
 },
-[154744] = {
-true,
-false,
-"blue",
-},
 [211228] = {
 true,
 false,
 "cyan",
+},
+[95843] = {
+true,
+false,
+"blue",
 },
 [140447] = {
 true,
@@ -34145,10 +34145,10 @@ true,
 false,
 "magenta",
 },
-[223357] = {
+[167731] = {
 true,
 false,
-"blue",
+"deepskyblue",
 },
 [118491] = {
 true,
@@ -34160,10 +34160,10 @@ true,
 false,
 "cyan",
 },
-[167731] = {
+[223357] = {
 true,
 false,
-"deepskyblue",
+"blue",
 },
 [122969] = {
 true,
@@ -34210,21 +34210,6 @@ true,
 false,
 "magenta",
 },
-[122970] = {
-true,
-false,
-"darkorange",
-},
-[144294] = {
-true,
-false,
-"deepskyblue",
-},
-[144293] = {
-true,
-false,
-"blue",
-},
 [167956] = {
 true,
 false,
@@ -34234,6 +34219,21 @@ false,
 true,
 false,
 "fuchsia",
+},
+[144293] = {
+true,
+false,
+"blue",
+},
+[122970] = {
+true,
+false,
+"darkorange",
+},
+[144294] = {
+true,
+false,
+"deepskyblue",
 },
 [114526] = {
 true,
@@ -34280,12 +34280,12 @@ true,
 false,
 "indigo",
 },
-[213893] = {
+[203799] = {
 true,
 false,
-"cyan",
+"deepskyblue",
 },
-[213894] = {
+[167963] = {
 true,
 false,
 "blue",
@@ -34295,10 +34295,10 @@ true,
 false,
 "darkorange",
 },
-[203799] = {
+[213893] = {
 true,
 false,
-"deepskyblue",
+"cyan",
 },
 [144295] = {
 true,
@@ -34315,7 +34315,7 @@ true,
 false,
 "magenta",
 },
-[167963] = {
+[213894] = {
 true,
 false,
 "blue",
@@ -34345,30 +34345,30 @@ true,
 false,
 "mediumpurple",
 },
-[177816] = {
-true,
-false,
-"cyan",
-},
 [168246] = {
 true,
 false,
 "WARRIOR",
+},
+[177816] = {
+true,
+false,
+"cyan",
 },
 [208521] = {
 true,
 false,
 "deepskyblue",
 },
-[166302] = {
-true,
-false,
-"cyan",
-},
 [165111] = {
 true,
 false,
 "darkorange",
+},
+[166302] = {
+true,
+false,
+"cyan",
 },
 [154020] = {
 true,
@@ -34535,15 +34535,15 @@ true,
 false,
 "blue",
 },
-[196115] = {
-true,
-false,
-"blue",
-},
 [91002] = {
 true,
 false,
 "fuchsia",
+},
+[190128] = {
+true,
+false,
+"white",
 },
 [81522] = {
 true,
@@ -35565,10 +35565,10 @@ true,
 false,
 "cyan",
 },
-[190128] = {
+[196115] = {
 true,
 false,
-"white",
+"blue",
 },
 [105715] = {
 true,
@@ -35680,20 +35680,20 @@ true,
 false,
 "magenta",
 },
-[165483] = {
+[114783] = {
 true,
 false,
-"fuchsia",
+"magenta",
 },
 [219301] = {
 true,
 false,
 "magenta",
 },
-[114783] = {
+[165483] = {
 true,
 false,
-"magenta",
+"fuchsia",
 },
 [167998] = {
 true,
@@ -35705,15 +35705,15 @@ true,
 false,
 "magenta",
 },
-[165414] = {
-true,
-false,
-"cyan",
-},
 [173720] = {
 true,
 false,
 "blue",
+},
+[165414] = {
+true,
+false,
+"cyan",
 },
 [167615] = {
 true,
@@ -52683,6 +52683,18 @@ PlaterLogs = {
 ["_error_logs"] = {
 },
 ["_general_logs"] = {
+"2026-11-14 13:10:35 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-14 12:29:40 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-14 06:30:25 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-14 05:50:52 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-14 04:49:41 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 19:07:00 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 16:58:44 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 10:22:53 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 07:18:38 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 07:06:46 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 04:59:57 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 04:58:56 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-12 19:12:52 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-12 18:56:49 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-12 17:17:28 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
@@ -52690,18 +52702,6 @@ PlaterLogs = {
 "2026-11-12 06:29:42 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-11 20:27:06 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-11 20:19:37 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
-"2026-11-11 18:17:26 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
-"2026-11-11 16:08:38 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
-"2026-07-08 00:55:16 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-07-08 00:54:24 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Ihavegold",
-"2026-07-08 00:52:50 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 11:45:45 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:41:59 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:41:40 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:36:18 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:34:07 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Ihavegold",
-"2026-01-30 19:14:38 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Krasivoe",
-"2026-01-30 19:13:56 | INIT | Plater-v626-TBC | Framework v660 | 2.5.5 | enUS | Krasivoe",
 },
 }
 PlaterBackup = {

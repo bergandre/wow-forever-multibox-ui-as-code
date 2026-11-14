@@ -1,6 +1,6 @@
 
 PawnOptions = {
-["LastVersion"] = 2.1401,
+["LastVersion"] = 2.1402,
 ["LastPlayerFullName"] = "Karums Warrior",
 ["AutoSelectScales"] = false,
 ["ItemLevels"] = {
@@ -40,9 +40,9 @@ PawnOptions = {
 ["Link"] = "|cnIQ3:|Hitem:286977::::::::19:1491::1::1:28:5256:::::|h[Sword of the Fallen]|h|r",
 },
 [9] = {
-["ID"] = 286981,
-["Level"] = 21,
-["Link"] = "|cnIQ3:|Hitem:286981::::::::18:1491::1::1:28:5256:::::|h[Death Bindings]|h|r",
+["ID"] = 15545,
+["Level"] = 30,
+["Link"] = "|cnIQ2:|Hitem:15545::::::::31:1491:::1:12727::::::|h[Thick Scale Bracelets of the Tiger]|h|r",
 },
 [5] = {
 ["ID"] = 2870,
@@ -55,10 +55,10 @@ PawnOptions = {
 ["Link"] = "|cnIQ2:|Hitem:6481::::::::23:1491::11:::::::|h[Dagmire Gauntlets]|h|r",
 },
 [11] = {
-["ID"] = 6414,
-["Level"] = 29,
+["ID"] = 6749,
+["Level"] = 32,
 ["AlsoFitsIn"] = 12,
-["Link"] = "|cnIQ3:|Hitem:6414::::::::26:1491::11:::::::|h[Seal of Sylvanas]|h|r",
+["Link"] = "|cnIQ2:|Hitem:6749::::::::31:1491::11:::::::|h[Tiger Band]|h|r",
 },
 [6] = {
 ["ID"] = 6460,

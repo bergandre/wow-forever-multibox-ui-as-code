@@ -18,12 +18,14 @@ local private = {
 	craftDB = nil,
 	matDB = nil,
 	matItemDB = nil,
+	craftDBItemQuery = nil,
 	matDBSpellIdQuery = nil,
 	craftSettingsTable = nil,
 	matSettingsTable = nil,
 	favoriteCraftSettingsTable = nil,
 	numMatDBRows = {},
 	numCraftsBySpellId = {},
+	craftedItemStrings = {},
 	characterTemp = {},
 	removeTemp = {},
 	professionTemp = {},
@@ -62,6 +64,8 @@ CraftInfoDB:OnModuleLoad(function()
 		:AddStringField("customValue")
 		:Commit()
 
+	private.craftDBItemQuery = private.craftDB:NewOwnedQuery()
+		:Equal("itemString", Database.BoundQueryParam())
 	private.matDBSpellIdQuery = private.matDB:NewOwnedQuery()
 		:Equal("craftString", Database.BoundQueryParam())
 end)
@@ -102,6 +106,7 @@ function CraftInfoDB.Upsert(craftString, itemString, profession, rootCategoryId,
 		assert(not next(private.updatesTemp))
 		if itemString ~= craftInfo.itemString then
 			craftInfo.itemString = itemString
+			private.craftedItemStrings[itemString] = true
 			private.updatesTemp.itemString = itemString
 		end
 		if profession ~= craftInfo.profession then
@@ -152,6 +157,7 @@ function CraftInfoDB.Upsert(craftString, itemString, profession, rootCategoryId,
 		private.HandleCraftStringAdded(craftString)
 		assert(not next(private.characterTemp))
 		tinsert(private.characterTemp, character)
+		private.craftedItemStrings[itemString] = true
 		private.craftDB:InsertRow(craftString, itemString, name, profession, numResult, private.characterTemp, hasCD)
 		wipe(private.characterTemp)
 	end
@@ -350,6 +356,18 @@ function CraftInfoDB.HasCraftString(craftString)
 	return private.craftDB:HasUniqueRow("craftString", craftString)
 end
 
+---Returns whether or not the craft DB has a craft for a given item.
+---@param itemString string The item string
+---@return boolean
+function CraftInfoDB.HasItemString(itemString)
+	if not private.craftedItemStrings[itemString] then
+		return false
+	end
+	return private.craftDBItemQuery
+		:BindParams(itemString)
+		:IsNotEmpty()
+end
+
 ---Gets the item string for a given craft.
 ---@param craftString string The craft string
 ---@return string
@@ -461,6 +479,7 @@ function private.LoadData()
 		Table.GetKeys(craftInfo.players, private.characterTemp)
 		assert(#private.characterTemp > 0)
 		sort(private.characterTemp)
+		private.craftedItemStrings[craftInfo.itemString] = true
 		private.craftDB:BulkInsertNewRow(craftString, craftInfo.itemString, (craftInfo.name --[[@as string?]]) or "", craftInfo.profession, craftInfo.numResult, private.characterTemp, craftInfo.hasCD and true or false)
 
 		for matString, matQuantity in pairs(craftInfo.mats) do

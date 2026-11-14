@@ -340,6 +340,7 @@ function private.ActionHandler(manager, state, action, ...)
 				tinsert(private.settings.sources, newIndex, source)
 			end
 		end
+		Crafting.HandleGatheringSourcesChanged()
 		return manager:ProcessAction("ACTION_REBUILD_SOURCES")
 	elseif action == "ACTION_REBUILD_SOURCES" then
 		state.sourcesFrame

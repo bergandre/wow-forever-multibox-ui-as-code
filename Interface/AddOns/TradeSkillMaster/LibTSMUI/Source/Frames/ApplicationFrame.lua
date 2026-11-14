@@ -12,6 +12,7 @@ local L = LibTSMUI.Locale.GetTable()
 local TempTable = LibTSMUI:From("LibTSMUtil"):Include("BaseType.TempTable")
 local Math = LibTSMUI:From("LibTSMUtil"):Include("Lua.Math")
 local Table = LibTSMUI:From("LibTSMUtil"):Include("Lua.Table")
+local CombatLockdown = LibTSMUI:From("LibTSMWoW"):Include("Service.CombatLockdown")
 local Theme = LibTSMUI:From("LibTSMService"):Include("UI.Theme")
 local private = {}
 local CONTENT_FRAME_OFFSET = 8
@@ -489,8 +490,14 @@ function ApplicationFrame.__protected:_ActionHandler(manager, state, action, ...
 		self._contextTable.centerY = self._defaultContextTable.centerY
 		self:Draw()
 	elseif action == "ACTION_HANDLE_DRAG_START" then
+		if self._frame:IsProtected() and CombatLockdown.IsActive() then
+			return
+		end
 		self._frame:StartMoving()
 	elseif action == "ACTION_HANDLE_DRAG_STOP" then
+		if self._frame:IsProtected() and CombatLockdown.IsActive() then
+			return
+		end
 		self._frame:StopMovingOrSizing()
 		self:_SavePosition()
 		self:Draw()

@@ -29,6 +29,7 @@ local private = {
 	topLevelPages = {},
 	isVisible = false,
 	showTimer = nil,
+	defaultUIButtonShifts = {},
 }
 local MIN_FRAME_SIZE = { width = 560, height = 500 }
 local STATE_SCHEMA = Reactive.CreateStateSchema("VendoringUIState")
@@ -97,6 +98,13 @@ function VendoringUI.IsVisible()
 	return private.isVisible
 end
 
+---Shifts the switch button shown on the default UI for a 3rd-party addon.
+---@param addonTag string The tag to use to identify the 3rd-party addon
+---@param xOffset number The amount to shift the button by
+function VendoringUI.ShiftDefaultUIButton(addonTag, xOffset)
+	private.defaultUIButtonShifts[addonTag] = xOffset
+end
+
 
 
 -- ============================================================================
@@ -120,8 +128,14 @@ function private.CreateMainFrame(state)
 end
 
 function private.CreateSwitchButton()
+	local xOffset = (App.IsRetail() or App.IsForever()) and -27 or -26
+	for _, shift in pairs(private.defaultUIButtonShifts) do
+		xOffset = xOffset + shift
+	end
 	return UIElements.New("SwitchButton", "switchBtn")
 		:SetDefaultUIParentFrame(Merchant.GetDefaultUIFrame())
+		:WipeAnchors()
+		:AddAnchor("TOPRIGHT", xOffset, (App.IsRetail() or App.IsForever()) and -4 or -3)
 		:SetManager(private.manager)
 		:SetAction("OnClick", "ACTION_SWITCH")
 end

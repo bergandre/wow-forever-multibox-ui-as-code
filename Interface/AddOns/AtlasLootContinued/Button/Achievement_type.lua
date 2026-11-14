@@ -1,7 +1,7 @@
 local ALName, ALPrivate = ...
 local AtlasLoot = _G.AtlasLoot
 local Compat = AtlasLoot.Compat
-if AtlasLoot:GameVersion_LT(AtlasLoot.WRATH_VERSION_NUM) then return end
+if not AtlasLoot:ClientHasWrathSystems() then return end
 
 local AC = AtlasLoot.Button:AddType("Achievement", "ac")
 local AL = AtlasLoot.Locales

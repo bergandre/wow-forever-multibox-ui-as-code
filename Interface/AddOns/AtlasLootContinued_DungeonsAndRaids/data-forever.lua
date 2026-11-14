@@ -198,6 +198,7 @@ data["RagefireForever"] = {
 				{ 17, 251362 }, -- Plans: Protector's Gloves
 				{ 18, 251363 }, -- Plans: Acolyte's Gloves
 				{ 19, 252782 }, -- Pattern: Wisdom's Leather Gloves
+				{ 20, 14540 }, -- Taragaman the Hungerer's Heart
 			},
 		},
 		{ -- RFCJergosh
@@ -302,6 +303,7 @@ data["RuinsOfLordaeron"] = {
 				{ 1, 271202 }, -- Witherbite Bracers
 				{ 2, 271201 }, -- Atrophic Girdle
 				{ 3, 271203 }, -- Segmented Spider Leg
+				{ 16, 275443 }, -- Highly Toxic Strain
 			},
 		},
 		{ -- RoLTheBaron
@@ -313,6 +315,7 @@ data["RuinsOfLordaeron"] = {
 				{ 1, 271206 }, -- Leftover Abomination Skin
 				{ 2, 271205 }, -- Abomination Bones
 				{ 3, 271204 }, -- Meathook Slicer
+				{ 16, 268518 }, -- Head of the Baron
 			},
 		},
 		{ -- RoLViktorTheVile
@@ -409,6 +412,7 @@ data["WailingCavernsForever"] = {
 				{ 1,  6460 }, -- Cobrahn's Grasp
 				{ 2,  10410 }, -- Leggings of the Fang
 				{ 4,  6465 }, -- Robe of the Moccasin
+				{ 16, 9738 }, -- Gem of Cobrahn
 			},
 		},
 		{ -- WCLadyAnacondra
@@ -422,6 +426,7 @@ data["WailingCavernsForever"] = {
 				{ 3,  5404 }, -- Serpent's Shoulders
 				{ 4,  6446 }, -- Snakeskin Bag
 				{ 5,  273088 }, -- Snake Eye Kaleidoscope
+				{ 16, 9739 }, -- Gem of Anacondra
 			},
 		},
 		{ -- WCKresh
@@ -447,6 +452,7 @@ data["WailingCavernsForever"] = {
 				{ 1,  6472 }, -- Stinging Viper
 				{ 3,  6473 }, -- Armor of the Fang
 				{ 4,  273089 }, -- Slither Cord
+				{ 16, 9740 }, -- Gem of Pythas
 			},
 		},
 		{ -- WCSkum
@@ -472,6 +478,7 @@ data["WailingCavernsForever"] = {
 				{ 3,  5970 }, -- Serpent Gloves
 				{ 4,  10411 }, -- Footpads of the Fang
 				{ 5,  6459 }, -- Savage Trodders
+				{ 16, 9741 }, -- Gem of Serpentis
 			},
 		},
 		{ -- WCVerdan
@@ -589,6 +596,7 @@ data["TheDeadminesForever"] = {
 				{ 1, 1937 },	-- Buzz Saw
 				{ 3, 2169 },	-- Buzzer Blade
 				{ 4, 285292 },	-- Dull Sawblade
+				{ 16, 7365 },	-- Gnoam Sprecklesprocket
 			},
 		},
 		{	--DMGilnid
@@ -660,6 +668,7 @@ data["TheDeadminesForever"] = {
 				{ 19, 252803 },	-- Pattern: Wisdom's Leather Hood
 				{ 20, 253938 },	-- Pattern: Filigreed Pristine Leggings
 				{ 21, 253948 },	-- Pattern: Filigreed Shining Leggings
+				{ 22, 3637 }, -- Head of VanCleef
 			},
 		},
 		{	--DMCookie
@@ -760,6 +769,7 @@ data["ShadowfangKeepForever"] = {
 				{ 103, 253940 }, -- Pattern: Filigreed Silky Leggings
 				{ 104, 253946 }, -- Pattern: Filigreed Pearly Leggings
 				{ 105, 253948 }, -- Pattern: Filigreed Shining Leggings
+				{ 106, 251380 }, -- Plans: Veteran's Silvered Chain Helm
 			},
 		},
 		{ -- SFKRazorclawtheButcher
@@ -772,6 +782,7 @@ data["ShadowfangKeepForever"] = {
 				{ 1,  1292 }, -- Butcher's Cleaver
 				{ 3,  6226 }, -- Bloody Apron
 				{ 4,  6633 }, -- Butcher's Slicer
+				{ 16, 273096 }, -- Blueprint: Tanning Rack
 			},
 		},
 		{ -- SFKSilverlaine
@@ -844,7 +855,6 @@ data["ShadowfangKeepForever"] = {
 				{ 1,  6340 }, -- Fenrus' Hide
 				{ 2,  3230 }, -- Black Wolf Bracers
 				{ 3,  273646 }, -- Half-Eaten Boots
-				{ 16, 251380 }, -- Plans: Veteran's Silvered Chain Helm
 			},
 		},
 		{ -- SFKWolfMasterNandos
@@ -869,6 +879,7 @@ data["ShadowfangKeepForever"] = {
 				{ 1,  6324 }, -- Robes of Arugal
 				{ 2,  6392 }, -- Belt of Arugal
 				{ 3,  6220 }, -- Meteor Shard
+				{ 5,  5442 }, -- Head of Arugal
 			},
 		},
 		{ -- SFKTrash
@@ -916,6 +927,14 @@ data["ShadowfangKeepForever"] = {
 				{ 1,  6283 }, -- The Book of Ur
 			},
 		},
+		{ -- SFKBlackTome
+			name = AL["Black Tome"],
+			ExtraList = true,
+			AtlasMapBossID = 12,
+			[NORMAL_DIFF] = {
+				{ 1,  276561 }, -- Black Tome
+			},
+		},
 	},
 }
 
@@ -947,6 +966,8 @@ data["ExcavationSiteWetlands"] = {
 				{ 2, 273027 }, -- Raptor's Gaze
 				{ 3, 273026 }, -- Garb of Florid Feathers
 				{ 16, 273106 }, -- Blueprint: Greenhouse
+				{ 17, 271100 }, -- Thicket Raptor Meat
+				{ 18, 284845 }, -- Thicket Raptor Hide
 			},
 		},
 		{ -- ESWRelicGuardian
@@ -958,8 +979,9 @@ data["ExcavationSiteWetlands"] = {
 				{ 1, 273028 }, -- Reliquary Mantle
 				{ 2, 273029 }, -- Golemsight Long Gun
 				{ 3, 273030 }, -- Ring of Power Regulation
-				{ 16, 270866 }, -- Titan Relic
-				{ 17, 273097 }, -- Blueprint: Rock Garden
+				{ 16, 270865 }, -- Titan Relic
+				{ 17, 270866 }, -- Titan Relic
+				{ 18, 273097 }, -- Blueprint: Rock Garden
 			},
 		},
 	}
@@ -1072,6 +1094,7 @@ data["BlackfathomDeepsForever"] = {
 				{ 19, 252823 }, -- Pattern: Totemic Leather Leggings
 				{ 20, 252825 }, -- Pattern: Wisdom's Leather Leggings
 				{ 21, 253982 }, -- Pattern: Filigreed Shadow Circlet
+				{ 22, 5881 }, -- Head of Kelris
 			},
 		},
 		{ -- BFDOldSerrakis
@@ -1162,6 +1185,7 @@ data["TheStockadeForever"] = {
 				{ 16, 251380 }, -- Plans: Veteran's Silvered Chain Helm
 				{ 17, 251382 }, -- Plans: Protector's Silvered Chain Helm
 				{ 18, 253942 }, -- Pattern: Filigreed Flame Leggings
+				{ 19, 3630 }, -- Head of Targorr
 			},
 		},
 		{ -- SWStKamDeepfury
@@ -1180,6 +1204,7 @@ data["TheStockadeForever"] = {
 				{ 7,  252515 }, -- Wisdom's Leather Helm
 				{ 16, 251379 }, -- Plans: Crusader's Silvered Chain Leggings
 				{ 17, 252825 }, -- Pattern: Wisdom's Leather Leggings
+				{ 18, 3640 }, -- Head of Deepfury
 			},
 		},
 		{ -- SWStHamhock
@@ -1211,6 +1236,7 @@ data["TheStockadeForever"] = {
 				{ 16, 252824 }, -- Pattern: Stormrider's Leather Kilt
 				{ 17, 253976 }, -- Pattern: Filigreed Pristine Circlet
 				{ 18, 253986 }, -- Pattern: Filigreed Shining Circlet
+				{ 19, 2926 }, -- Head of Bazil Thredd
 			},
 		},
 		{ -- SWStDextrenWard
@@ -1230,6 +1256,7 @@ data["TheStockadeForever"] = {
 				{ 17, 251376 }, -- Plans: Guard's Silvered Chain Leggings
 				{ 18, 252820 }, -- Pattern: Brawler's Leather Legguards
 				{ 19, 252821 }, -- Pattern: Trapper's Leather Legguards
+				{ 20, 3628 }, -- Hand of Dextren Ward
 			},
 		},
 		{ -- SWStBruegalIronknuckle
@@ -1283,6 +1310,7 @@ data["ScarletMonasteryGraveyardForever"] = {
 				{ 4,  274290 }, -- Painwalker Buckler
 				{ 5,  252513 }, -- Trapper's Leather Helm
 				{ 6,  252455 }, -- Defender's Leather Helm
+				{ 16, 5805 }, -- Heart of Zeal
 			},
 		},
 		{ -- SMAzshir
@@ -1480,6 +1508,16 @@ data["CityOfDalaran"] = {
 				{ 2, 273049 }, -- Archmagister's Faceted Pendant
 				{ 3, 273052 }, -- Ponderous Orb
 				{ 16, 273103 }, -- Blueprint: Arcane Salvager
+				{ 17, 251961 }, -- Arcane Mote
+			},
+		},
+		{ -- CoDTrash
+			name = AL["Trash"],
+			ExtraList = true,
+			[NORMAL_DIFF] = {
+				{ 1, 286987 }, -- Violet Sorcerer's Sandals
+				{ 2, 286989 }, -- Violet Sorcerer's Wraps
+				{ 3, 286988 }, -- Violet Sorcerer's Leggings
 			},
 		},
 	}
@@ -1547,9 +1585,8 @@ data["RazorfenKraulForever"] = {
 				{ 1,  6687 }, -- Corpsemaker
 				{ 3,  6686 }, -- Tusken Helm
 				{ 4,  274161 }, -- Quillord Mail Leggings
-				{ 5,  252512 }, -- Brawler's Leather Helm
-				{ 6,  252513 }, -- Trapper's Leather Helm
-				{ 7,  252515 }, -- Wisdom's Leather Helm
+				{ 5,  252513 }, -- Trapper's Leather Helm
+				{ 6,  252515 }, -- Wisdom's Leather Helm
 				{ 16, 251379 }, -- Plans: Crusader's Silvered Chain Leggings
 				{ 17, 252821 }, -- Pattern: Trapper's Leather Legguards
 			},
@@ -1609,6 +1646,9 @@ data["RazorfenKraulForever"] = {
 				{ 7,  252515 }, -- Wisdom's Leather Helm
 				{ 16,  17008 }, -- Small Scroll
 				{ 17, 273103 }, -- Blueprint: Arcane Salvager
+				{ 18, 274463 }, -- Tattered Note
+				{ 19, 5793 }, -- Razorflank's Heart
+				{ 20, 5792 }, -- Razorflank's Medallion
 			},
 		},
 		{ -- RFKEarthcallerHalmgar
@@ -1662,6 +1702,7 @@ data["GnomereganForever"] = {
 			DisplayIDs = {{7288}},
 			[NORMAL_DIFF] = {
 				{ 1,  9444 }, -- Techbot CPU Shell
+				{ 3,  9277 }, -- Techbot's Memory Core
 			},
 		},
 		{ -- GnGrubbis
@@ -1746,6 +1787,7 @@ data["GnomereganForever"] = {
 				--{ 23, 4376 }, -- Flame Deflector
 				{ 19, 7742 }, -- Schematic: Gnomish Cloaking Device
 				--{ 26, 4397 }, -- Gnomish Cloaking Device
+				{ 20, 9299 }, -- Thermaplugg's Safe Combination
 			},
 		},
 		{ -- GnTrash
@@ -1796,8 +1838,10 @@ data["ScarletMonasteryLibraryForever"] = {
 			AtlasMapBossID = 1,
 			[NORMAL_DIFF] = {
 				{ 1,  7710 }, -- Loksey's Training Stick
+				{ 2,  274292 }, -- Houndmaster Boomerang
 				{ 3,  7756 }, -- Dog Training Gloves
 				{ 4,  3456 }, -- Dog Whistle
+				{ 16, 273109 }, -- Blueprint: Trapper's Workbench
 			},
 		},
 		{ -- SMDoan
@@ -1882,6 +1926,7 @@ data["ScarletMonasteryArmoryForever"] = {
 				{ 2,  7718 }, -- Herod's Shoulder
 				{ 3,  10330 }, -- Scarlet Leggings
 				{ 4,  7717 }, -- Ravager
+				{ 5,  274295 }, -- Band of Crimson Light
 			},
 		},
 		{ -- SMATrash
@@ -1925,7 +1970,85 @@ data["TheDrownedCity"] = {
 	LoadDifficulty = NORMAL_DIFF,
 	LevelRange = {35, 35, 40},
 	items = {
-		ComingSoon(), -- TODO: replace with real bosses/loot once known
+		{ -- TDCZulAlai
+			name = AL["Zul'Alai"],
+			npcID = 258905,
+			[NORMAL_DIFF] = {
+				{ 1,  274598 }, -- Bloodslash Axe
+				{ 2,  274599 }, -- Oathbound Bracers
+				{ 3,  274600 }, -- Berserker Shackles
+			},
+		},
+		{ -- TDCVarTaka
+			name = AL["Var'Taka"],
+			npcID = 258924,
+			[NORMAL_DIFF] = {
+				{ 1,  274601 }, -- Harpoon of Command
+				{ 2,  274602 }, -- Brinebelly Leggings
+				{ 3,  274613 }, -- Priestess Cloak
+			},
+		},
+		{ -- TDCPrimevalElemental
+			name = AL["Primeval Elemental"],
+			npcID = 263886,
+			[NORMAL_DIFF] = {
+				{ 1,  274611 }, -- Robe of the Drowned
+				{ 2,  274612 }, -- Waterlogged Burial Shroud
+				{ 3,  274615 }, -- Heart of the Primeval
+			},
+		},
+		{ -- TDCCaptainDreadrise
+			name = AL["Captain Dreadrise"],
+			npcID = 260042,
+			[NORMAL_DIFF] = {
+				{ 1,  274603 }, -- Dreadfrost Saber
+				{ 2,  274604 }, -- Frosty Blunderbuss
+				{ 3,  274605 }, -- Briny Sash
+			},
+		},
+		{ -- TDCDeathlessMarrow
+			name = AL["Deathless Marrow"],
+			npcID = 269586,
+			[NORMAL_DIFF] = {
+				{ 1, "INV_Box_01", nil, AL["Loot data not yet available"] },
+			},
+		},
+		{ -- TDCMinloth
+			name = AL["Min'loth the Serpent"],
+			npcID = {260243, 260274},
+			[NORMAL_DIFF] = {
+				{ 1,  274608 }, -- Maw of Min'loth
+				{ 2,  274609 }, -- Serpentbane Crown
+				{ 3,  274610 }, -- Ritual-Binder's Gloves
+			},
+		},
+		{ -- TDCUmbra
+			name = AL["Umbra"],
+			npcID = 264172,
+			specialType = "rare",
+			[NORMAL_DIFF] = {
+				{ 1,  286658 }, -- Umbral Scaled Belt
+				{ 2,  286662 }, -- Deep-Dweller's Grips
+			},
+		},
+		{ -- TDCGill
+			name = AL["Gill"],
+			npcID = 264177,
+			specialType = "rare",
+			[NORMAL_DIFF] = {
+				{ 1,  286646 }, -- Gill's Gills
+				{ 2,  286649 }, -- Tidebound Dagger
+			},
+		},
+		{ -- TDCPyromancerBraxton
+			name = AL['"Pyromancer" Braxton'],
+			npcID = 260468,
+			specialType = "rare",
+			[NORMAL_DIFF] = {
+				{ 1,  286651 }, -- Flamestarter's Signet
+				{ 2,  286650 }, -- Pyromancer's Baton
+			},
+		},
 	}
 }
 
@@ -2059,6 +2182,7 @@ data["RazorfenDownsForever"] = {
 			[NORMAL_DIFF] = {
 				{ 1,  10774 }, -- Fleshhide Shoulders
 				{ 3,  10772 }, -- Glutton's Cleaver
+				{ 4, 274385 }, -- Abomination Chain
 			},
 		},
 		{ -- RFDRagglesnout
@@ -2086,6 +2210,8 @@ data["RazorfenDownsForever"] = {
 				{ 3,  10764 }, -- Deathchill Armor
 				{ 4,  10761 }, -- Coldrage Dagger
 				{ 6,  10765 }, -- Bonefingers
+				{ 16, 10420 }, -- Skull of the Coldbringer
+				{ 7, 274381 }, -- Coldbringer Spine
 			},
 		},
 		{ -- RFDPlaguemaw
@@ -2097,6 +2223,7 @@ data["RazorfenDownsForever"] = {
 			[NORMAL_DIFF] = {
 				{ 1,  10766 }, -- Plaguerot Sprig
 				{ 3,  10760 }, -- Swine Fists
+				{ 4, 274380 }, -- Decaying Flesh Bands
 			},
 		},
 
@@ -2151,7 +2278,81 @@ data["KroldokStronghold"] = {
 	LoadDifficulty = NORMAL_DIFF,
 	LevelRange = {40, 40, 45},
 	items = {
-		ComingSoon(), -- TODO: replace with real bosses/loot once known
+		{ -- KSGrox
+			name = AL["Slavecrusher Grox"],
+			npcID = 258966,
+			Level = 42,
+			-- TODO: DisplayIDs, AtlasMapBossID once known
+			[NORMAL_DIFF] = {
+				{ 1,  274995 }, -- Slavecrusher Scepter
+				{ 2,  274996 }, -- Resistance Breaker Spaulder
+				{ 3,  274997 }, -- Chain of Binding
+				{ 16, 273101 }, -- Blueprint: Expert Campfire
+			},
+		},
+		{ -- KSZarmok
+			name = AL["Twilight Commander Zarmok"],
+			npcID = 258972,
+			Level = 43,
+			[NORMAL_DIFF] = {
+				{ 1,  274998 }, -- Shadowlight Athame
+				{ 2,  274999 }, -- Shadecaster's Leggings
+				{ 3,  275000 }, -- Zarmok's Plated Signet
+			},
+		},
+		{ -- KSAshka
+			name = AL["War Handler Ashka"],
+			npcID = 259281,
+			[NORMAL_DIFF] = {
+				{ 1,  275001 }, -- Bloodied Gutslicer
+				{ 2,  275002 }, -- War Handler's Gaze
+				{ 3,  275003 }, -- Worgbinder's Treads
+			},
+		},
+		{ -- KSNargurk
+			name = AL["Nar'gurk"],
+			npcID = 258964,
+			Level = 44,
+			[NORMAL_DIFF] = {
+				{ 1,  275004 }, -- Chain of the Corruptor
+				{ 2,  275005 }, -- Krol'dok Warplate Chest
+				{ 3,  275006 }, -- Krol'dok Warplate Helmet
+				{ 16, 267104 }, -- Tome of Twilight
+			},
+		},
+		{ -- KSToof
+			name = AL["Bossman Toof"],
+			npcID = 264773,
+			Level = 42,
+			[NORMAL_DIFF] = {
+				{ 1,  286428 }, -- Band of Bossman
+				{ 2,  286429 }, -- Big-Belly Belt
+				{ 3,  286430 }, -- Toofbreaker
+			},
+		},
+		{ -- KSMugg
+			name = AL["Overlord Mugg"],
+			npcID = 258968,
+			Level = 45,
+			[NORMAL_DIFF] = {
+				{ 1,  275007 }, -- Mugg's Jabber
+				{ 2,  275008 }, -- Mugg's Crosser
+				{ 3,  275009 }, -- Emblem of Slamming
+				{ 4,  275010 }, -- Strongly Scented Hood
+				{ 16, 267086 }, -- Eye of Mugg
+			},
+		},
+		{ -- KSTrash
+			name = AL["Trash"],
+			ExtraList = true,
+			[NORMAL_DIFF] = {
+				{ 1,  275006 }, -- Krol'dok Warplate Helmet
+				{ 2,  287014 }, -- Krol'dok Warplate Pauldrons
+				{ 3,  275005 }, -- Krol'dok Warplate Chest
+				{ 4,  287012 }, -- Krol'dok Warplate Gauntlets
+				{ 5,  287013 }, -- Krol'dok Warplate Legplates
+			},
+		},
 	}
 }
 
@@ -2236,6 +2437,10 @@ data["UldamanForever"] = {
 			AtlasMapBossID = 5,
 			[NORMAL_DIFF] = {
 				{ 1,  8053 }, -- Obsidian Power Source
+				{ 2, 274430 }, -- Rock Sentinel Slicer
+				{ 3, 274428 }, -- Dark Golem Breastplate
+				{ 4, 274425 }, -- White Obsidian Wand
+				{ 5, 274485 }, -- Axe of Lingering Dread
 			},
 		},
 		{ -- UldAncientStoneKeeper
@@ -2285,6 +2490,8 @@ data["UldamanForever"] = {
 				{ 1,  11118 }, -- Archaedic Stone
 				{ 2,  9413 }, -- The Rockpounder
 				{ 3,  9418 }, -- Stoneslayer
+				{ 16, 7672 }, -- Shattered Necklace Power Source
+				{ 4, 274432 }, -- Stone Keeper Spire
 			},
 		},
 		{ -- UldTrash
@@ -2488,6 +2695,7 @@ data["Zul'FarrakForever"] = {
 			[NORMAL_DIFF] = {
 				{ 1,  9469 }, -- Gahz'rilla Scale Armor
 				{ 3,  9467 }, -- Gahz'rilla Fang
+				{ 16, 8707 }, -- Gahz'rilla's Electrified Scale
 			},
 		},
 		{ -- ZFChiefUkorzSandscalp
@@ -2567,6 +2775,7 @@ data["MaraudonForever"] = {
 				{ 1,  17746 }, -- Noxxion's Shackles
 				{ 2,  17744 }, -- Heart of Noxxion
 				{ 3,  17745 }, -- Noxious Shooter
+				{ 16, 17702 }, -- Celebrian Rod
 			},
 		},
 		{ -- MaraRazorlash
@@ -2602,6 +2811,7 @@ data["MaraudonForever"] = {
 				{ 1,  17755 }, -- Satyrmane Sash
 				{ 2,  17754 }, -- Infernal Trickster Leggings
 				{ 3,  17752 }, -- Satyr's Lash
+				{ 16, 17703 }, -- Celebrian Diamond
 			},
 		},
 		{ -- MaraMeshlok
@@ -2745,7 +2955,61 @@ data["AlcazPrison"] = {
 	LoadDifficulty = NORMAL_DIFF,
 	LevelRange = {48, 48, 53},
 	items = {
-		ComingSoon(), -- TODO: replace with real bosses/loot once known
+		{ -- APOverseerWrex
+			name = AL["Overseer Wrex"],
+			npcID = 255391,
+			Level = 50,
+			-- TODO: DisplayIDs, AtlasMapBossID once known
+			[NORMAL_DIFF] = {
+				{ 1,  276734 }, -- Wrex's Pinky Ring
+				{ 2,  276732 }, -- Alcaz Willcrusher
+			},
+		},
+		{ -- APTheQuestioner
+			name = AL["The Questioner"],
+			npcID = 256236,
+			Level = 51,
+			[NORMAL_DIFF] = {
+				{ 1,  276742 }, -- Girdle of Extracted Answers
+				{ 2,  276743 }, -- Fingerbreaker Stamp
+				{ 3,  276741 }, -- Defias Enforcer's Shoulderpads
+			},
+		},
+		{ -- APTidemistressCazass
+			name = AL["Tidemistress Ca'zass"],
+			npcID = 255997,
+			Level = 50,
+			[NORMAL_DIFF] = {
+				{ 1,  276736 }, -- Seascale Bracers
+				{ 2,  276737 }, -- Cloak of the Tidemistress
+			},
+		},
+		{ -- APKaterinatheCleaner
+			name = AL["Katerina the Cleaner"],
+			npcID = 257016,
+			Level = 52,
+			[NORMAL_DIFF] = {
+				{ 1,  276740 }, -- Sentimental Locket
+			},
+		},
+		{ -- APBlazeroar
+			name = AL["Blazeroar"],
+			npcID = 255702,
+			Level = 53,
+			[NORMAL_DIFF] = {
+				{ 1, "INV_Box_01", nil, AL["Loot data not yet available"] },
+			},
+		},
+		{ -- APTrash
+			name = AL["Trash"],
+			ExtraList = true,
+			[NORMAL_DIFF] = {
+				{ 1,  287021 }, -- Defias Enforcer's Prowlers
+				{ 2,  287019 }, -- Defias Enforcer's Mask
+				{ 3,  287020 }, -- Defias Enforcer's Chest
+				{ 4,  276746 }, -- Defias Enforcer's Legguards
+			},
+		},
 	}
 }
 
@@ -2827,6 +3091,7 @@ data["TheTempleOfAtal'HakkarForever"] = {
 				{ 1,  10806 }, -- Vestments of the Atal'ai Prophet
 				{ 2,  10808 }, -- Gloves of the Atal'ai Prophet
 				{ 3,  10807 }, -- Kilt of the Atal'ai Prophet
+				{ 16, 6212 }, -- Head of Jammal'an
 			},
 		},
 		{ -- STOgom
@@ -2907,6 +3172,9 @@ data["TheTempleOfAtal'HakkarForever"] = {
 				{ 6,  12243 }, -- Smoldering Claw
 				{ 7,  10795 }, -- Drakeclaw Band
 				{ 8,  10796 }, -- Drakestone
+				{ 16, 20019 }, -- Tooth of Morphaz
+				{ 17, 20025 }, -- Blood of Morphaz
+				{ 18, 20085 }, -- Arcane Shard
 			},
 		},
 		{ -- STEranikus
@@ -3173,9 +3441,6 @@ data["BlackrockDepthsForever"] = {
 			DisplayIDs = {{8655}},
 			AtlasMapBossID = 8,
 			[NORMAL_DIFF] = {
-				{ 1,  22205 }, -- Black Steel Bindings
-				{ 2,  22255 }, -- Magma Forged Band
-				{ 3,  22256 }, -- Mana Shaping Handwraps
 				{ 4,  22254 }, -- Wand of Eternal Light
 			},
 		},
@@ -3192,6 +3457,7 @@ data["BlackrockDepthsForever"] = {
 				{ 3,  11842 }, -- Lead Surveyor's Mantle
 				{ 4,  11841 }, -- Senior Designer's Pantaloons
 				{ 6,  11840 }, -- Master Builder's Shirt
+				{ 16, 10999 }, -- Ironfel
 			},
 		},
 		{ -- BRDLordIncendius
@@ -3207,7 +3473,7 @@ data["BlackrockDepthsForever"] = {
 				{ 3,  11765 }, -- Pyremail Wristguards
 				{ 4,  11767 }, -- Emberplate Armguards
 				{ 6,  19268 }, -- Ace of Elementals
-				{ 8,  11768 }, -- Incendic Bracers
+				{ 16, 11126 }, -- Tablet of Kurniya
 			},
 		},
 		{ -- BRDBaelGar
@@ -3252,6 +3518,7 @@ data["BlackrockDepthsForever"] = {
 				{ 2,  11822 }, -- Omnicast Boots
 				{ 3,  11669 }, -- Naglering
 				{ 4,  11819 }, -- Second Wind
+				{ 16, 11465 }, -- Marshal Windsor's Lost Information
 			},
 		},
 		{ -- BRDGuzzler
@@ -3282,6 +3549,8 @@ data["BlackrockDepthsForever"] = {
 				{ 27, 15759 }, -- Pattern: Black Dragonscale Breastplate
 				{ 28, 11325 }, -- Dark Iron Ale Mug
 				{ 29, 11602 }, -- Grim Guzzler Key
+				{ 30, 11312 }, -- Lost Thunderbrew Recipe
+				{ 31, 11313 }, -- Ribbly's Head
 			},
 		},
 		{ -- Phalanx
@@ -3296,6 +3565,7 @@ data["BlackrockDepthsForever"] = {
 				{ 2,  11745 }, -- Fists of Phalanx
 				{ 3, 11744 }, -- Bloodfist
 				{ 4, 11743 }, -- Rockfist
+				{ 5, 11746 }, -- Golem Skull Helm
 			},
 		},
 		{ -- BRDFlamelash
@@ -3311,7 +3581,6 @@ data["BlackrockDepthsForever"] = {
 				{ 4,  11814 }, -- Molten Fists
 				{ 5,  11832 }, -- Burst of Knowledge
 				{ 6,  11809 }, -- Flame Wrath
-				{ 8,  23320 }, -- Tablet of Flame Shock VI
 			},
 		},
 		{ -- BRDPanzor
@@ -3449,6 +3718,7 @@ data["BlackrockDepthsForever"] = {
 				{ 2,  22330 }, -- Shroud of Arcane Mastery
 				{ 3,  22318 }, -- Malgen's Long Bow
 				{ 4,  22317 }, -- Lefty's Brass Knuckle
+				{ 16, 22047 }, -- Top Piece of Lord Valthalak's Amulet
 			},
 		},
 	},
@@ -3622,6 +3892,7 @@ data["LowerBlackrockSpireForever"] = {
 				{ 2,  22232 }, -- Marksman's Girdle
 				{ 3,  13259 }, -- Ribsteel Footguards
 				{ 4,  13178 }, -- Rosewine Circle
+				{ 5,  13053 }, -- Doombringer
 				{ 16,  18784 }, -- Top Half of Advanced Armorsmithing: Volume III
 			},
 		},
@@ -3753,7 +4024,107 @@ data["BlackmawHold"] = {
 	LoadDifficulty = NORMAL_DIFF,
 	LevelRange = {55, 55, 60},
 	items = {
-		ComingSoon(), -- TODO: replace with real bosses/loot once known
+		{ -- BHImpaantheImprisoner
+			name = AL["Impaan the Imprisoner"],
+			npcID = 247206,
+			Level = 57,
+			-- TODO: DisplayIDs, AtlasMapBossID once known
+			[NORMAL_DIFF] = {
+				{ 1,  280057 }, -- Robes of Dark Summons
+			},
+		},
+		{ -- BHBonesnouttheUnbroken
+			name = AL["Bonesnout the Unbroken"],
+			npcID = 247198,
+			Level = 58,
+			[NORMAL_DIFF] = {
+				{ 1,  280059 }, -- Tuskblade Halberd
+			},
+		},
+		{ -- BHMoontouchedWanderer
+			name = AL["Moontouched Wanderer"],
+			npcID = 269104,
+			Level = 55,
+			specialType = "rare",
+			[NORMAL_DIFF] = {
+				{ 1,  280080 }, -- Claymore of Two Moons
+				{ 2,  280079 }, -- Lunarlight Robe
+			},
+		},
+		{ -- BHGortektheApprentice
+			name = AL["Gortek the Apprentice"],
+			npcID = 269111,
+			Level = 55,
+			specialType = "rare",
+			[NORMAL_DIFF] = {
+				{ 1,  280077 }, -- Fist of Revelation
+				{ 2,  280078 }, -- Apprentice's Protective Treads
+			},
+		},
+		{ -- BHTunnelwebMatriarch
+			name = AL["Tunnelweb Matriarch"],
+			npcID = 250034,
+			Level = 55,
+			specialType = "rare",
+			[NORMAL_DIFF] = {
+				{ 1,  280085 }, -- Tunnelweb Pincer
+				{ 2,  280086 }, -- Octofinger Gauntlets
+			},
+		},
+		{ -- BHWithermaw
+			name = AL["Withermaw"],
+			npcID = 247195,
+			Level = 58,
+			[NORMAL_DIFF] = {
+				{ 1,  280063 }, -- Bloodfur Bulwark
+				{ 2,  280062 }, -- Cloak of the Fleshborer
+				{ 3,  280064 }, -- Withering Grips
+			},
+		},
+		{ -- BHElderShamanBloodmane
+			name = AL["Elder Shaman Bloodmane"],
+			npcID = 247209,
+			Level = 59,
+			[NORMAL_DIFF] = {
+				{ 1,  280068 }, -- Bloody Claws of Attack
+			},
+		},
+		{ -- BHBlackmawBehemoth
+			name = AL["Blackmaw Behemoth"],
+			npcID = 247207,
+			Level = 59,
+			[NORMAL_DIFF] = {
+				{ 1,  280066 }, -- Trousers of the Ebon Giant
+			},
+		},
+		{ -- BHUnboundSpirit
+			name = AL["Unbound Spirit"],
+			npcID = 247231,
+			Level = 59,
+			[NORMAL_DIFF] = {
+				{ 1,  280072 }, -- Cowl of Dark Ambition
+				{ 2,  280071 }, -- Flamebreak Talisman
+			},
+		},
+		{ -- BHVarroxBleakhoof
+			name = AL["Varrox Bleakhoof"],
+			npcID = 247234,
+			Level = 60,
+			[NORMAL_DIFF] = {
+				{ 1,  280076 }, -- Horns of Varrox
+				{ 2,  280074 }, -- Scalding Flamehoof
+			},
+		},
+		{ -- BHTrash
+			name = AL["Trash"],
+			ExtraList = true,
+			[NORMAL_DIFF] = {
+				{ 1,  287032 }, -- Den Champion's Binding
+				{ 2,  251453 }, -- Plans: Breastplate of Salvation
+				{ 3,  287034 }, -- Grove Subjugator's Blade
+				{ 4,  287028 }, -- Tormented Cuffs
+			},
+		},
 	}
 }
 
@@ -3778,6 +4149,7 @@ data["DireMaulEastForever"] = {
 			[NORMAL_DIFF] = {
 				{ 1,  18267 }, -- Recipe: Runn Tum Tuber Surprise
 				{ 3,  18249 }, -- Crescent Key
+				{ 16, 18261 }, -- Book of Incantations
 			},
 		},
 		{ -- DMEZevrimThornhoof
@@ -3807,6 +4179,7 @@ data["DireMaulEastForever"] = {
 				{ 5,  19268 }, -- Ace of Elementals
 				{ 7,  18305 }, -- Breakwater Legguards
 				{ 8,  18307 }, -- Riptide Shoes
+				{ 16, 18299 }, -- Hydrospawn Essence
 			},
 		},
 		{ -- DMELethtendris
@@ -3820,6 +4193,7 @@ data["DireMaulEastForever"] = {
 				{ 2,  18311 }, -- Quel'dorai Channeling Rod
 				{ 4,  18301 }, -- Lethtendris's Wand
 				{ 5,  18302 }, -- Band of Vigor
+				{ 16, 18426 }, -- Lethtendris's Web
 			},
 		},
 		{ -- DMEAlzzin
@@ -3905,6 +4279,7 @@ data["UpperBlackrockSpireForever"] = {
 				{ 5,  12905 }, -- Wildfire Cape
 				{ 6,  12926 }, -- Flaming Band
 				{ 8,  23320 }, -- Tablet of Flame Shock VI
+				{ 16, 17322 }, -- Eye of the Emberseer
 			},
 		},
 		{ -- UBRSSolakar
@@ -3953,8 +4328,7 @@ data["UpperBlackrockSpireForever"] = {
 				{ 7,  12837 }, -- Plans: Masterwork Stormhammer
 				{ 9, 18779 }, -- Bottom Half of Advanced Armorsmithing: Volume I
 				{ 16, "INV_Box_01", nil, AL["Unforged Rune Covered Breastplate"], nil },
-				{ 17, 12806 }, -- Unforged Rune Covered Breastplate
-				{ 18, 12696 }, -- Plans: Demon Forged Breastplate
+				{ 17, 12728 }, -- Pattern: Invulnerable Mail
 			},
 		},
 		{ -- UBRSGyth
@@ -3985,7 +4359,6 @@ data["UpperBlackrockSpireForever"] = {
 				{ 1,  12590 }, -- Felstriker
 				{ 3,  16733 }, -- Spaulders of Valor
 				{ 5,  12587 }, -- Eye of Rend
-				{ 6,  12588 }, -- Bonespike Shoulder
 				{ 7,  12936 }, -- Battleborn Armbraces
 				{ 8,  18104 }, -- Feralsurge Girdle
 				{ 9,  12935 }, -- Warmaster Legguards
@@ -3995,6 +4368,7 @@ data["UpperBlackrockSpireForever"] = {
 				{ 13, 12940 }, -- Dal'Rend's Sacred Charge
 				{ 14, 12939 }, -- Dal'Rend's Tribal Guardian
 				{ 15, 12583 }, -- Blackhand Doomsaw
+				{ 16, 12630 }, -- Head of Rend Blackhand
 			},
 		},
 		{ -- UBRSBeast
@@ -4048,6 +4422,7 @@ data["UpperBlackrockSpireForever"] = {
 				{ 22, 16666 }, -- Vest of Elements
 				{ 23, 16726 }, -- Lightforge Breastplate
 				{ 24, 16730 }, -- Breastplate of Valor
+				{ 25, 16663 }, -- Blood of the Black Dragon Champion
 			},
 		},
 		{ -- UBRSTrash
@@ -4104,7 +4479,109 @@ data["ShapersTerrace"] = {
 	LoadDifficulty = NORMAL_DIFF,
 	LevelRange = {58, 58, 60},
 	items = {
-		ComingSoon(), -- TODO: replace with real bosses/loot once known
+		{ -- STTitanosaur
+			name = AL["Titanosaur"],
+			npcID = 253201,
+			Level = 61,
+			-- TODO: DisplayIDs, AtlasMapBossID once known
+			[NORMAL_DIFF] = {
+				{ 1,  280009 }, -- Titanosaur Scale Pendant
+				{ 2,  280011 }, -- Deeproar Cord
+				{ 3,  280010 }, -- Gargantuan Wristguards
+			},
+		},
+		{ -- STVenomridge
+			name = AL["Venomridge"],
+			npcID = 261813,
+			Level = 61,
+			[NORMAL_DIFF] = {
+				{ 1,  280015 }, -- Venomvessel Ring
+				{ 2,  280017 }, -- Octoclaw Chain Boots
+				{ 3,  280016 }, -- Spiderchitin Wrap
+			},
+		},
+		{ -- STThunderhoof
+			name = AL["Thunderhoof"],
+			npcID = 261812,
+			Level = 61,
+			[NORMAL_DIFF] = {
+				{ 1,  280018 }, -- Hammer of Thundering Hooves
+				{ 2,  280020 }, -- Deep Jungle Rifle
+				{ 3,  280019 }, -- Dinofrill Casque
+			},
+		},
+		{ -- STDirehornMatriarch
+			name = AL["Direhorn Matriarch"],
+			npcID = 262127,
+			Level = 61,
+			[NORMAL_DIFF] = {
+				{ 1,  280045 }, -- Regal Direhorn Drape
+				{ 2,  280022 }, -- Scaleguard Scimitar
+				{ 3,  280021 }, -- Tooth of the Matriarch
+			},
+		},
+		{ -- STCinder
+			name = AL["Cinder"],
+			npcID = 261974,
+			Level = 61,
+			[NORMAL_DIFF] = {
+				{ 1,  280029 }, -- Cinderedge Crescent
+			},
+		},
+		{ -- STBolt
+			name = AL["Bolt"],
+			npcID = 262081,
+			Level = 62,
+			[NORMAL_DIFF] = {
+				{ 1,  280031 }, -- Sparklance Wand
+				{ 2,  280032 }, -- Bolt's Charged Eyeball
+			},
+		},
+		{ -- STSnowtalon
+			name = AL["Snowtalon"],
+			npcID = 262297,
+			Level = 62,
+			[NORMAL_DIFF] = {
+				{ 1,  280026 }, -- Albinofur Grips
+			},
+		},
+		{ -- STVitrix
+			name = AL["Vitrix"],
+			npcID = 272561,
+			Level = 62,
+			[NORMAL_DIFF] = {
+				{ 1,  280031 }, -- Sparklance Wand
+				{ 2,  280027 }, -- Crownroar Chestplate
+			},
+		},
+		{ -- STIzhaRelandTorRel
+			name = AL["Izha'Rel and Tor'Rel"],
+			npcID = 253218,
+			Level = 61,
+			[NORMAL_DIFF] = {
+				{ 1,  280014 }, -- Raptorscale Bulwark
+				{ 2,  280013 }, -- Frostfang Mail Vest
+				{ 3,  280012 }, -- Talon of Tor'Rel
+			},
+		},
+		{ -- STNanaya
+			name = AL["Nanaya"],
+			npcID = 261809,
+			Level = 62,
+			[NORMAL_DIFF] = {
+				{ 1,  280023 }, -- Nanaya's Control Spire
+				{ 2,  280025 }, -- Leggings of Curation
+				{ 3,  273128 }, -- Maker's Spark
+				{ 4,  280024 }, -- Legplates of Reinforced Crystal
+			},
+		},
+		{ -- STTrash
+			name = AL["Trash"],
+			ExtraList = true,
+			[NORMAL_DIFF] = {
+				{ 1,  287037 }, -- Shaper's Robe
+			},
+		},
 	}
 }
 
@@ -4538,6 +5015,7 @@ data["ScholomanceForever"] = {
 				{ 8,  14541 }, -- Barovian Family Sword
 				{ 9,  22394 }, -- Staff of Metanoia
 				{ 12, 13523 }, -- Blood of Innocents
+				{ 16, 13725 }, -- Krastinov's Bag of Horrors
 			},
 		},
 		{ -- SCHOLORattlegore
@@ -4571,6 +5049,8 @@ data["ScholomanceForever"] = {
 				{ 2,  18761 }, -- Oblivion's Touch
 				{ 3,  18758 }, -- Specter's Blade
 				{ 4,  18759 }, -- Malicious Axe
+				{ 16, 18749 }, -- Charger's Lost Soul
+				{ 17, 18880 }, -- Darkreaver's Head
 			},
 		},
 		{ -- SCHOLOMarduk
@@ -4619,6 +5099,7 @@ data["ScholomanceForever"] = {
 				{ 14, 13952 }, -- Iceblade Hacker
 				{ 15, 14487 }, -- Bonechill Hammer
 				{ 16, 13521 }, -- Recipe: Flask of Supreme Power
+				{ 17, 13626 }, -- Human Head of Ras Frostwhisper
 			},
 		},
 		{ -- SCHOLOInstructorMalicia
@@ -5068,7 +5549,6 @@ data["StratholmeForever"] = {
 			AtlasMapBossID = 7,
 			[NORMAL_DIFF] = {
 				{ 1, "INV_Box_01", nil, AL["Malors Strongbox"], nil },
-				{ 2,  12845 }, -- Medallion of Faith
 			},
 		},
 		{ -- STRATCrimsonHammersmith
@@ -5314,6 +5794,7 @@ data["StratholmeForever"] = {
 				{ 22, 16668 }, -- Kilt of Elements
 				{ 23, 16728 }, -- Lightforge Legplates
 				{ 24, 16732 }, -- Legplates of Valor
+				{ 25, 13251 }, -- Head of Baron Rivendare
 			},
 		},
 		{ -- STRATTrash

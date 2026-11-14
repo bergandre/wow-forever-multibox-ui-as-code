@@ -1,7 +1,7 @@
 # TODO: World of Warcraft: Forever - set the real Interface number once known (in-game: /dump select(4, GetBuildInfo());)
 ## Interface: 16000, 16001, 120100
 ## Author: Okrah, Lag
-## Version: 12920
+## Version: 12957
 ## SavedVariables: AtlasLootDB
 ## OptionalDeps: Ace3, LibSharedMedia-3.0, AceGUI-3.0-SharedMediaWidgets, LibDBIcon-1.0, LibDataBroker-1.1
 ## DefaultState: Enabled

@@ -83,11 +83,12 @@ function private.MoveThread(context, callback)
 		while not didMove and LibTSMService.GetTime() < timeout do
 			-- Check for any moves that are done
 			local slotId, itemString, quantity = context:CheckForDoneSlotsThreaded()
-			if slotId then
+			while slotId do
 				didMove = true
 				numDone = numDone + 1
 				callback("MOVED", itemString, quantity)
 				callback("PROGRESS", numDone / numMoves)
+				slotId, itemString, quantity = context:CheckForDoneSlotsThreaded()
 			end
 			Threading.Yield(true)
 		end

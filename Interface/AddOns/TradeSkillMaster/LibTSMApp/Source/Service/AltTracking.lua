@@ -20,6 +20,7 @@ local Sync = LibTSMApp:From("LibTSMService"):Include("Sync")
 local private = {
 	settings = nil,
 	quantityDB = nil,
+	quantityBaseItems = {},
 	baseItemQuantityQuery = nil,
 	characterFactionrealmCache = {}, ---@type OrderedTable.Table<string,true>
 	quantityCallbacks = CallbackRegistry.NewList(), ---@type CallbackRegistry<AltTrackingQuantityCallbackFunc>
@@ -99,6 +100,9 @@ end
 
 function AltTracking.GetTotalQuantity(itemString)
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
+		if not private.quantityBaseItems[itemString] then
+			return 0
+		end
 		private.baseItemQuantityQuery:BindParams(itemString)
 		return private.baseItemQuantityQuery:Sum("total")
 	end
@@ -119,6 +123,9 @@ end
 
 function AltTracking.GetQuantity(itemString)
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
+		if not private.quantityBaseItems[itemString] then
+			return 0, 0
+		end
 		private.baseItemQuantityQuery:BindParams(itemString)
 		return private.baseItemQuantityQuery:Sum("inventory"), private.baseItemQuantityQuery:Sum("auctions")
 	end
@@ -244,6 +251,7 @@ function private.UpdateDB()
 	for levelItemString, quantity in pairs(updateTemp.total) do
 		local auction = (updateTemp.auction[levelItemString] or 0)
 		assert(quantity >= auction)
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:BulkInsertNewRow(levelItemString, quantity, quantity - auction, auction)
 	end
 	private.quantityDB:BulkInsertEnd()

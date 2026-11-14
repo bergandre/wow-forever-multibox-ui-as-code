@@ -9,7 +9,7 @@
 -- outside the rim toward it with a highlight arc on the rim beneath, the
 -- distance in a capsule below, the item's tooltip on hover ("The ring,
 -- refined": our own art, Tools/make_media.py). Within 15 yards it hides: the
--- glow on the node is Lueur's (the soft target), and NodeRadar never touches
+-- glow on the node is the soft target's, and NodeRadar never touches
 -- the soft-targeting settings (owner).
 --
 -- Measured on 70450 (docs/FOREVER-PROBE.md, "The compass, first round"):
@@ -24,7 +24,7 @@ local API = NR.API
 local Compass = {}
 NR.Compass = Compass
 
-Compass.NEAR = 15      -- yards: hidden this close (Lueur's soft target takes over; Forever loses it at 15)
+Compass.NEAR = 15      -- yards: hidden this close (the soft target takes over; Forever loses it at 15)
 Compass.HYSTERESIS = 5 -- yards: another node must be this much nearer to take over
 Compass.GRACE = 2      -- seconds past the idle interval without a sweep before it hides
 -- The look, built at medium and scaled to the size (the outer diameter).
@@ -472,9 +472,23 @@ local function choose()
     target = best
 end
 
+-- The scan's trace (#137, part 4): one line when the target's identity changes, the reset
+-- included, formatted only then (a gather's aftermath, read from the next session's log).
+local traced = nil      -- the target last traced (nil: none, as at load)
+local function traceTarget()
+    if target == traced then return end
+    traced = target
+    if not API.Blind() then return end
+    if not target then API.Trace("compass: target none"); return end
+    local pn, pw = here()
+    API.Trace(("compass: target %s%s%s"):format(tostring(target.name), target.party and " (party)" or "",
+        pn and (", %.0f yd"):format(yards(target, pn, pw)) or ""))
+end
+
 local function refresh()
     local previous = target
     choose()
+    traceTarget()
     if previous ~= target and NR.FarMarker then NR.FarMarker.TargetGone() end
     if not (target and Compass.On()) then hide(); return end
     dress()
@@ -533,6 +547,7 @@ end
 -- The compass turned off: no target.
 function Compass.Reset()
     target = nil
+    traceTarget()
     if NR.FarMarker then NR.FarMarker.TargetGone() end
     hide()
 end

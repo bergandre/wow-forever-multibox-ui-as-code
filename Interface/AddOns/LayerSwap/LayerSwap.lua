@@ -138,8 +138,14 @@ Who.sentTo, Who.GONE_WAIT, Who.GONE_FOR = {}, 15, 600
 -- how long a host known to stand on another layer gets to invite before that happens all the same
 Who.ANYWAY_WAIT, Who.ANYWAY_LATE = 3, 10
 -- 1.14.14: an ask for new layers only names up to SEEN_MAX layers seen in the zone after the one it leaves;
--- the guest leaves a LayerSwap host's group LEAVE_AFTER seconds after the move is confirmed
+-- the guest leaves a LayerSwap host's group LEAVE_AFTER seconds after the move is confirmed. 1.14.16-18 waited
+-- 30 s (two users on CurseForge, 12 Nov 2026: back on the old layer after LayerSwap left the group); 3 s again
+-- from 1.14.19 (13 Nov 2026: a host reported being moved to its guests' layers, and every swap proven on live
+-- left the group within a few seconds). The Auto leave box stays for a guest who wants to stay.
 Layer.SEEN_MAX, Layer.LEAVE_AFTER = 6, 3
+-- Auto leave (a user on CurseForge, 12 Nov 2026: back on the old layer seconds after LayerSwap left the
+-- host's group). On to start; off, the group of a host that moved the player is left to the player.
+function Layer.autoLeave() return LayerSwapDB == nil or LayerSwapDB.autoLeave ~= false end
 -- The border probe: the layer read within this long after a zone border is logged with the one
 -- before it (which zones share layers - Westfall and Duskwood may, Elwynn and Westfall did not).
 Who.BORDER_FOR, Who.BORDER_READS, Who.BORDER_QUIET = 60, 3, 15
@@ -357,6 +363,16 @@ end
 -- 1.14.14: the name the layers are filed under. On Forever the zone-level map's name: the game's own zone text
 -- changes inside some buildings (the tower at Sentinel Hill read "Sentinel Tower", 11 Nov 2026, and the layer
 -- read there got a new letter). The game's zone text where the map says nothing, and on Classic as before.
+-- An instance - a dungeon, a raid, a battleground, an arena - has no layers: every group gets a copy of its
+-- own (Adam in a dungeon, 12 Nov 2026: the bar said "Detecting..." all the way through). Its name while the
+-- player is in one; the bar and the panel show it where the layer stands, and no request is sent from it.
+function Layer.instance()
+  if not IsInInstance() then return nil end
+  local name = type(GetInstanceInfo) == "function" and GetInstanceInfo() or nil
+  if isSecret(name) or type(name) ~= "string" or name == "" then return "Instance" end
+  return name
+end
+
 function Layer.zone()
   local map = FOREVER and zoneOf("player")
   local name = map and zoneName(map)
@@ -832,8 +848,11 @@ local function replyHeard(where, sender, tag, host, at)
     heardAt[sender] = at or GetTime()
     local flag = host
     if flag == nil then flag = hosting end
-    -- a host on its break (Host.left) invites nobody: it answers like a Host-off user (1.14.12)
-    if flag and Host.left(GetTime()) then flag = false end
+    -- a host that cannot invite now answers like a Host-off user: on its break (Host.left, 1.14.12), and from
+    -- 1.14.19 in someone else's group, with its own ask waiting or its group full (canInvite) - askers counted
+    -- such hosts and waited for invites that could not come (12 Nov 2026, live: hosts on other layers heard
+    -- ask after ask and never invited)
+    if flag and not canInvite() then flag = false end
     local text = "heard " .. sender .. "|" .. (current or "-") .. "|" .. (zoneOf("player") or "-") .. "|" .. (flag and "h" or "-")
     local res = Send.note(kind, channel, text)
     if res ~= nil then log("heard", sender, text, tostring(res)) end
@@ -929,6 +948,26 @@ local function onChat(where, msg, sender)
   answer(where, msg, sender, scope)
 end
 
+-- An asker on this host's own layer: skipped, and told so out of sight, so it knows a host heard it and why no
+-- invite comes (instead of two minutes of waiting).
+function Host.sameSkip(sender, where, zone, note, layer, why)
+  stats.skipped = stats.skipped + 1
+  log("skip", sender, "already on our layer " .. layer .. (why or ""), where)
+  Near.settle(sender, hosting)
+  local to = (where == "direct" and Who.from[sender]) or (note and note.from)
+  if zone and to then
+    local res = Send.note("WHISPER", to, "same")
+    if res ~= nil then log("note", "same to " .. sender, tostring(res)) end
+  end
+end
+
+-- 1.14.19: the layer each asker said it leaves, kept Host.REASK_FOR seconds. An asker asks a host that has not read its
+-- layer once more without that layer (Who.anyway), so it invites; such a host read its own layer only when the
+-- ask came (13 Nov 2026, live: it invited the re-ask from the asker's own layer and read it a second later).
+-- Now the re-ask still meets the same-layer check: an unread host reads the units around it for up to
+-- Host.REASK_STEP * (Host.REASK_READS + 1) seconds first, and invites as before when it still cannot tell.
+Host.leaves, Host.REASK_FOR, Host.REASK_STEP, Host.REASK_READS = {}, 30, 0.5, 3
+
 -- The answer to a request that passed the checks: a host is only any use on another layer
 -- than the one the asker is leaving, and only on the layer the asker named.
 answer = function(where, msg, sender, scope)
@@ -1002,6 +1041,15 @@ answer = function(where, msg, sender, scope)
   if not tag and not (want or avoid) and note and note.at and GetTime() - note.at <= NOTE_TTL then
     want, avoid = note.want, note.avoid
   end
+  local now, reask = GetTime(), nil
+  local left = Host.leaves[sender]
+  if avoid then
+    Host.leaves[sender] = { layer = avoid, at = now }
+  elseif want then
+    Host.leaves[sender] = nil
+  elseif left and now - left.at <= Host.REASK_FOR then
+    reask = left.layer
+  end
   if want and not Layer.same(want, current) then
     stats.skipped = stats.skipped + 1
     log("skip", sender, "wants " .. want .. ", we are on " .. (current or "an unknown layer"), where)
@@ -1017,16 +1065,7 @@ answer = function(where, msg, sender, scope)
     return
   end
   if avoid and Layer.same(avoid, current) then
-    stats.skipped = stats.skipped + 1
-    log("skip", sender, "already on our layer " .. avoid, where)
-    Near.settle(sender, hosting)
-    -- the asker's zone and layer: say so out of sight, so the asker knows a host heard it and
-    -- why no invite comes (instead of two minutes of waiting)
-    local to = (where == "direct" and Who.from[sender]) or (note and note.from)
-    if zone and to then
-      local res = Send.note("WHISPER", to, "same")
-      if res ~= nil then log("note", "same to " .. sender, tostring(res)) end
-    end
+    Host.sameSkip(sender, where, zone, note, avoid)
     return
   end
   -- 1.14.14: an ask for new layers only - this host stands on a layer the asker has seen
@@ -1038,6 +1077,27 @@ answer = function(where, msg, sender, scope)
         Near.settle(sender, hosting)
         return
       end
+    end
+  end
+  if reask then
+    local AGAIN = " (asked again without it)"
+    if current then
+      if Layer.same(reask, current) then Host.sameSkip(sender, where, zone, note, reask, AGAIN); return end
+    else
+      local tries = 0
+      local function decide()
+        if not hosting then Near.settle(sender, false); return end
+        if not current and tries < Host.REASK_READS then
+          tries = tries + 1
+          Who.rescan()
+          C_Timer.After(Host.REASK_STEP, decide)
+          return
+        end
+        if current and Layer.same(reask, current) then Host.sameSkip(sender, where, zone, note, reask, AGAIN)
+        else claimThenInvite(sender, where) end
+      end
+      C_Timer.After(Host.REASK_STEP, decide)
+      return
     end
   end
   claimThenInvite(sender, where)
@@ -1238,6 +1298,8 @@ local leftInfo                  -- { at, layer }: set when such a group is left,
 -- the next player. A group joined on an invite sent by hand (no reply to our ask) is left to the player.
 local notice, noticeUntil       -- one line for the panel, kept a little while
 local held                      -- { host, from, to } after a swap, while in the host's group
+-- whole seconds until the host's group is left, for the panel's line
+function Layer.leaveIn(now) return math.max(1, math.ceil(((held and held.leaveAt) or now) - now)) end
 
 local function layerLabel(id)
   local l = id and (layers[id] or layers[Layer.canon(id)])
@@ -1297,8 +1359,123 @@ local function setNotice(text, seconds)
   notice, noticeUntil = text, GetTime() + (seconds or 30)
 end
 
+-- The request worked: say so, and hand the host their group back. copy (1.14.15): the creatures read after
+-- the world refresh carry the number we asked from and another second part than at the join (Layer.copied) -
+-- another layer under the same number, so the entry and its letter stay and only the verdict changes.
+function Layer.worked(id, now, copy)
+  -- the copy line names the whole ids read, so a second such move does not read "from 7086-7 to 7086-7"
+  log("swapped", copy and swap.rawFrom or swap.from, copy or id, string.format("%.1f s after joining%s%s", now - swap.joinedAt,
+    swap.want and (", asked for " .. swap.want) or "", copy and ", same number" or ""))
+  -- "did not move you" may have been said moments before (creatures that disagreed): the host did move us
+  if swap.sameLogged and swap.inviter then Layer.forgive(swap.inviter) end
+  -- the host answered our ask as a LayerSwap user: its group is left by itself (see above)
+  local byHost = FOREVER and Send.restricted() and swap.inviter ~= nil and swap.replies ~= nil and swap.replies[swap.inviter] ~= nil
+  -- Auto leave off (the options page): the group is the player's to leave, and the lines say why it is not left
+  local auto = byHost and Layer.autoLeave()
+  local manual = byHost and not auto
+  local tail = auto and (" - LayerSwap leaves the group for you after " .. Layer.LEAVE_AFTER .. " s, the layer stays.")
+    or manual and " - Auto leave is off, so you stay in the group until you leave it."
+    or " - you can leave the group, the layer stays."
+  if copy then
+    -- a layer asked for by name was not reached: the entry asked from never is the one wanted
+    local missed = swap.want and not Layer.same(swap.want, id)
+    say("the game moved you to another layer that LayerSwap cannot tell from the one you left, so the panel still says " .. layerLabel(id)
+      .. (missed and (" - it is not the " .. layerLabel(swap.want) .. " you asked for") or "")
+      .. tail)
+    notice = nil
+    if missed then setNotice("Moved to another " .. layerLabel(id) .. ", not " .. layerLabel(swap.want) .. ".", 60) end
+  elseif swap.want and not Layer.same(swap.want, id) then
+    -- a host who invites by hand may stand anywhere
+    say("you are now on " .. layerLabel(id) .. " - not the " .. layerLabel(swap.want) .. " you asked for.")
+    setNotice("You are on " .. layerLabel(id) .. ", not " .. layerLabel(swap.want) .. ".", 60)
+  elseif FOREVER then
+    say("you are now on " .. layerLabel(id) .. tail)
+    notice = nil   -- a warning about an earlier invite must not hide the line that says the swap worked
+  else
+    -- Classic keeps the new layer after the group is left; AutoLayer asks its guests to leave
+    say("you are now on " .. layerLabel(id) .. " - you can leave the group.")
+    setNotice("On " .. layerLabel(id) .. " now - you can leave the group.", 60)
+  end
+  if FOREVER then held = { host = swap.inviter, from = swap.from, to = id, auto = auto or nil, manual = manual or nil, copy = copy and true or nil } end
+  swap = nil
+  if auto then
+    log("autoLeave", held.host, copy or id, "moved")
+    -- this very group: left by hand and in the next host's group by then, that group has its own wait;
+    -- Auto leave unticked meanwhile takes h.auto away (the options page)
+    local h = held
+    h.leaveAt = now + Layer.LEAVE_AFTER
+    C_Timer.After(Layer.LEAVE_AFTER, function()
+      if swapGroup and held == h and h.auto and IsInGroup() then pcall(leaveParty) end
+    end)
+  end
+end
+
+-- 1.14.15 (live, 11 Nov 2026 00:04: a join, the world refreshed, and every creature read 7086-8 where it had
+-- been 7086-7 - the game had moved the player; LayerSwap said nothing, the letter stayed, and 1.14.14 would
+-- have said "did not move you" had the host's group lasted 12 s). Within one login the
+-- second part of an id is the same for every creature of one layer and keeps its value, so after a world
+-- refresh in a host's group, two creatures that agree on another second part than at the join are another
+-- layer under the same number - three of the last five where one of them still carries the old id. Only the
+-- player's own readings are compared this way, in the zone of the join and with no zone border in between
+-- (swap.rawFrom is dropped at a border); between players the number alone counts, as before.
+function Layer.agreed(raw, rawFrom)
+  if raw == rawFrom or not Layer.same(raw, rawFrom) then return false end
+  local new, old = 0, 0
+  for _, v in ipairs(votes) do
+    if v == raw then new = new + 1 elseif v == rawFrom then old = old + 1 end
+  end
+  return new >= 2 and (old == 0 or new >= 3)
+end
+function Layer.copied(raw)
+  local s = swap
+  if not FOREVER or not s or not s.joinedAt or not s.transferAt or not s.rawFrom or current == nil then return end
+  if not Layer.same(current, s.from) or Layer.zone() ~= s.zoneFrom then return end
+  if not Layer.agreed(raw, s.rawFrom) then return end
+  -- an entry of an earlier login may carry this very id (its letter differs): then it is a swap like any other
+  Layer.worked(current, GetTime(), current == s.from and raw or nil)
+  refresh()
+end
+
+-- The host's group ended before two creatures of the new layer were read (live, 11 Nov 2026 00:04: they were
+-- read 0.14 s before the host disbanded, and in three of seven joins the group ended first). The world
+-- refresh came in that group, so the same comparison holds for Layer.AFTER_FOR seconds after it: said and
+-- logged, nothing else - there is no group left to leave. Layer.keep is called where such a group ends
+-- without a verdict; a new world refresh, a zone border or the next host's group ends the wait.
+Layer.AFTER_FOR = 30
+function Layer.keep()
+  local s = swap
+  -- not after 'did not move you' was said on the readings since the refresh (s.refreshed): that verdict stands
+  if FOREVER and s and s.joinedAt and s.transferAt and s.rawFrom and not s.refreshed then
+    Layer.pending = { rawFrom = s.rawFrom, from = s.from, zoneFrom = s.zoneFrom, transferAt = s.transferAt, joinedAt = s.joinedAt, want = s.want }
+  end
+end
+function Layer.copiedAfter(raw)
+  local p = Layer.pending
+  if not p then return end
+  if (swap and swap.joinedAt) or GetTime() - p.transferAt > Layer.AFTER_FOR then Layer.pending = nil return end
+  if current == nil or current ~= p.from or Layer.zone() ~= p.zoneFrom then return end
+  -- two creatures on the id of before, once the units of the layer left are out of doubt: not moved - the
+  -- wait ends without a word
+  if raw == p.rawFrom and GetTime() - p.transferAt >= Layer.STALE_FOR then Layer.pending = nil return end
+  if not Layer.agreed(raw, p.rawFrom) then return end
+  Layer.pending = nil
+  local missed = p.want and not Layer.same(p.want, current)
+  log("swapped", p.rawFrom, raw, string.format("%.1f s after joining%s, same number, read after the group ended", GetTime() - p.joinedAt,
+    p.want and (", asked for " .. p.want) or ""))
+  say("the game moved you to another layer that LayerSwap cannot tell from the one you left, so the panel still says " .. layerLabel(current)
+    .. (missed and (" - it is not the " .. layerLabel(p.want) .. " you asked for") or "") .. " - the layer stays.")
+  -- the panel's line stays with a request that waits in the chat box and with a warning about the host inviting
+  if not (Send.pending or (swap and swap.inviterSeen)) then
+    setNotice(missed and ("Moved to another " .. layerLabel(current) .. ", not " .. layerLabel(p.want) .. ".")
+      or ("Moved to another " .. layerLabel(current) .. " - it stays."), 30)
+    Layer.told = notice   -- taken down again when the world changes within those 30 s
+  end
+  refresh()
+end
+
 local function setCurrent(id)
   if Layer.same(id, current) then return end
+  Layer.raw = nil   -- the whole id two creatures agree on belongs to the layer left (observe sets it again)
   local now = GetTime()
   local l = layers[id]
   if not l then
@@ -1324,32 +1501,7 @@ local function setCurrent(id)
   local asked = swap and swap.from and layers[swap.from]
   local walked = asked and asked ~= l and asked.zone and l.zone and asked.zone ~= l.zone
   if swap and swap.joinedAt and swap.from and not Layer.same(swap.from, id) and not walked then
-    -- the request worked: say so, and hand the host their group back
-    log("swapped", swap.from, id, string.format("%.1f s after joining%s", now - swap.joinedAt,
-      swap.want and (", asked for " .. swap.want) or ""))
-    -- the host answered our ask as a LayerSwap user: its group is left by itself (see above)
-    local auto = FOREVER and Send.restricted() and swap.inviter ~= nil and swap.replies ~= nil and swap.replies[swap.inviter] ~= nil
-    if swap.want and not Layer.same(swap.want, id) then
-      -- a host who invites by hand may stand anywhere
-      say("you are now on " .. layerLabel(id) .. " - not the " .. layerLabel(swap.want) .. " you asked for.")
-      setNotice("You are on " .. layerLabel(id) .. ", not " .. layerLabel(swap.want) .. ".", 60)
-    elseif FOREVER then
-      say("you are now on " .. layerLabel(id) .. (auto and " - LayerSwap leaves the group for you, the layer stays."
-        or " - you can leave the group, the layer stays."))
-      notice = nil   -- a warning about an earlier invite must not hide the line that says the swap worked
-    else
-      -- Classic keeps the new layer after the group is left; AutoLayer asks its guests to leave
-      say("you are now on " .. layerLabel(id) .. " - you can leave the group.")
-      setNotice("On " .. layerLabel(id) .. " now - you can leave the group.", 60)
-    end
-    if FOREVER then held = { host = swap.inviter, from = swap.from, to = id, auto = auto or nil } end
-    swap = nil
-    if auto then
-      log("autoLeave", held.host, id, "moved")
-      C_Timer.After(Layer.LEAVE_AFTER, function()
-        if swapGroup and held and held.auto and IsInGroup() then pcall(leaveParty) end
-      end)
-    end
+    Layer.worked(id, now)
   end
   if leftInfo then
     -- what did leaving the host's group do to the layer?
@@ -1386,8 +1538,11 @@ local function observe(unit)
   votedGuid[guid] = true
   votes[#votes + 1] = id
   if #votes > VOTES then table.remove(votes, 1) end
-  local count = 0
-  for _, v in ipairs(votes) do if Layer.same(v, id) then count = count + 1 end end
+  local count, exact = 0, 0
+  for _, v in ipairs(votes) do
+    if Layer.same(v, id) then count = count + 1 end
+    if v == id then exact = exact + 1 end
+  end
   if Layer.same(id, current) then
     layers[current].last = time()
   elseif count >= (current and 3 or 2) then
@@ -1395,6 +1550,13 @@ local function observe(unit)
     -- from zero). Leaving a layer that is believed takes a majority of the last five: a
     -- pair of patrols that wandered in from the next zone must not flip it.
     setCurrent(Layer.canon(id))
+  end
+  -- 1.14.15: the whole id two creatures agree on, kept for the player's own readings within this login
+  -- (Layer.copied); another whole id replaces it only with a majority of the last five
+  if FOREVER and current and Layer.same(id, current) and exact >= ((Layer.raw and Layer.raw ~= id) and 3 or 2) then
+    Layer.raw = id
+    Layer.copied(id)
+    Layer.copiedAfter(id)
   end
 end
 
@@ -1427,6 +1589,8 @@ local SAME_LAYER_LEAVE = 15
 -- (1.9 declined it by itself; 1.10 does not - see warnInvite).
 local SAME_HOST_TTL = 600
 local sameHosts = {}
+-- 1.14.15: a host named as one that did not move us, and then the move showed (Layer.worked)
+function Layer.forgive(name) sameHosts[name] = nil end
 
 -- The game now and then stops the channel message even on a click (ADDON_ACTION_BLOCKED,
 -- "UNKNOWN()": 2 of 7 asks in the beta, 25 Sep 2026). The event fires during the send, so
@@ -1545,10 +1709,12 @@ local function hostOnOurLayer(now)
   if not FOREVER then return false end   -- no transfer event on Classic: no way to tell
   local base = swap ~= nil and swap.joinedAt ~= nil and swapGroup and not held
   local yes = base and not swap.transferAt and now - swap.joinedAt >= SAME_LAYER_AFTER and (swap.fresh or 0) >= Who.FRESH
-  -- 1.14.14: the game refreshed the world after the join, and the layer read since is the one we asked from
-  -- (live, 11 Nov 2026: a transfer 0.9 s after joining, the same layer 5 s later - the host was moved, not
-  -- the guest). Not moved: said once the units of the layer left are out of doubt (Layer.STALE_FOR).
+  -- 1.14.14: the game refreshed the world after the join, and the layer read since is the one we asked from.
+  -- Not moved: said once the units of the layer left are out of doubt (Layer.STALE_FOR). 1.14.15: where the
+  -- whole id at the join is known, two creatures read since must agree on that very id - the same number
+  -- with another second part is another layer (Layer.copied), and creatures that disagree decide nothing.
   if base and not yes and swap.transferAt and current and swap.from and Layer.same(current, swap.from)
+     and (not swap.rawFrom or Layer.raw == swap.rawFrom)
      and now - swap.transferAt >= Layer.STALE_FOR + 2 then
     yes, swap.refreshed = true, true
   end
@@ -2334,12 +2500,21 @@ end
 -- false and why, and the click goes the old way.
 -- What this click asks: our own zone, then the zone one level band at a time (BANDS slices), in
 -- turn - only a host in our zone moves us. Without a zone name the level range of the realm.
+-- The zone term of a search in the client's own language: the game's own who list builds it from WHO_TAG_ZONE,
+-- which is not "z-" on every client (a user on CurseForge, 13 Nov 2026: on the Russian client it is Cyrillic,
+-- and every search there found nobody).
+function Who.zoneTerm(zone)
+  local tag = WHO_TAG_ZONE
+  if isSecret(tag) or type(tag) ~= "string" or tag == "" then tag = "z-" end
+  return tag .. '"' .. zone .. '"'
+end
+
 function Who.filter(zone)
   local okM, m = pcall(GetMaxPlayerLevel)
   local max = okM and not isSecret(m) and tonumber(m) or nil
   if not max or max < 10 then max = 60 end
   Who.band = ((Who.band or -1) + 1) % (Who.BANDS + 1)
-  local z = zone and ('z-"' .. zone .. '"') or nil
+  local z = zone and Who.zoneTerm(zone) or nil
   if Who.band == 0 then return z or ("1-" .. max) end
   local size = math.ceil(max / Who.BANDS)
   local lo = (Who.band - 1) * size + 1
@@ -2397,10 +2572,22 @@ function Who.phase(label)
   return line
 end
 
+-- 1.14.19, a measurement, logged only: the game's own count-down to a world refresh, where one is pending - in a
+-- host's group, and when the world is entered (13 Nov 2026, Forever 70938: an invite from another shard now warns
+-- that accepting "may cause the world to refresh around you", and the game's toast now shows a refresh still pending
+-- after a /reload. Whether a swap now moves the guest later, through such a refresh, is unmeasured.)
+function Layer.logEviction(label)
+  if not FOREVER or type(GetEvictionTimeRemaining) ~= "function" then return end
+  local ok, left = pcall(GetEvictionTimeRemaining)
+  if not ok or isSecret(left) or type(left) ~= "number" or left <= 0 then return end
+  log("evict", label, math.floor(left + 0.5), IsInGroup() and "in a group" or "alone")
+end
+
 function Who.phaseSoon(label)
   for _, s in ipairs({ 2, 10 }) do
-    C_Timer.After(s, function() if IsInGroup() then Who.phase(label .. " +" .. s .. " s") end end)
+    C_Timer.After(s, function() if IsInGroup() then Who.phase(label .. " +" .. s .. " s"); Layer.logEviction(label .. " +" .. s .. " s") end end)
   end
+  C_Timer.After(14, function() if IsInGroup() then Layer.logEviction(label .. " +14 s") end end)
 end
 
 -- What this click asks: the players on our zone's map, then the map one class at a time (the
@@ -2411,7 +2598,7 @@ function Who.query(zone, map)
   if map and not Who.noMap then
     Who.round = ((Who.round or -1) + 1) % (#Who.CLASSES + 1)
     local cls = Who.round > 0 and Who.CLASSES[Who.round] or nil
-    return zone and ('z-"' .. zone .. '"') or "", { classIDs = cls and { cls } or {}, raceIDs = {}, uiMapIDs = { map } },
+    return zone and Who.zoneTerm(zone) or "", { classIDs = cls and { cls } or {}, raceIDs = {}, uiMapIDs = { map } },
       "map " .. map .. (cls and (" class " .. cls) or "")
   end
   local f = Who.filter(zone)
@@ -2783,6 +2970,15 @@ local function requestSwap(target, via, leaving, wantNumber)
   local now = GetTime()
   -- an unanswered request past its time is over; it must not hide what this click says
   if swap and not swap.joinedAt and now - swap.at > SWAP_TTL then swap = nil end
+  local inst = Layer.instance()
+  if inst and not leaving then
+    -- before the group check: in a dungeon the player is in a group, and leaving it is not the answer
+    local line = "No layers in " .. inst .. " - Swap layer works in the open world."
+    setNotice(line, 10)
+    say(line)
+    refresh()
+    return "held"
+  end
   if IsInGroup() and not leaving then
     setNotice("You are in a group. Leave it to swap layers.", 10)
   elseif (swap and now - swap.at < SWAP_COOLDOWN) or now - stopped.at < SWAP_COOLDOWN then
@@ -3111,6 +3307,7 @@ end
 
 local function leaveSwapGroup()
   if swapGroup and IsInGroup() then pcall(leaveParty) end
+  Layer.keep()
   swap = nil
   refresh()
 end
@@ -3189,6 +3386,10 @@ end
 -- The one status line under the buttons.
 local function statusLine()
   local now = GetTime()
+  if Layer.instance() and not swap and not swapGroup and not Send.pending and not (Who.pending and not Who.pending.out)
+     and not (notice and now < (noticeUntil or 0)) then
+    return "Swap layer works in the open world."
+  end
   if Send.pending then
     -- a notice set for the line that waits (a refusal, a throttle) says why; else the line itself
     if notice and now < (noticeUntil or 0) then return notice end
@@ -3254,11 +3455,17 @@ local function statusLine()
   if notice and now < (noticeUntil or 0) then return notice end
   if held and swapGroup then
     -- on live the new layer stays after the group is left (9 Nov 2026, 10:55 and 11:48)
+    if held.copy then
+      -- 1.14.15: moved to another layer that carries the same number - the letter cannot tell them apart
+      return "Moved to another " .. layerLabel(current or held.to) .. ". " ..
+        (held.auto and ("Leaving " .. (held.host or "the host") .. "'s group in " .. Layer.leaveIn(now) .. " s.")
+          or held.manual and "Auto leave is off - the group is yours to leave." or "You can leave - it stays.")
+    end
     if held.auto then
-      return "On " .. layerLabel(current or held.to) .. " - leaving " .. (held.host or "the host") .. "'s group, the layer stays."
+      return "On " .. layerLabel(current or held.to) .. " - leaving " .. (held.host or "the host") .. "'s group in " .. Layer.leaveIn(now) .. " s."
     end
     return "On " .. layerLabel(current or held.to) .. " in " .. (held.host or "the host") ..
-      "'s group. You can leave - it stays."
+      (held.manual and "'s group. Auto leave is off - the group is yours to leave." or "'s group. You can leave - it stays.")
   end
   -- Host off: the reason it is on stands here until it is on again (Adam, 8 Nov 2026)
   if not hosting then return HOST_OFF_LINE end
@@ -3373,47 +3580,6 @@ local function addText(parent, font, y, lines, rightInset)
   return fs, y - height
 end
 
--- A "LIVE" dot, as on a news broadcast: red and pulsing while hosting, grey and still
--- when not. Solid colours cut round by the portrait mask (it exists on Forever: the dot
--- came out round in the beta). A dark ring that never pulses sits behind it - red on the
--- red Forever button was hard to see (Adam's screenshot, 24 Sep 2026). x and y place the
--- centre, counted from the middle of the parent's left edge.
-local function makeLiveDot(parent, x, y)
-  local function round(size, sublevel)
-    local t = parent:CreateTexture(nil, "OVERLAY", nil, sublevel)
-    t:SetSize(size, size)
-    t:SetPoint("CENTER", parent, "LEFT", x, y or 0)
-    local mask = parent:CreateMaskTexture()
-    if mask then
-      mask:SetTexture("Interface/CharacterFrame/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-      mask:SetAllPoints(t)
-      t:AddMaskTexture(mask)
-    end
-    return t
-  end
-  local ring = round(12, 1)
-  ring:SetColorTexture(0.06, 0.02, 0.02)
-  local dot = round(8, 2)
-  local pulse = dot:CreateAnimationGroup()
-  pulse:SetLooping("BOUNCE")
-  local fade = pulse:CreateAnimation("Alpha")
-  fade:SetFromAlpha(1)
-  fade:SetToAlpha(0.3)
-  fade:SetDuration(0.8)
-  return dot, pulse, ring
-end
-
-local function showLive(dot, pulse, on)
-  if on then
-    dot:SetColorTexture(1, 0.2, 0.2)
-    if not pulse:IsPlaying() then pulse:Play() end
-  else
-    dot:SetColorTexture(0.45, 0.45, 0.45)
-    pulse:Stop()
-    dot:SetAlpha(1)
-  end
-end
-
 local function buildPanel()
   local p = CreateFrame("Frame", "LayerSwapPanel", UIParent)
   p:SetWidth(PANEL_W)
@@ -3526,7 +3692,6 @@ local function buildPanel()
   p.hostButton:SetSize(buttonW, 24)
   p.hostButton:SetPoint("TOPRIGHT", p, "TOPRIGHT", -PAD, y)
   p.hostButton:SetScript("OnClick", function() setHosting(not hosting) end)
-  p.hostDot, p.hostPulse = makeLiveDot(p.hostButton, 14)
   y = y - 24 - 8
 
   p.status, y = addText(p, "GameFontHighlightSmall", y, 2)
@@ -3553,7 +3718,11 @@ refresh = function()
   if not p or not p:IsShown() then return end
   local now = GetTime()
   local zone = Layer.zone() or ""
-  if current then
+  local inst = Layer.instance()
+  if inst then
+    p.layer:SetText(inst)
+    p.detail:SetText("Dungeons and raids have no layers.")
+  elseif current then
     p.layer:SetText(layerLabel(current))
     p.detail:SetText(current .. "  -  " .. zone)
   else
@@ -3599,6 +3768,9 @@ refresh = function()
     -- yet (after /ls guild alone the button still asks the channel too; /ls stop ends either)
     setButtonText(p.swapButton, "Stop asking")
     p.swapButton:SetEnabled(now - swap.at >= STOP_AFTER)
+  elseif inst then
+    setButtonText(p.swapButton, "Swap layer")
+    p.swapButton:SetEnabled(false)
   elseif FOREVER and not current then
     setButtonText(p.swapButton, "Reading layer...")
     p.swapButton:SetEnabled(false)
@@ -3608,9 +3780,8 @@ refresh = function()
         or now - (Who.lastAt or -1000) < SWAP_COOLDOWN)
       and not (Send.restricted() and not Who.can() and Send.repeatLeft(now, (Send.place(now)))))
   end
-  -- ON has to be unmistakable at a glance: the LIVE dot pulses red
-  p.hostButton:SetText(hosting and "Host: |cffff4040LIVE|r" or "Host: |cffa0a0a0OFF|r")
-  showLive(p.hostDot, p.hostPulse, hosting)
+  -- green ON, grey OFF, no dot (Adam, 12 Nov 2026; the red pulsing LIVE read as an error)
+  p.hostButton:SetText(hosting and "Host: |cff40ff40ON|r" or "Host: |cffa0a0a0OFF|r")
   p.status:SetText(statusLine())
   -- "players asked for inv": the players who asked, each once, so one impatient asker does not count
   -- ten times; said in full, so it cannot be read as our own asks (Adam, 8 Oct 2026). The same line
@@ -3728,26 +3899,85 @@ local function toggleMenu(anchor)
 end
 
 -- ---------------------------------------------------------------------------------------
--- the mini line: stays on screen with the layer, LIVE while hosting, and the countdown when
--- the game announces a move. The logo drops the layer menu, a click elsewhere opens the
--- panel, drag moves it, /ls mini hides it.
+-- the mini bar: stays on screen with the layer on its first line and one status on its second. Two lines and
+-- no red dot from 1.14.17 (Adam, 12 Nov 2026; two users on CurseForge read the pulsing red LIVE dot as an
+-- error): the logo wears the state - gold while hosting, grey with Host off, green while a request runs or a
+-- host's group is held. A click anywhere on the bar - the logo too - opens the panel, where Host is switched
+-- (Adam, 12 Nov 2026: Host is not to go off on a click on the logo); a right-click on the logo drops the layer
+-- menu, drag moves the bar, a right-click elsewhere or /ls mini hides it.
+local MINI_GOLD, MINI_GREY, MINI_GREEN, MINI_AMBER = "|cffe5b24c", "|cff8a8a8a", "|cff60e070", "|cffffb040"
 
-local function miniText()
-  local parts = { current and layerLabel(current) or "Detecting..." }
-  if hosting then parts[#parts + 1] = "|cffff4040LIVE|r" end
-  local now = GetTime()
-  if swap and not swap.joinedAt and now - swap.at <= SWAP_TTL then parts[#parts + 1] = "|cffffd100asking|r" end
-  local r = refreshIn(now)
-  if r then parts[#parts + 1] = "|cffffb040refresh " .. (r == "soon" and "soon" or ("in " .. r)) .. "|r" end
-  return table.concat(parts, "   ")
+-- The state ("swap", "on", "off") and the second line: a request under way first, then the world refresh the
+-- game announced, then Host.
+local function miniStatus(now)
+  local state, line = hosting and "on" or "off", nil
+  if swap and swap.joinedAt then
+    state, line = "swap", MINI_GREEN .. "In the host's group|r"
+  elseif swap and now - swap.at <= SWAP_TTL then
+    local n = heardCounts()
+    state, line = "swap", MINI_GREEN .. (n > 0 and ("Asking, " .. n .. " heard") or "Asking") .. "|r"
+  elseif held and swapGroup then
+    state = "swap"
+    line = MINI_GREEN .. (held.auto and ("Leaving in " .. Layer.leaveIn(now) .. " s") or "In the host's group") .. "|r"
+  elseif Layer.instance() then
+    -- no layers in an instance; the logo keeps the colours Host gives it (Adam, 12 Nov 2026)
+    line = MINI_GREY .. "No layers here|r"
+  end
+  if not line then
+    local r = refreshIn(now)
+    if r then line = MINI_AMBER .. "Refresh " .. (r == "soon" and "soon" or ("in " .. r)) .. "|r" end
+  end
+  if not line then
+    if hosting then
+      line = MINI_GOLD .. (stats.joined > 0 and ("Hosting, " .. stats.joined .. " joined") or "Hosting") .. "|r"
+    else
+      line = MINI_GREY .. "Host off|r"
+    end
+  end
+  return state, line
+end
+
+-- One line where the bar has two (a user on CurseForge, 12 Nov 2026: the two lines no longer fitted on top of
+-- his minimap): the layer and the status side by side, the bar as high as it was up to 1.14.16. Off to start.
+local function miniOneLine() return LayerSwapDB.miniOneLine == true end
+
+-- The bar's height and where the logo and the two texts sit, for one line or two.
+local function layoutMini(m)
+  local one = miniOneLine()
+  m:SetHeight(one and 20 or 32)
+  m.logo:SetSize(one and 16 or 22, one and 16 or 22)
+  m.logo:ClearAllPoints()
+  m.logo:SetPoint("LEFT", m, "LEFT", one and 3 or 5, 0)
+  m.text:ClearAllPoints()
+  m.status:ClearAllPoints()
+  if one then
+    m.text:SetPoint("LEFT", m, "LEFT", 24, 0)
+  else
+    m.text:SetPoint("TOPLEFT", m, "TOPLEFT", 34, -4)
+    m.status:SetPoint("BOTTOMLEFT", m, "BOTTOMLEFT", 34, 4)
+  end
+  m.status:SetShown(not one)
 end
 
 refreshMini = function()
   if not mini or not mini:IsShown() then return end
-  mini.text:SetText(miniText())
-  -- the line is as wide as its text, so the text can never run out of it
-  mini:SetWidth(math.ceil(mini.text:GetStringWidth() or 0) + 52)
-  showLive(mini.dot, mini.pulse, hosting)
+  local state, line = miniStatus(GetTime())
+  local name = Layer.instance() or (current and layerLabel(current)) or "Detecting..."
+  local one = miniOneLine()
+  mini.text:SetText(one and (name .. "   " .. line) or name)
+  mini.status:SetText(one and "" or line)
+  -- the logo as drawn while hosting; grey with Host off; green while a request runs
+  mini.state = state
+  mini.icon:SetDesaturated(state ~= "on")
+  if state == "swap" then mini.icon:SetVertexColor(0.35, 1, 0.45)
+  elseif state == "off" then mini.icon:SetVertexColor(0.7, 0.7, 0.7)
+  else mini.icon:SetVertexColor(1, 1, 1) end
+  -- the bar is as wide as its longer line, so the text can never run out of it
+  if one then
+    mini:SetWidth(math.ceil(mini.text:GetStringWidth() or 0) + 32)
+  else
+    mini:SetWidth(math.ceil(math.max(mini.text:GetStringWidth() or 0, mini.status:GetStringWidth() or 0)) + 44)
+  end
 end
 
 local function saveMini()
@@ -3770,7 +4000,6 @@ end
 
 local function buildMini()
   local m = CreateFrame("Button", "LayerSwapMini", UIParent)
-  m:SetHeight(20)
   m:SetFrameStrata("MEDIUM")
   m:SetClampedToScreen(true)
   m:SetMovable(true)
@@ -3786,22 +4015,26 @@ local function buildMini()
   bg:SetAllPoints(m)
   bg:SetColorTexture(0, 0, 0, miniBackground() / 100)
   m.bg = bg
-  -- the LayerSwap logo, left of the LIVE dot: a click drops the layer menu
+  -- the LayerSwap logo: a click opens the panel like the rest of the bar, a right-click drops the layer menu
   m.logo = CreateFrame("Button", "LayerSwapMiniLogo", m)
-  m.logo:SetSize(16, 16)
-  m.logo:SetPoint("LEFT", m, "LEFT", 3, 0)
+  m.logo:RegisterForClicks("LeftButtonUp", "RightButtonUp")
   local icon = m.logo:CreateTexture(nil, "ARTWORK")
   icon:SetAllPoints(m.logo)
   icon:SetTexture("Interface/AddOns/LayerSwap/Media/logo")
+  m.icon = icon
   local lit = m.logo:CreateTexture(nil, "HIGHLIGHT")
   lit:SetAllPoints(m.logo)
   lit:SetColorTexture(1, 1, 1, 0.15)
-  m.logo:SetScript("OnClick", function() toggleMenu(m) end)
-  m.dot, m.pulse = makeLiveDot(m, 30)
+  m.logo:SetScript("OnClick", function(_, button)
+    if button == "RightButton" then toggleMenu(m) else closeMenu(); togglePanel() end
+  end)
   m.text = m:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-  m.text:SetPoint("LEFT", m, "LEFT", 42, 0)
   m.text:SetJustifyH("LEFT")
   m.text:SetWordWrap(false)
+  m.status = m:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  m.status:SetJustifyH("LEFT")
+  m.status:SetWordWrap(false)
+  layoutMini(m)
   m:SetScript("OnDragStart", function(self) self.moved = true; self:StartMoving() end)
   m:SetScript("OnDragStop", function(self) self:StopMovingOrSizing(); saveMini() end)
   m:SetScript("OnClick", function(self, button)
@@ -3972,7 +4205,7 @@ do
     sub:SetText("See your layer, ask for a swap, and host swaps for others. /ls opens the panel.")
     o.checks = {}
     local y = -64
-    local function check(key, label, note, get, set)
+    local function check(key, label, note, get, set, short)
       local cb = CreateFrame("CheckButton", "LayerSwapOption" .. key, o, "UICheckButtonTemplate")
       cb:SetPoint("TOPLEFT", o, "TOPLEFT", 16, y)
       local name = o:CreateFontString(nil, "OVERLAY", "GameFontNormal")
@@ -3985,9 +4218,10 @@ do
       line:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -3)
       line:SetPoint("RIGHT", o, "RIGHT", -16, 0)
       line:SetJustifyH("LEFT")
-      line:SetWordWrap(true)
-      if line.SetMaxLines then line:SetMaxLines(2) end
-      line:SetHeight(math.ceil((line:GetLineHeight() or 12) * 2))
+      -- short: a note of one line, and a row that much lower (the Forever page has nine rows)
+      line:SetWordWrap(not short)
+      if line.SetMaxLines then line:SetMaxLines(short and 1 or 2) end
+      line:SetHeight(math.ceil((line:GetLineHeight() or 12) * (short and 1 or 2)))
       line:SetText(note)
       cb.get = get
       cb:SetScript("OnClick", function(self)
@@ -3996,7 +4230,7 @@ do
         refresh()
       end)
       o.checks[#o.checks + 1] = cb
-      y = y - 46
+      y = y - (short and 34 or 46)
     end
     o.sliders = {}
     -- A slider with its label, value and note. No Blizzard template, so it looks the same on
@@ -4055,6 +4289,16 @@ do
           LayerSwapDB.newOnly = on and true or false
           log("newOnly", on and "on" or "off")
         end)
+      -- Auto leave: on to start, as since 1.14.14 (see Layer.autoLeave)
+      check("AutoLeave", "Auto leave",
+        "Once you are on the new layer, LayerSwap leaves the host's group for you a few seconds later, so the host is free for the next player. Off, you stay in the group until you leave it yourself.",
+        Layer.autoLeave,
+        function(on)
+          LayerSwapDB.autoLeave = on and true or false
+          log("autoLeaveOption", on and "on" or "off")
+          -- unticked while a host's group waits to be left: that group is the player's to leave too
+          if not on and held and held.auto then held.auto, held.manual = nil, true end
+        end)
       -- Skip askers near you (1.14; a user on CurseForge, 23 Oct 2026, farming a spot with Host
       -- on). Off to start. The notes say what gets past it: another host in the zone, a whisper,
       -- and that an ask without a position is skipped too (see Near.check).
@@ -4075,10 +4319,17 @@ do
         end,
         function(v) return v .. " yards" end)
     end
-    check("MiniBar", "Mini bar", "The small line with your layer, the LIVE dot and the world refresh countdown.",
-      miniShown, function(on) if on ~= miniShown() then toggleMini() end end)
+    check("MiniBar", "Mini bar", "The small bar with your layer and what LayerSwap is doing. A click on it opens the panel.",
+      miniShown, function(on) if on ~= miniShown() then toggleMini() end end, true)
+    check("MiniOneLine", "Mini bar on one line", "The layer and what LayerSwap is doing side by side, where the bar has two lines.",
+      miniOneLine,
+      function(on)
+        LayerSwapDB.miniOneLine = on and true or nil
+        log("miniOneLine", on and "on" or "off")
+        if mini then layoutMini(mini); refreshMini() end
+      end, true)
     check("Minimap", "Minimap button", "Left-click opens the panel, right-click the settings menu.",
-      minimapShown, function(on) if on ~= minimapShown() then toggleMinimap() end end)
+      minimapShown, function(on) if on ~= minimapShown() then toggleMinimap() end end, true)
     -- Mini bar background: a slider, 0-100 % (1.13); the line fades with it as it moves (Adam,
     -- 21 Oct 2026: "seamless"), and the value is kept across logins.
     slider("MiniBackground", "Mini bar background",
@@ -4098,12 +4349,64 @@ do
     open:SetPoint("TOPLEFT", o, "TOPLEFT", 20, y - 6)
     open:SetText("Open the panel")
     open:SetScript("OnClick", function() if not panelShown() then togglePanel() end end)
-    o:SetScript("OnShow", function(self)
-      for _, cb in ipairs(self.checks) do cb:SetChecked(cb.get()) end
-      for _, s in ipairs(self.sliders) do
+    -- the page's boxes and sliders, as the saved values are now
+    local function sync()
+      for _, cb in ipairs(o.checks) do cb:SetChecked(cb.get()) end
+      for _, s in ipairs(o.sliders) do
         s:SetValue(s.get())
         s.valueText:SetText(s.format(s.get()))
       end
+    end
+    -- Reset to defaults (1.14.15; Adam, 12 Nov 2026): every switch and slider of this page as a new install has
+    -- them - Host on, Only new layers and Skip askers near you off, 150 yards, the mini bar and the minimap
+    -- button shown, the mini bar's background at 55%. Where the mini bar and the panel sit, the layers seen and
+    -- the players known or asked are no settings: they stay. The first click only asks for a second one within
+    -- RESET_FOR seconds, so a stray click changes nothing; the game's own dialog is not used (an addon's use of
+    -- it can stand in the way of the game's next one).
+    local RESET, RESET_ASK, RESET_DONE, RESET_FOR = "Reset to defaults", "Click again to reset", "Settings reset", 5
+    local reset = CreateFrame("Button", "LayerSwapOptionsReset", o, "UIPanelButtonTemplate")
+    reset:SetSize(170, 22)
+    reset:SetPoint("LEFT", open, "RIGHT", 12, 0)
+    reset:SetText(RESET)
+    reset:SetScript("OnClick", function(self)
+      local now = GetTime()
+      if not (self.armed and now - self.armed <= RESET_FOR) then
+        self.armed = now
+        self:SetText(RESET_ASK)
+        C_Timer.After(RESET_FOR, function()
+          if self.armed == now then
+            self.armed = nil
+            self:SetText(RESET)
+          end
+        end)
+        return
+      end
+      self.armed = nil
+      if not hosting then setHosting(true) end
+      if LayerSwapDB.newOnly == true then log("newOnly", "off") end
+      if Near.on() then log("near", "off") end
+      if not Layer.autoLeave() then log("autoLeaveOption", "on") end
+      LayerSwapDB.newOnly, LayerSwapDB.skipNear, LayerSwapDB.skipNearYards, LayerSwapDB.miniBackground = nil, nil, nil, nil
+      LayerSwapDB.autoLeave = nil
+      if miniOneLine() then log("miniOneLine", "off") end
+      LayerSwapDB.miniOneLine = nil
+      if mini then layoutMini(mini) end
+      applyMiniBackground()
+      if not miniShown() then toggleMini() end
+      if not minimapShown() then toggleMinimap() end
+      log("options", "reset")
+      sync()
+      refresh()
+      self:SetText(RESET_DONE)
+      self.done = now
+      C_Timer.After(3, function()
+        if self.done == now and not self.armed then self:SetText(RESET) end
+      end)
+    end)
+    o:SetScript("OnShow", function()
+      reset.armed, reset.done = nil, nil
+      reset:SetText(RESET)
+      sync()
     end)
     optionsFrame = o
     if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
@@ -4131,7 +4434,7 @@ local function setupMinimap()
     end,
     OnTooltipShow = function(tt)
       tt:AddLine("LayerSwap")
-      tt:AddLine((current and layerLabel(current) or "Detecting...") .. (hosting and "   |cffff4040LIVE|r" or ""), 1, 1, 1)
+      tt:AddLine((current and layerLabel(current) or "Detecting...") .. (hosting and "   |cff40ff40Host on|r" or ""), 1, 1, 1)
       tt:AddLine("Left-click: the panel.  Right-click: settings.", 0.7, 0.7, 0.7)
     end,
   })
@@ -4203,7 +4506,7 @@ local f = CreateFrame("Frame")
 for _, ev in ipairs({ "PLAYER_LOGIN", "PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA",
                       "CHAT_MSG_CHANNEL", "CHAT_MSG_WHISPER", "CHAT_MSG_GUILD", "CHAT_MSG_SYSTEM", "UI_ERROR_MESSAGE",
                       "GROUP_ROSTER_UPDATE", "GROUP_JOINED", "GROUP_LEFT", "PARTY_INVITE_REQUEST",
-                      "SHARD_TRANSFER_IMMINENT", "SHARD_TRANSFER",
+                      "SHARD_TRANSFER_IMMINENT", "SHARD_TRANSFER", "SHARD_TRANSFER_CANCELLED",
                       "NAME_PLATE_UNIT_ADDED", "PLAYER_TARGET_CHANGED", "UPDATE_MOUSEOVER_UNIT",
                       "ADDON_ACTION_FORBIDDEN", "ADDON_ACTION_BLOCKED", "CHAT_MSG_ADDON",
                       "CHANNEL_COUNT_UPDATE", "CHANNEL_ROSTER_UPDATE", "WHO_LIST_UPDATE",
@@ -4226,7 +4529,7 @@ if FOREVER then
   end
 end
 
-f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, channelBaseName)
+f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, a6, zoneChannelID, a8, channelBaseName)
   if ev == "NAME_PLATE_UNIT_ADDED" then
     if not isSecret(a1) and type(a1) == "string" then observe(a1) end
   elseif ev == "PLAYER_TARGET_CHANGED" then
@@ -4292,6 +4595,10 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, 
   elseif ev == "PARTY_INVITE_REQUEST" then
     local now = GetTime()
     local name = not isSecret(a1) and type(a1) == "string" and a1 or nil
+    -- 13 Nov 2026 (Forever 70938): the 6th field says whether the inviter stands on another shard;
+    -- logged only, to learn whether it matches a move (read_log.py prints it against the transfer)
+    local cross = isSecret(a6) and "secret" or (a6 == true and "another shard") or (a6 == false and "same shard") or "no field"
+    log("inviteShard", name or "?", cross)
     local seen = name and sameHosts[name]
     if seen and not (current and Layer.same(seen.layer, current) and now - seen.at <= SAME_HOST_TTL) then seen = nil end
     local mins = seen and math.floor((now - seen.at) / 60)
@@ -4333,6 +4640,11 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, 
       swap.joinedAt, swapGroup = GetTime(), true
       watchUntil = GetTime() + 20               -- "Party converted to Raid", who else joins ...
       log("joinedHost", swap.inviter, current)
+      Layer.pending = nil   -- 1.14.15: the next host's group ends the wait of the one before (Layer.copiedAfter)
+      -- 1.14.15: the whole id read before the join (Layer.copied) - only where we still stand on the layer
+      -- asked from; an ask made in one zone and joined in the next has nothing to compare
+      swap.rawFrom = (current ~= nil and current == swap.from) and Layer.raw or nil
+      swap.zoneFrom = Layer.zone()
       -- the creatures around us, read now and a little later: they tell whether the join moved us
       Who.scan()
       C_Timer.After(1, Who.scan)
@@ -4394,6 +4706,7 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, 
       swapGroup = false
       leftInfo = { at = GetTime(), layer = current }
       log("left", current)
+      Layer.keep()   -- 1.14.15: the world refreshed in this group and it ended before a verdict (Layer.copiedAfter)
       if swap then swap = nil end
       if held then
         held = nil
@@ -4413,11 +4726,18 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, 
   elseif ev == "SHARD_TRANSFER_IMMINENT" then
     local left = type(GetEvictionTimeRemaining) == "function" and GetEvictionTimeRemaining() or nil
     evictAt = (not isSecret(left) and type(left) == "number") and (GetTime() + left) or nil
-    log("shard", ev, left)
+    log("shard", ev, left, IsInGroup() and "in a group" or "alone")
     refresh()
+  elseif ev == "SHARD_TRANSFER_CANCELLED" then
+    -- 1.14.19, logged only: a refresh the game announced and then dropped - after a host's group was left, say
+    log("shard", ev, nil, IsInGroup() and "in a group" or "alone")
   elseif ev == "SHARD_TRANSFER" or ev == "ZONE_CHANGED_NEW_AREA" or ev == "PLAYER_ENTERING_WORLD" then
+    if ev == "PLAYER_ENTERING_WORLD" then Layer.logEviction("entering the world") end
     -- the world around the player may be another one now: believe nothing until two
     -- creatures have been seen again
+    Layer.pending = nil   -- 1.14.15: after a host's group ended (Layer.keep) - nothing to compare any more
+    if Layer.told and notice == Layer.told then notice = nil end
+    Layer.told = nil
     if ev == "SHARD_TRANSFER" then
       evictAt, lastShardAt = nil, GetTime()
       log("shard", ev)
@@ -4434,6 +4754,9 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, 
     forgetSightings()
     if ev == "ZONE_CHANGED_NEW_AREA" then
       Who.borderAt = GetTime()
+      -- 1.14.15: a zone border crossed in the host's group - the next zone's creatures carry ids of their own,
+      -- so the whole id of the join proves nothing any more (the verdicts of 1.14.14 stand there)
+      if swap and swap.joinedAt then swap.rawFrom = nil end
       if current and Who.here and Who.here.layer == current then
         Who.crossing = { from = Who.here.zone, layer = current, at = GetTime(), reads = 0 }
       end
@@ -4451,7 +4774,7 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, 
     if ev ~= "PLAYER_ENTERING_WORLD" or current == nil then
       if current then log("layer", "unknown", nil, current) end
       if swap and swap.joinedAt and swap.from == nil then swap.from = "unknown" end
-      current = nil
+      current, Layer.raw = nil, nil
     end
     if ev == "PLAYER_ENTERING_WORLD" then onEnterWorld(a1 == true, a2 == true) end
     refresh()
@@ -4469,7 +4792,7 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, 
     -- was just written is kept one more round instead of being wiped by this login.
     LayerSwapDB.previous = { session = LayerSwapDB.session, log = LayerSwapDB.log }
     LayerSwapDB.log = {}
-    LayerSwapDB.session = { started = date("%Y-%m-%d %H:%M:%S"), version = "1.14.14", me = fullName("player"), toc = TOC, restricted = Send.restricted(),
+    LayerSwapDB.session = { started = date("%Y-%m-%d %H:%M:%S"), version = "1.14.19", me = fullName("player"), toc = TOC, restricted = Send.restricted(),
                             search = Who.can() }
     -- The layers seen survive a /reload and a relog; an hour without a sighting drops one.
     local saved = type(LayerSwapDB.layers) == "table" and LayerSwapDB.layers or {}

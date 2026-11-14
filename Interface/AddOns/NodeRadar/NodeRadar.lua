@@ -42,6 +42,7 @@ local DEFAULTS = {
     moveScan = false,   -- the minimap scan (#91), from build 70862: opt-in; moveScanAsked: the
                         -- login prompt asked once per account
     scanEvery = 2,      -- the scan's seconds between looks moving (standing still: three times, at most 10)
+    scanQuiet = true,   -- other frames on the minimap mouse-off during a look (#119)
 }
 -- Settings no longer used: v1's (it never worked on Forever), and the ring's
 -- colour (the sonar is green for herbs, gold for ore). Dropped.
@@ -197,6 +198,7 @@ function NR.Located(new, now)
     Compass.Reconcile(nil, now)
     NR.FarMarker.Update({ where = NR.Scan.Where() })
     for _, r in ipairs(new) do Alert.Located(r, now) end
+    Alert.Flush(now)                                -- a held sound nothing will locate plays now (#137)
 end
 
 -- What a minimap scan saw (#91), on completion: presence, the counts of each node name in range.
@@ -555,7 +557,8 @@ SlashCmdList.NODERADAR = function(msg)
     elseif cmd == "scan" then
         NR.Set("moveScan", not db.moveScan)
         API.Say("the minimap scan " .. onOff(db.moveScan)
-            .. (db.moveScan and not API.Blind() and " (it runs from client build 70862; this client's radar reads the minimap itself)" or ""))
+            .. (db.moveScan and not API.Blind() and " (it runs from client build 70862; this client's radar reads the minimap itself)" or "")
+            .. (db.moveScan and NR.MoveScan.Secret() and " (but this client build hides the minimap's names from addons: it can't run until the next build)" or ""))
     elseif cmd == "test" then
         Alert.Test()
     elseif cmd == "status" then

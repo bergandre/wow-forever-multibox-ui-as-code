@@ -1,5 +1,5 @@
 ## Interface: 16001
-## Version: 1.02
+## Version: 1.03
 ## Author: Pirson
 ## IconTexture: Interface\AddOns\GatherRadar\img\logo_gr
 ## Title: |cffd597ffGatherRadar|r
@@ -141,3 +141,4 @@ UI/Arrow.lua
 UI/Session.lua
 UI/Options.lua
 UI/WorldMapPins.xml
+Core/API.lua

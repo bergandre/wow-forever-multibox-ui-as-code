@@ -92,6 +92,24 @@ function TSM_API.RegisterUICallback(uiName, addonTag, func)
 	end
 end
 
+---Shifts a TSM button which is shown on the default UI by the requested offset (relative to its default position).
+---@param uiName "VENDORING" The UI which the button is on (currently only "VENDORING" is supported)
+---@param addonTag string A string which uniquely identifies the addon making this call (i.e. "MyAddon")
+---@param xOffset number The amount to shift the TSM button by (relative to its default position)
+function TSM_API.ShiftDefaultUIButton(uiName, addonTag, xOffset)
+	private.CheckCallMethod(uiName)
+	private.ValidateArgumentType(addonTag, "string", "addonTag")
+	if addonTag == "" then
+		error("Invalid `addonTag` argument (cannot be an empty string)", 2)
+	end
+	private.ValidateArgumentType(xOffset, "number", "xOffset")
+	if uiName == "VENDORING" then
+		VendoringUI.ShiftDefaultUIButton(addonTag, xOffset)
+	else
+		error("Invalid uiName: "..tostring(uiName), 2)
+	end
+end
+
 
 
 -- ============================================================================

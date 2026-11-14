@@ -2,7 +2,7 @@
 NodeRadarCharDB = {
 ["track"] = {
 ["last"] = {
-["herbs"] = 165,
+["herbs"] = 176,
 },
 ["ignored"] = {
 [13467] = true,
@@ -10,16 +10,16 @@ NodeRadarCharDB = {
 [2447] = true,
 [2449] = true,
 [3819] = true,
-[3821] = true,
 [3358] = true,
 [8836] = true,
 [13463] = true,
 [765] = true,
 [13464] = true,
 [8846] = true,
+[4625] = true,
 [8838] = true,
 [13465] = true,
-[4625] = true,
+[2450] = true,
 [8831] = true,
 [8839] = true,
 [13466] = true,

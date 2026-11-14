@@ -83,7 +83,8 @@ local option;
 
 -- General
 local ttOptionsGeneral = {
-	{ type = "Check", var = "alwaysCompareItems", label = "Always Compare Items (may reduce FPS)", tip = "When off (default), " .. PARENT_MOD_NAME .. " keeps the game setting \"alwaysCompareItems\" at 0, so item comparison tooltips are only shown while holding Shift. This avoids FPS drops when hovering equippable items, because the game continuously rebuilds the comparison tooltips while they are shown.\nWhen on, comparison tooltips are always shown when hovering equippable items.\nNOTE: " .. PARENT_MOD_NAME .. " applies this setting on login and whenever it is changed here, so changing the game's own \"always compare\" setting will be reverted on the next login or reload." },
+	{ type = "Check", var = "manageAlwaysCompareItems", label = "Let TipTac Control \"Always Compare Items\"", tip = "When off (default), " .. PARENT_MOD_NAME .. " leaves the game's own item comparison setting alone.\nWhen on, " .. PARENT_MOD_NAME .. " applies the option below on login and whenever it is changed here, so changing the game's own setting will be reverted on the next login or reload." },
+	{ type = "Check", var = "alwaysCompareItems", enabled = function(factory) return factory:GetConfigValue("manageAlwaysCompareItems") end, label = "Always Compare Items (may reduce FPS)", tip = "Only used if the option above is on. When off, " .. PARENT_MOD_NAME .. " keeps the game setting \"alwaysCompareItems\" at 0, so item comparison tooltips are only shown while holding Shift. This avoids FPS drops when hovering equippable items, because the game continuously rebuilds the comparison tooltips while they are shown.\nWhen on, comparison tooltips are always shown when hovering equippable items.\n" },
 	{ type = "Check", var = "showMinimapIcon", label = "Enable Minimap Icon", tip = "Will show a minimap icon for " .. PARENT_MOD_NAME, y = 10 },
 	{ type = "Slider", var = "gttScale", label = "Tooltip Scale", min = 0.2, max = 4, step = 0.05, y = 10 },
 	
@@ -95,6 +96,8 @@ local ttOptionsGeneral = {
 	{ type = "Check", var = "showPlayerGender", label = "Show Player Gender", tip = "This will show the gender of the player. E.g. \"85 Female Blood Elf Paladin\".", enabled = function(factory) return factory:GetConfigValue("showUnitTip") end },
 	{ type = "Check", var = "showClassOnSeparateLine", label = "Show Player's Class on Separate Line", tip = "This will show the class of the player on its own line below the level and race line.", enabled = function(factory) return factory:GetConfigValue("showUnitTip") end },
 	{ type = "Check", var = "hideSkyborneTitle", label = "Hide High Order/Windshaper Title", tip = "This will remove the words \"High Order\" or \"Windshaper\" from the beginning of the Skyborne race name (e.g. \"High Order Skyborne\" becomes \"Skyborne\") to save space on the tooltip.", enabled = function(factory) return factory:GetConfigValue("showUnitTip") end },
+	{ type = "Check", var = "showFullLevelText", label = "Show full level text (ex. Level 10 Warlock)", tip = "Will show \"Level 10\" instead of just \"10\" in the level line of unit tooltips." },
+	{ type = "Check", var = "colorLevelByDifficultyForAllUnits", label = "Color Level by Difficulty for Friendly Units", tip = "By default the level is colored by difficulty (grey/green/yellow/orange/red) only for units you can attack. With this option the level of friendly units is colored by difficulty too." },
 	{ type = "Check", var = "showCurrentUnitSpeed", label = "Show Current Unit Speed", tip = "This will show the current speed of the unit after race & class.", enabled = function(factory) return factory:GetConfigValue("showUnitTip") end }
 };
 
@@ -360,6 +363,17 @@ tinsert(ttOptionsAnchors, { type = "Header", label = "Other Anchor Overrides", t
 tinsert(ttOptionsAnchors, { type = "Check", var = "enableAnchorOverrideCF", label = "(Guild & Community) ChatFrame", tip = "This option will override the anchor for (Guild & Community, addon WIM) ChatFrame", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
 tinsert(ttOptionsAnchors, { type = "DropDown", var = "anchorOverrideCFType", label = "Tip Type", list = DROPDOWN_ANCHORTYPE, enabled = function(factory) return factory:GetConfigValue("enableAnchor") and factory:GetConfigValue("enableAnchorOverrideCF") end });
 tinsert(ttOptionsAnchors, { type = "DropDown", var = "anchorOverrideCFPoint", label = "Tip Point", list = DROPDOWN_ANCHORPOS, enabled = function(factory) return factory:GetConfigValue("enableAnchor") and factory:GetConfigValue("enableAnchorOverrideCF") end });
+
+tinsert(ttOptionsAnchors, { type = "Header", label = "Don't Anchor Tooltips Of These Addons", tip = "Tooltips shown by these addons keep the position the addon or the game gives them, instead of being moved by " .. PARENT_MOD_NAME .. ".", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
+
+tinsert(ttOptionsAnchors, { type = "Check", var = "anchorExcludePlumber", label = "Plumber", tip = "Don't move tooltips shown by the addon Plumber", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
+tinsert(ttOptionsAnchors, { type = "Check", var = "anchorExcludeAuctionator", label = "Auctionator", tip = "Don't move tooltips shown by the addon Auctionator", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
+tinsert(ttOptionsAnchors, { type = "Check", var = "anchorExcludeBaganator", label = "Baganator", tip = "Don't move tooltips shown by the addon Baganator", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
+tinsert(ttOptionsAnchors, { type = "Text", var = "anchorExcludeCustom", label = "Other Addons (frame names, comma separated)", tip = "Don't move tooltips shown by frames whose name contains one of these words, ignoring case. Example: myaddon, otheraddon. You can find the frame name with /fstack.", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
+
+tinsert(ttOptionsAnchors, { type = "Header", label = "Other Addons Moving The Tooltip", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
+
+tinsert(ttOptionsAnchors, { type = "Check", var = "keepAnchorWhenMovedByOtherAddons", label = "Keep " .. PARENT_MOD_NAME .. "'s Position (e.g. EllesmereUI)", tip = "If another addon (for example EllesmereUI with its tooltip growth direction or movable tooltip position) moves the tooltip after " .. PARENT_MOD_NAME .. " has positioned it, " .. PARENT_MOD_NAME .. " moves it back to the position set here. Only applies to Normal and Parent anchors. Leave this off if you want the other addon to decide the position.", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
 
 tinsert(ttOptionsAnchors, { type = "Header", label = "Mouse Settings", enabled = function(factory) return factory:GetConfigValue("enableAnchor") end });
 
@@ -728,6 +742,7 @@ if (TipTacTalents) then
 	
 	tinsert(tttOptions, { type = "Check", var = "t_showTalentText", label = "Show Talent Text", tip = "This option makes the tip show the talent text", enabled = function(factory) return factory:GetConfigValue("t_enable") and factory:GetConfigValue("t_showTalents") end, y = 10 });
 	tinsert(tttOptions, { type = "Check", var = "t_colorTalentTextByClass", label = "Color Talent Text by Class Color", tip = "With this option on, talent text is colored by their class color", enabled = function(factory) return factory:GetConfigValue("t_enable") and factory:GetConfigValue("t_showTalents") and factory:GetConfigValue("t_showTalentText") end });
+	tinsert(tttOptions, { type = "Check", var = "t_hideTalentsLabel", label = "Hide \"Specialization:\" Label", tip = "This option removes the label in front of the talent text, so the tip shows e.g. \"Retribution\" instead of \"Specialization: Retribution\"", enabled = function(factory) return factory:GetConfigValue("t_enable") and factory:GetConfigValue("t_showTalents") end });
 	
 	if (LibFroznFunctions.hasWoWFlavor.numTalentTrees > 0) then
 		if (LibFroznFunctions.hasWoWFlavor.numTalentTrees == 2) then

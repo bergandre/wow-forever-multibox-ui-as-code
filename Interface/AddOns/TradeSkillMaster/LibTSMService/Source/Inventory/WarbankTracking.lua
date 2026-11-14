@@ -17,6 +17,7 @@ local DefaultUI = LibTSMService:From("LibTSMWoW"):Include("UI.DefaultUI")
 local private = {
 	slotDB = nil,
 	quantityDB = nil,
+	quantityBaseItems = {},
 	quantityStorage = nil,
 	updates = {
 		pending = {},
@@ -89,6 +90,7 @@ function WarbankTracking.Load(quantityData)
 	-- Build the DB
 	private.quantityDB:BulkInsertStart()
 	for levelItemString, quantity in pairs(quantityData) do
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:BulkInsertNewRow(levelItemString, quantity)
 	end
 	private.quantityDB:BulkInsertEnd()
@@ -135,7 +137,13 @@ end
 ---@param itemString string The item string
 ---@return number
 function WarbankTracking.GetQuantity(itemString)
+	if not LibTSMService.IsRetail() then
+		return 0
+	end
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
+		if not private.quantityBaseItems[itemString] then
+			return 0
+		end
 		return private.baseItemQuantityQuery
 			:BindParams(itemString)
 			:Sum("quantity")
@@ -338,6 +346,7 @@ function private.ChangeItemTotal(levelItemString, changeQuantity)
 	else
 		-- Create a new row
 		assert(changeQuantity > 0)
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:InsertRow(levelItemString, changeQuantity)
 	end
 

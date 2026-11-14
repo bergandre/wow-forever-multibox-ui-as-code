@@ -118,6 +118,12 @@ function ItemFilter:ParseStr(str)
 	return isValid, errType, errArg
 end
 
+---Gets whether or not the filter is valid and has no criteria, so matches every item.
+---@return boolean
+function ItemFilter:IsEmpty()
+	return self._isValid and not next(self._data)
+end
+
 ---Gets the string.
 ---@return string?
 function ItemFilter:GetStr()

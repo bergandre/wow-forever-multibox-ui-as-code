@@ -15,10 +15,10 @@ Quartz3DB = {
 },
 },
 },
-["Player"] = {
+["EnemyCasts"] = {
 ["profiles"] = {
 ["Default"] = {
-["x"] = 548.8091430664062,
+["centerpos"] = true,
 },
 },
 },
@@ -43,10 +43,10 @@ Quartz3DB = {
 },
 },
 },
-["EnemyCasts"] = {
+["Player"] = {
 ["profiles"] = {
 ["Default"] = {
-["centerpos"] = true,
+["x"] = 548.8091430664062,
 },
 },
 },
@@ -58,10 +58,6 @@ Quartz3DB = {
 },
 },
 },
-["profileKeys"] = {
-["Invited Undead"] = "Default",
-["Tailoring Altchar"] = "Default",
-},
 ["global"] = {
 ["configDialog"] = {
 ["status"] = {
@@ -71,6 +67,10 @@ Quartz3DB = {
 ["children"] = {
 },
 },
+},
+["profileKeys"] = {
+["Tailoring Altchar"] = "Default",
+["Invited Undead"] = "Default",
 },
 ["profiles"] = {
 ["Default"] = {

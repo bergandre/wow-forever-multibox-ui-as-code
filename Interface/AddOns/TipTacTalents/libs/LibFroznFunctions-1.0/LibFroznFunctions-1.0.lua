@@ -9,7 +9,7 @@
 
 -- create new library
 local LIB_NAME = "LibFroznFunctions-1.0";
-local LIB_MINOR = 71; -- bump on changes
+local LIB_MINOR = 72; -- bump on changes
 
 if (not LibStub) then
 	error(LIB_NAME .. " requires LibStub.");
@@ -972,6 +972,35 @@ function LibFroznFunctions:GetSpecializationInfo(specIndex, isInspect, isPet, in
 	
 	-- before mopc 5.5.0
 	return GetSpecializationInfo(specIndex, isInspect, isPet, inspectTarget, sex);
+end
+
+-- get specialization id of the inspected unit
+--
+-- @param  unitID  unit id of the inspected unit
+-- @return specialization id, 0 if unknown
+function LibFroznFunctions:GetInspectSpecialization(unitID, ...)
+	-- newer clients provide it in C_SpecializationInfo
+	if (C_SpecializationInfo) and (C_SpecializationInfo.GetInspectSpecialization) then
+		return C_SpecializationInfo.GetInspectSpecialization(unitID, ...);
+	end
+	
+	-- older clients
+	return GetInspectSpecialization(unitID, ...);
+end
+
+-- get specialization info by specialization id
+--
+-- @param  specializationID  id of the specialization
+-- @param  sex               optional. sex of the unit
+-- @return specialization id, name, description, icon, role, primary stat, ...
+function LibFroznFunctions:GetSpecializationInfoByID(specializationID, ...)
+	-- newer clients provide it in C_SpecializationInfo
+	if (C_SpecializationInfo) and (C_SpecializationInfo.GetSpecializationInfoByID) then
+		return C_SpecializationInfo.GetSpecializationInfoByID(specializationID, ...);
+	end
+	
+	-- older clients
+	return GetSpecializationInfoByID(specializationID, ...);
 end
 
 -- get debuff display info table
@@ -5618,13 +5647,13 @@ function LibFroznFunctions:GetTalents(unitID)
 			
 			_, specializationName, _, specializationIcon, role = self:GetSpecializationInfo(specIndex);
 		else -- inspecting
-			local specializationID = GetInspectSpecialization(unitID);
+			local specializationID = self:GetInspectSpecialization(unitID);
 			
 			if (specializationID == 0) then
 				return LFF_TALENTS.none;
 			end
 			
-			_, specializationName, _, specializationIcon, role = GetSpecializationInfoByID(specializationID);
+			_, specializationName, _, specializationIcon, role = self:GetSpecializationInfoByID(specializationID);
 		end
 		
 		if (specializationName ~= "") then

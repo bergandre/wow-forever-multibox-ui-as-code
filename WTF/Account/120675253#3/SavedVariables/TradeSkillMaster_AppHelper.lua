@@ -11,13 +11,6 @@ TradeSkillMaster_AppHelperDB = {
 },
 ["updateTime"] = 1794420578.872547,
 },
-["groupImports"] = {
-},
-["fullScan"] = {
-["data"] = {
-},
-["updateTime"] = 0,
-},
 ["analytics"] = {
 ["data"] = {
 "[\"AC\",\"v4.15.3\",1793944990440,1793944990,1,\"ADDON_INITIALIZE\",0.1]",
@@ -976,7 +969,40 @@ TradeSkillMaster_AppHelperDB = {
 "[\"AC\",\"v4.15.6\",1794509668229,1794509649,6,\"UI_NAVIGATION\",\"auction/auctioning\",\"auction/auctioning/selection\"]",
 "[\"AC\",\"v4.15.6\",1794509669590,1794509649,7,\"UI_NAVIGATION\",\"auction/auctioning/selection\",\"auction/my_auctions\"]",
 "[\"AC\",\"v4.15.6\",1794510897525,1794509649,8,\"UI_NAVIGATION\",\"auction/my_auctions\",\"\"]",
+"[\"AC\",\"v4.15.6\",1794538724517,1794538724,1,\"UI_NAVIGATION\",\"\",\"task_list\"]",
+"[\"AC\",\"v4.15.6\",1794538724606,1794538724,2,\"ADDON_INITIALIZE\",0.2]",
+"[\"AC\",\"v4.15.6\",1794538730904,1794538724,3,\"ADDON_ENABLE\",0.1]",
+"[\"AC\",\"v4.15.6\",1794538751584,1794538724,4,\"UI_NAVIGATION\",\"\",\"auction\"]",
+"[\"AC\",\"v4.15.6\",1794538751623,1794538724,5,\"UI_NAVIGATION\",\"auction\",\"auction/my_auctions\"]",
+"[\"AC\",\"v4.15.6\",1794538752814,1794538724,6,\"UI_NAVIGATION\",\"auction/my_auctions\",\"auction/auctioning\"]",
+"[\"AC\",\"v4.15.6\",1794538752815,1794538724,7,\"UI_NAVIGATION\",\"auction/auctioning\",\"auction/auctioning/selection\"]",
+"[\"AC\",\"v4.15.6\",1794538753866,1794538724,8,\"UI_NAVIGATION\",\"auction/auctioning/selection\",\"auction/auctioning/postScan\"]",
+"[\"AC\",\"v4.15.6\",1794538763797,1794538724,9,\"UI_NAVIGATION\",\"auction/auctioning/postScan\",\"\"]",
+"[\"AC\",\"v4.15.6\",1794538804502,1794538804,1,\"UI_NAVIGATION\",\"\",\"task_list\"]",
+"[\"AC\",\"v4.15.6\",1794538804586,1794538804,2,\"ADDON_INITIALIZE\",0.3]",
+"[\"AC\",\"v4.15.6\",1794538805393,1794538804,3,\"ADDON_ENABLE\",0.1]",
+"[\"AC\",\"v4.15.6\",1794538965280,1794538804,4,\"UI_NAVIGATION\",\"\",\"banking\"]",
+"[\"AC\",\"v4.15.6\",1794538971066,1794538804,5,\"UI_NAVIGATION\",\"banking\",\"\"]",
+"[\"AC\",\"v4.15.6\",1794538982940,1794538804,6,\"UI_NAVIGATION\",\"\",\"auction\"]",
+"[\"AC\",\"v4.15.6\",1794538982957,1794538804,7,\"UI_NAVIGATION\",\"auction\",\"auction/auctioning\"]",
+"[\"AC\",\"v4.15.6\",1794538982957,1794538804,8,\"UI_NAVIGATION\",\"auction/auctioning\",\"auction/auctioning/selection\"]",
+"[\"AC\",\"v4.15.6\",1794538985321,1794538804,9,\"UI_NAVIGATION\",\"auction/auctioning/selection\",\"auction/shopping\"]",
+"[\"AC\",\"v4.15.6\",1794538985321,1794538804,10,\"UI_NAVIGATION\",\"auction/shopping\",\"auction/shopping/selection\"]",
+"[\"AC\",\"v4.15.6\",1794538987778,1794538804,11,\"UI_NAVIGATION\",\"auction/shopping/selection\",\"auction/shopping/scan\"]",
+"[\"AC\",\"v4.15.6\",1794538995229,1794538804,12,\"UI_NAVIGATION\",\"auction/shopping/scan\",\"auction/shopping/selection\"]",
+"[\"AC\",\"v4.15.6\",1794538995281,1794538804,13,\"UI_NAVIGATION\",\"auction/shopping/selection\",\"auction/shopping/scan\"]",
+"[\"AC\",\"v4.15.6\",1794539002224,1794538804,14,\"UI_NAVIGATION\",\"auction/shopping/scan\",\"\"]",
+"[\"AC\",\"v4.15.6\",1794541382433,1794541382,1,\"UI_NAVIGATION\",\"\",\"task_list\"]",
+"[\"AC\",\"v4.15.6\",1794541382515,1794541382,2,\"ADDON_INITIALIZE\",0.2]",
+"[\"AC\",\"v4.15.6\",1794541387544,1794541382,3,\"ADDON_ENABLE\",0.1]",
 },
-["updateTime"] = 1794510897.525751,
+["updateTime"] = 1794541387.544469,
+},
+["fullScan"] = {
+["data"] = {
+},
+["updateTime"] = 0,
+},
+["groupImports"] = {
 },
 }

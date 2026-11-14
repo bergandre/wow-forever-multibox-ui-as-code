@@ -6848,8 +6848,8 @@ true,
 ["ScriptType"] = 3,
 ["Temp_Initialization"] = "function (scriptTable)\n    --insert code here\n    \nend\n\n\n",
 ["Time"] = 1705066781,
-["url"] = "",
 ["__TrashAt"] = 1768680340,
+["url"] = "",
 ["Temp_ConstructorCode"] = "function (self, unitId, unitFrame, envTable, scriptTable)\n    --insert code here\n    \n    envTable.npcInfo = {\n        [164427] = {secondCastBar = true, timer = 20, timerId = 321247, altCastId = \"1\", name = \"Boom!\"}, --reanimated warrior - plaguefall\n        \n        [164414] = {secondCastBar = true, timer = 20, timerId = 321247, altCastId = \"2\", name = \"Boom!\"}, --reanimated mage - plaguefall\n        \n        [164185] = {secondCastBar = true, timer = 20, timerId = 319941, altCastId = \"3\", remaining = 5, name = GetSpellInfo(319941)}, --Echelon - Halls of Atonement\n        \n        [164567] = {secondCastBar = true, altCastId = \"dromanswrath\", debuffTimer = 323059, name = GetSpellInfo(323059), spellIcon = 323059}, --Ingra Maloch -- tirna scythe\n        \n        [165408] = {secondCastBar = true, timer = 20, timerId = 322711, altCastId = \"4\", remaining = 5, name = GetSpellInfo(322711)}, --Halkias - Refracted Sinlight - Halls of Atonement\n        \n        \n        --[154564] = {secondCastBar = true, timerId = \"Test Bar\", altCastId = \"debugcast\", remaining = 5, name = GetSpellInfo(319941), spellIcon = 319941}, --debug \"Test (1)\" BW \"Test Bar\" DBM --DEBUG\n        --[154580] = {secondCastBar = true, altCastId = \"debugcast\", debuffTimer = 204242, name = GetSpellInfo(81297), spellIcon = 81297}, --debug \"Test (1)\" BW \"Test Bar\" DBM --DEBUG\n    }\n    \n    --set the castbar config\n    local config = {\n        iconTexture = \"\",\n        iconTexcoord = {0.1, 0.9, 0.1, 0.9},\n        iconAlpha = 1,\n        iconSize = 14,\n        \n        text = \"Boom!\",\n        textSize = 9,\n        \n        texture = [[Interface\\AddOns\\Plater\\images\\bar_background]],\n        color = \"silver\",\n        \n        isChanneling = false,\n        canInterrupt = false,\n        \n        height = 2,\n        width = Plater.db.profile.plate_config.enemynpc.health_incombat[1],\n        \n        spellNameAnchor = {side = 3, x = 0, y = -2},\n        timerAnchor = {side = 5, x = 0, y = -2},\n    }    \n    \n    function envTable.ShowAltCastBar(npcInfo, unitFrame, unitId, customTime, customStart)\n        --show the cast bar\n        if (npcInfo.timerId) then\n            local barObject = Plater.GetBossTimer(npcInfo.timerId)\n            if (barObject) then\n                if (npcInfo.remaining) then\n                    local timeLeft = barObject.timer + barObject.start - GetTime()\n                    if (timeLeft > npcInfo.remaining) then\n                        return\n                    end\n                end\n                \n                config.text = npcInfo.name\n                \n                if (npcInfo.spellIcon) then\n                    local _, _, iconTexture = GetSpellInfo(npcInfo.spellIcon)\n                    config.iconTexture = iconTexture\n                else\n                    config.iconTexture = \"\"\n                end\n                \n                Plater.SetAltCastBar(unitFrame.PlateFrame, config, barObject.timer, customStart or barObject.start, npcInfo.altCastId)\n            end\n        else\n            Plater.SetAltCastBar(unitFrame.PlateFrame, config, customTime or npcInfo.timer, customStart, npcInfo.altCastId)            \n        end\n        \n        DetailsFramework:TruncateText(unitFrame.castBar2.Text, unitFrame.castBar2:GetWidth() - 16)\n    end\nend",
 ["Icon"] = "Interface\\AddOns\\Plater\\Images\\countdown_bar_icon",
 ["semver"] = "",
@@ -14079,10 +14079,10 @@ true,
 ["Explosion Affix M+"] = 14,
 ["Add - Tag Number [P]"] = 2,
 ["Unit Power"] = 1,
-["Unit - Important"] = 5,
+["Cast - Quick Flash"] = 2,
 ["Cast - Special Ability [P]"] = 3,
 ["Cast - Glowing [P]"] = 10,
-["Cast - Quick Flash"] = 2,
+["Unit - Important"] = 5,
 ["Cast - Spark Color [P]"] = 2,
 ["Cast - Heal Stun [P]"] = 2,
 ["Fixate"] = 11,
@@ -14093,8 +14093,8 @@ true,
 ["Cast - AoE Hit All [P]"] = 3,
 ["Cast - Very Important"] = 15,
 ["Cast - Alert + Timer [P]"] = 4,
-["Cast - Debuff [P]"] = 2,
 ["Cast - Stop Casting"] = 4,
+["Cast - Debuff [P]"] = 2,
 ["Aura is Shield [P]"] = 5,
 ["Add - Warning [P]"] = 5,
 ["Cast - Simple Interrupt [P]"] = 2,
@@ -21783,9 +21783,9 @@ false,
 ["nameplateMotion"] = "Interface/AddOns/Plater/Plater.lua:1614",
 ["nameplateMinScale"] = "...e/AddOns/Prat-3.0/Libs/AceTimer-3.0/AceTimer-3.0.lua:50",
 ["nameplateOtherTopInset"] = "Interface/AddOns/Plater/Plater_OptionsPanel.lua:1346",
-["nameplateStackingTypes"] = "Interface/AddOns/Plater/Plater.lua:9981",
+["nameplateStackingTypes"] = "Interface/AddOns/Plater/Plater.lua:2569",
 ["nameplateShowFriends"] = "Interface/AddOns/Plater/Plater.lua:1614",
-["nameplateShowFriendlyPlayers"] = "Interface/AddOns/Plater/Plater.lua:9981",
+["nameplateShowFriendlyPlayers"] = "Interface/AddOns/Plater/Plater.lua:2569",
 ["nameplateShowFriendlyGuardians"] = "Interface/AddOns/Plater/Plater_OptionsPanel.lua:1346",
 ["NamePlateHorizontalScale"] = "Interface/AddOns/Plater/Plater_OptionsPanel.lua:1346",
 ["nameplateShowFriendlyBuffs"] = "Interface/AddOns/Plater/Plater.lua:4693",
@@ -24972,9 +24972,9 @@ true,
 "Ink of Ozumat",
 "Throne of the Tides",
 },
-[104275] = {
-"Imacu'tya",
-"Corte de Estrellas",
+[199749] = {
+"Anomalía del flujo temporal",
+"El Alba del Infinito",
 },
 [104274] = {
 "Baalgar el Atento",
@@ -24998,13 +24998,13 @@ true,
 "Darkflame Cleft",
 "enUS",
 },
-[199749] = {
-"Anomalía del flujo temporal",
-"El Alba del Infinito",
-},
 [135240] = {
 "Soul Essence",
 "Waycrest Manor",
+},
+[184020] = {
+"Rabioso descomunal",
+"Uldaman: Legado de Tyr",
 },
 [40319] = {
 "Drahga Shadowburner",
@@ -25018,9 +25018,10 @@ true,
 "Dreadwing Raven",
 "Waycrest Manor",
 },
-[128967] = {
-"Ashvane Sniper",
-"Siege of Boralus",
+[213338] = {
+"Forgebound Mender",
+"The Stonevault",
+"enUS",
 },
 [166266] = {
 "Spare Parts",
@@ -25034,17 +25035,17 @@ true,
 "T'lonja",
 "Atal'Dazar",
 },
-[184020] = {
-"Rabioso descomunal",
-"Uldaman: Legado de Tyr",
+[128967] = {
+"Ashvane Sniper",
+"Siege of Boralus",
 },
 [171384] = {
 "Research Scribe",
 "Sanguine Depths",
 },
-[120651] = {
-"Entidad desconocida",
-"Plaga Abrumadora",
+[104275] = {
+"Imacu'tya",
+"Corte de Estrellas",
 },
 [11783] = {
 "Theradrim Shardling",
@@ -25065,9 +25066,10 @@ true,
 "Priory of the Sacred Flame",
 "enUS",
 },
-[95832] = {
-"Valarjar Shieldmaiden",
-"Halls of Valor",
+[213751] = {
+"Dynamite Mine Cart",
+"Darkflame Cleft",
+"enUS",
 },
 [136330] = {
 "Soul Thorns",
@@ -25077,10 +25079,9 @@ true,
 "Tuercesangre mechaoscura",
 "Operación: Compuerta",
 },
-[213751] = {
-"Dynamite Mine Cart",
-"Darkflame Cleft",
-"enUS",
+[133870] = {
+"Diseased Lasher",
+"The Underrot",
 },
 [84957] = {
 "Piromántico pútrido",
@@ -25090,17 +25091,17 @@ true,
 "Protector of Flame",
 "The Vortex Pinnacle",
 },
-[133870] = {
-"Diseased Lasher",
+[133685] = {
+"Befouled Spirit",
 "The Underrot",
 },
 [39616] = {
 "Naz'jar Invader",
 "Throne of the Tides",
 },
-[133685] = {
-"Befouled Spirit",
-"The Underrot",
+[95832] = {
+"Valarjar Shieldmaiden",
+"Halls of Valor",
 },
 [214117] = {
 "Entidad desconocida",
@@ -25118,14 +25119,14 @@ true,
 "Blight Toad",
 "Waycrest Manor",
 },
-[134284] = {
-"Fallen Deathspeaker",
-"The Underrot",
-},
 [212412] = {
 "Sootsnout",
 "Darkflame Cleft",
 "enUS",
+},
+[212778] = {
+"Minion of Ghur'sha",
+"Throne of the Tides",
 },
 [168572] = {
 "Fungi Stormer",
@@ -25135,12 +25136,12 @@ true,
 "Ojo de la reina",
 "Ciudad de los Hilos",
 },
-[212778] = {
-"Minion of Ghur'sha",
-"Throne of the Tides",
-},
 [224609] = {
 "Destructor crepuscular",
+"Grim Batol",
+},
+[40320] = {
+"Valiona",
 "Grim Batol",
 },
 [212765] = {
@@ -25701,18 +25702,18 @@ true,
 "Hurgador arcano",
 "Academia Algeth'ar",
 },
-[81236] = {
-"Técnico de Riel siniestro",
-"Depósito Riel siniestro",
+[12216] = {
+"Poison Sprite",
+"Maraudon",
+"enUS",
 },
 [176521] = {
 "Stygian Abductor",
 "Sanctum of Domination",
 },
-[12216] = {
-"Poison Sprite",
-"Maraudon",
-"enUS",
+[205435] = {
+"Destripador de época",
+"El Alba del Infinito",
 },
 [205691] = {
 "Creación de Iridikron",
@@ -25738,34 +25739,34 @@ true,
 "Sister Malady",
 "Waycrest Manor",
 },
+[197905] = {
+"Spellbound Scepter",
+"Algeth'ar Academy",
+},
+[163618] = {
+"Zolramus Necromancer",
+"The Necrotic Wake",
+},
+[196202] = {
+"Educador de Algeth'ar",
+"Academia Algeth'ar",
+},
 [168891] = {
 "Rigged Plagueborer",
 "Plaguefall",
-},
-[186246] = {
-"Buitre desgarrador",
-"Hondonada Frondacuero",
 },
 [150168] = {
 "Toxic Monstrosity",
 "Operation: Mechagon",
 },
-[197905] = {
-"Spellbound Scepter",
-"Algeth'ar Academy",
-},
-[150169] = {
-"Toxic Lurker",
-"Operation: Mechagon",
-},
-[81407] = {
-"Bombardero Riel siniestro",
-"Depósito Riel siniestro",
-},
-[210810] = {
-"Menial Laborer",
-"Darkflame Cleft",
+[136139] = {
+"Mechanized Peacekeeper",
+"The MOTHERLODE!!",
 "enUS",
+},
+[186246] = {
+"Buitre desgarrador",
+"Hondonada Frondacuero",
 },
 [10393] = {
 "Skul",
@@ -25790,9 +25791,10 @@ true,
 "Valarjar Thundercaller",
 "Halls of Valor",
 },
-[196202] = {
-"Educador de Algeth'ar",
-"Academia Algeth'ar",
+[235631] = {
+"Crawler Mine",
+"The MOTHERLODE!!",
+"enUS",
 },
 [10489] = {
 "Risen Guard",
@@ -25812,9 +25814,9 @@ true,
 "Aparato de contención",
 "Salas de Infusión",
 },
-[127315] = {
-"Reanimation Totem",
-"Atal'Dazar",
+[150169] = {
+"Toxic Lurker",
+"Operation: Mechagon",
 },
 [189318] = {
 "Oso infectado",
@@ -26020,11 +26022,6 @@ true,
 "Black Blood",
 "Ara-Kara, City of Echoes",
 },
-[210818] = {
-"Lowly Moleherd",
-"Darkflame Cleft",
-"enUS",
-},
 [192800] = {
 "Maestra de lanzas nokhud",
 "El Ataque Nokhud",
@@ -26032,6 +26029,11 @@ true,
 [165076] = {
 "Gluttonous Tick",
 "Sanguine Depths",
+},
+[210818] = {
+"Lowly Moleherd",
+"Darkflame Cleft",
+"enUS",
 },
 [45572] = {
 "Howling Gale",
@@ -26055,9 +26057,9 @@ true,
 "Theater of Pain",
 "enUS",
 },
-[122969] = {
-"Zanchuli Witch-Doctor",
-"Atal'Dazar",
+[192796] = {
+"Soplacuernos nokhud",
+"El Ataque Nokhud",
 },
 [118491] = {
 "Corrupted Risen Mage",
@@ -26067,9 +26069,9 @@ true,
 "Depraved Collector",
 "Halls of Atonement",
 },
-[192796] = {
-"Soplacuernos nokhud",
-"El Ataque Nokhud",
+[122969] = {
+"Zanchuli Witch-Doctor",
+"Atal'Dazar",
 },
 [223357] = {
 "Sureki Conscript",
@@ -26113,9 +26115,9 @@ true,
 "Sobrestante Lahar",
 "Neltharus",
 },
-[213892] = {
-"Mago oscuro del ocaso",
-"El Rompealbas",
+[167731] = {
+"Separation Assistant",
+"The Necrotic Wake",
 },
 [144293] = {
 "Waste Processing Unit",
@@ -26127,21 +26129,21 @@ true,
 "Cinderbrew Meadery",
 "enUS",
 },
-[167731] = {
-"Separation Assistant",
-"The Necrotic Wake",
+[98406] = {
+"Embershard Scorpion",
+"Neltharion's Lair",
 },
 [114526] = {
 "Suplente fantasmal",
 "Regreso a Karazhan",
 },
-[170490] = {
-"Atal'ai High Priest",
-"De Other Side",
+[213892] = {
+"Mago oscuro del ocaso",
+"El Rompealbas",
 },
-[98406] = {
-"Embershard Scorpion",
-"Neltharion's Lair",
+[122970] = {
+"Shadowblade Stalker",
+"Atal'Dazar",
 },
 [166299] = {
 "Mistveil Tender",
@@ -26168,42 +26170,42 @@ true,
 "Irontide Cleaver",
 "Siege of Boralus",
 },
-[144295] = {
-"Mechagon Mechanic",
-"Operation: Mechagon",
-"enUS",
-},
 [81603] = {
 "Campeona Druna",
 "Muelles de hierro",
+},
+[167962] = {
+"Defunct Dental Drill",
+"De Other Side",
 },
 [105699] = {
 "Sable de maná",
 "Corte de Estrellas",
 },
-[122971] = {
-"Dazar'ai Juggernaut",
-"Atal'Dazar",
+[144295] = {
+"Mechagon Mechanic",
+"Operation: Mechagon",
+"enUS",
 },
 [213893] = {
 "Taumaturga oscura del ocaso",
 "El Rompealbas",
 },
-[167962] = {
-"Defunct Dental Drill",
+[167963] = {
+"Headless Client",
 "De Other Side",
 },
 [75506] = {
 "Partidaria de Sombraluna",
 "Cementerios de Sombraluna",
 },
-[167963] = {
-"Headless Client",
-"De Other Side",
+[136186] = {
+"Tidesage Spiritualist",
+"Shrine of the Storm",
 },
-[177816] = {
-"Especialista en interrogatorios",
-"Tazavesh, el Mercado Velado",
+[122971] = {
+"Dazar'ai Juggernaut",
+"Atal'Dazar",
 },
 [114783] = {
 "Doncella reformada",
@@ -26222,32 +26224,32 @@ true,
 "Nightfall Curseblade",
 "The Dawnbreaker",
 },
-[154020] = {
-"Prisonbreak Cursewalker",
-"Torghast, Tower of the Damned",
-"enUS",
+[137521] = {
+"Irontide Powdershot",
+"Siege of Boralus",
+},
+[208521] = {
+"Pumpkin Soldier",
+"Scarlet Monastery",
+},
+[177816] = {
+"Especialista en interrogatorios",
+"Tazavesh, el Mercado Velado",
 },
 [209801] = {
 "Quartermaster Koratite",
 "The Rookery",
 "enUS",
 },
-[208521] = {
-"Pumpkin Soldier",
-"Scarlet Monastery",
-},
-[136186] = {
-"Tidesage Spiritualist",
-"Shrine of the Storm",
-},
 [155812] = {
 "Mawsworn Ritualist",
 "Torghast, Tower of the Damned",
 "enUS",
 },
-[166302] = {
-"Corpse Harvester",
-"The Necrotic Wake",
+[154020] = {
+"Prisonbreak Cursewalker",
+"Torghast, Tower of the Damned",
+"enUS",
 },
 [12217] = {
 "Corruptor",
@@ -26295,16 +26297,16 @@ true,
 "Partehuesos qalashi",
 "Neltharus",
 },
+[187768] = {
+"Dathea Stormlash",
+"Vault of the Incarnates",
+},
 [39625] = {
 "General Umbriss",
 "Grim Batol",
 },
 [198308] = {
 "Frostwrought Dominator",
-"Vault of the Incarnates",
-},
-[187768] = {
-"Dathea Stormlash",
 "Vault of the Incarnates",
 },
 [10394] = {
@@ -26382,9 +26384,9 @@ true,
 "Entidad desconocida",
 "El Sempibrote",
 },
-[190359] = {
-"Skulking Zealot",
-"Halls of Infusion",
+[168658] = {
+"Forsworn Devastator",
+"Spires of Ascension",
 },
 [171184] = {
 "Mythresh, Sky's Talons",
@@ -26394,21 +26396,21 @@ true,
 "Witherbark",
 "The Everbloom",
 },
-[168658] = {
-"Forsworn Devastator",
+[168717] = {
+"Forsworn Justicar",
 "Spires of Ascension",
-},
-[98538] = {
-"Lady Velandras Ravencrest",
-"Black Rook Hold",
-},
-[229252] = {
-"Hiena mechaoscura",
-"Operación: Compuerta",
 },
 [186229] = {
 "Roble marchito",
 "Hondonada Frondacuero",
+},
+[190359] = {
+"Skulking Zealot",
+"Halls of Infusion",
+},
+[98538] = {
+"Lady Velandras Ravencrest",
+"Black Rook Hold",
 },
 [211341] = {
 "Sombra manifiesta",
@@ -26450,12 +26452,12 @@ true,
 "Tred'ova",
 "Mists of Tirna Scithe",
 },
-[194467] = {
-"Disease Slasher",
-"Brackenhide Hollow",
-},
 [169428] = {
 "Wrathguard",
+"Brackenhide Hollow",
+},
+[194467] = {
+"Disease Slasher",
 "Brackenhide Hollow",
 },
 [170147] = {
@@ -26916,9 +26918,9 @@ true,
 "Riptide Shredder",
 "Siege of Boralus",
 },
-[168717] = {
-"Forsworn Justicar",
-"Spires of Ascension",
+[229252] = {
+"Hiena mechaoscura",
+"Operación: Compuerta",
 },
 [205727] = {
 "Entidad desconocida",
@@ -27000,9 +27002,9 @@ true,
 "The MOTHERLODE!!",
 "enUS",
 },
-[137521] = {
-"Irontide Powdershot",
-"Siege of Boralus",
+[166302] = {
+"Corpse Harvester",
+"The Necrotic Wake",
 },
 [190377] = {
 "Invocahielo primalista",
@@ -27011,6 +27013,11 @@ true,
 [192680] = {
 "Centinela guardián",
 "Academia Algeth'ar",
+},
+[144296] = {
+"Spider Tank",
+"Operation: Mechagon",
+"enUS",
 },
 [104270] = {
 "Ensamblaje de los Guardianes",
@@ -27024,11 +27031,6 @@ true,
 [190345] = {
 "Geomante primalista",
 "Salas de Infusión",
-},
-[144296] = {
-"Spider Tank",
-"Operation: Mechagon",
-"enUS",
 },
 [172979] = {
 "Esporeadora Almíbar",
@@ -27059,9 +27061,9 @@ true,
 "Theater of Pain",
 "enUS",
 },
-[122970] = {
-"Shadowblade Stalker",
-"Atal'Dazar",
+[170490] = {
+"Atal'ai High Priest",
+"De Other Side",
 },
 [190340] = {
 "Defensora refti",
@@ -27103,14 +27105,14 @@ true,
 "Vileshard Hulk",
 "Neltharion's Lair",
 },
+[165560] = {
+"Gormling Larva",
+"Mists of Tirna Scithe",
+},
 [167566] = {
 "Bleakwing Assassin",
 "Castle Nathria",
 "enUS",
-},
-[165560] = {
-"Gormling Larva",
-"Mists of Tirna Scithe",
 },
 [190404] = {
 "Subterranean Proto-Dragon",
@@ -27239,9 +27241,9 @@ true,
 "Invocahielo infestado",
 "El Sempibrote",
 },
-[163862] = {
-"Defender of Many Eyes",
-"Plaguefall",
+[127315] = {
+"Reanimation Totem",
+"Atal'Dazar",
 },
 [105715] = {
 "Inquisidor vigilante",
@@ -27251,19 +27253,18 @@ true,
 "Reanimated Guardian",
 "The Underrot",
 },
-[136139] = {
-"Mechanized Peacekeeper",
-"The MOTHERLODE!!",
+[81407] = {
+"Bombardero Riel siniestro",
+"Depósito Riel siniestro",
+},
+[210810] = {
+"Menial Laborer",
+"Darkflame Cleft",
 "enUS",
 },
-[235631] = {
-"Crawler Mine",
-"The MOTHERLODE!!",
-"enUS",
-},
-[163618] = {
-"Zolramus Necromancer",
-"The Necrotic Wake",
+[163862] = {
+"Defender of Many Eyes",
+"Plaguefall",
 },
 [167612] = {
 "Stoneborn Reaver",
@@ -27294,9 +27295,9 @@ true,
 "Snarling Dockhound",
 "Siege of Boralus",
 },
-[205435] = {
-"Destripador de época",
-"El Alba del Infinito",
+[81236] = {
+"Técnico de Riel siniestro",
+"Depósito Riel siniestro",
 },
 [174175] = {
 "Loyal Stoneborn",
@@ -27548,9 +27549,9 @@ true,
 "Mano de establo espectral",
 "Regreso a Karazhan",
 },
-[40320] = {
-"Valiona",
-"Grim Batol",
+[115407] = {
+"Torre",
+"Regreso a Karazhan",
 },
 [58569] = {
 "Purificador Escarlata",
@@ -27560,9 +27561,9 @@ true,
 "Entidad desconocida",
 "El Rompealbas",
 },
-[115407] = {
-"Torre",
-"Regreso a Karazhan",
+[134284] = {
+"Fallen Deathspeaker",
+"The Underrot",
 },
 [81737] = {
 "Crecimiento desenfrenado",
@@ -27581,22 +27582,21 @@ true,
 "The Rookery",
 "enUS",
 },
-[133436] = {
-"Venture Co. Skyscorcher",
-"The MOTHERLODE!!",
-},
 [115406] = {
 "Caballo",
 "Regreso a Karazhan",
+},
+[133436] = {
+"Venture Co. Skyscorcher",
+"The MOTHERLODE!!",
 },
 [97788] = {
 "Storm Drake",
 "Halls of Valor",
 },
-[213338] = {
-"Forgebound Mender",
-"The Stonevault",
-"enUS",
+[120651] = {
+"Entidad desconocida",
+"Plaga Abrumadora",
 },
 [212400] = {
 "Void-Touched Elemental",
@@ -27944,14 +27944,14 @@ true,
 ["Fixate"] = 11,
 ["Cast - Special Ability [P]"] = 3,
 ["Cast - Glowing [P]"] = 10,
-["Cast - Shield Interrupt"] = 2,
+["Countdown"] = 12,
 ["Cast - Spark Color [P]"] = 2,
 ["Cast - Heal Stun [P]"] = 2,
 ["Fixate by Unit Buff [P]"] = 2,
 ["Cast - Tankbuster [P]"] = 1,
 ["Cast - Important Target [P]"] = 2,
-["Countdown"] = 12,
-["Cast - Shining Green [P]"] = 3,
+["Cast - On Going Cast [P]"] = 2,
+["Cast - Shield Interrupt"] = 2,
 ["Cast - Alert + Timer [P]"] = 4,
 ["Cast - Quick Flash"] = 2,
 ["Cast - AoE Hit All [P]"] = 3,
@@ -27975,8 +27975,8 @@ true,
 ["Cast - AoE With Range [P]"] = 2,
 ["Cast - Frontal Cone"] = 17,
 ["Add - Explode on Die [P]"] = 1,
-["Cast - On Going Cast [P]"] = 2,
 ["Cast - Heroic Leap [P]"] = 3,
+["Cast - Shining Green [P]"] = 3,
 ["Cast - Important by Color [P]"] = 2,
 ["Fixate On You"] = 12,
 },
@@ -28011,7 +28011,7 @@ true,
 ["nameplateShowEnemyMinions"] = "1",
 ["nameplateShowFriendlyNPCs"] = "0",
 ["nameplateSelectedScale"] = "1.15",
-["nameplateStackingTypes"] = "A",
+["nameplateStackingTypes"] = "",
 ["nameplateMinAlphaDistance"] = "10.000000",
 ["nameplateMotion"] = "1",
 ["nameplateShowFriends"] = "1",
@@ -28028,7 +28028,7 @@ true,
 ["nameplateSelfTopInset"] = "0.5",
 ["nameplateRemovalAnimation"] = "0",
 },
-["login_counter"] = 2591,
+["login_counter"] = 2608,
 ["show_aggro_flash"] = true,
 ["bossmod_aura_height"] = 32,
 ["plater_resources_show"] = false,
@@ -33001,10 +33001,10 @@ true,
 false,
 "blue",
 },
-[212681] = {
+[150165] = {
 true,
 false,
-"darkorange",
+"indigo",
 },
 [95842] = {
 true,
@@ -33016,25 +33016,25 @@ true,
 false,
 "cyan",
 },
-[139422] = {
-true,
-false,
-"gold",
-},
 [212412] = {
 true,
 false,
 "indigo",
+},
+[139422] = {
+true,
+false,
+"gold",
 },
 [235631] = {
 true,
 false,
 "magenta",
 },
-[212826] = {
+[152905] = {
 true,
 false,
-"blue",
+"fuchsia",
 },
 [127315] = {
 true,
@@ -33056,10 +33056,10 @@ true,
 false,
 "blue",
 },
-[152905] = {
+[154744] = {
 true,
 false,
-"fuchsia",
+"blue",
 },
 [190342] = {
 true,
@@ -33271,20 +33271,15 @@ true,
 false,
 "mediumpurple",
 },
-[45572] = {
+[205366] = {
 true,
 false,
-"fuchsia",
+"WARRIOR",
 },
 [176573] = {
 true,
 false,
 "fuchsia",
-},
-[205366] = {
-true,
-false,
-"WARRIOR",
 },
 [207177] = {
 true,
@@ -33300,6 +33295,11 @@ false,
 true,
 false,
 "magenta",
+},
+[45572] = {
+true,
+false,
+"fuchsia",
 },
 [210818] = {
 true,
@@ -33321,15 +33321,15 @@ true,
 false,
 "darkorange",
 },
-[122969] = {
-true,
-false,
-"cyan",
-},
-[164506] = {
+[206068] = {
 true,
 false,
 "magenta",
+},
+[167731] = {
+true,
+false,
+"deepskyblue",
 },
 [118491] = {
 true,
@@ -33341,20 +33341,20 @@ true,
 false,
 "cyan",
 },
-[206068] = {
-true,
-false,
-"magenta",
-},
-[223357] = {
-true,
-false,
-"blue",
-},
 [206064] = {
 true,
 false,
 "deepskyblue",
+},
+[122969] = {
+true,
+false,
+"cyan",
+},
+[164506] = {
+true,
+false,
+"magenta",
 },
 [129366] = {
 true,
@@ -33391,27 +33391,27 @@ true,
 false,
 "magenta",
 },
-[129879] = {
-true,
-false,
-"indigo",
-},
 [150169] = {
 true,
 false,
 "cyan",
-},
-[144293] = {
-true,
-false,
-"blue",
 },
 [201788] = {
 true,
 false,
 "indigo",
 },
-[167956] = {
+[144293] = {
+true,
+false,
+"blue",
+},
+[98406] = {
+true,
+false,
+"blue",
+},
+[213892] = {
 true,
 false,
 "cyan",
@@ -33426,10 +33426,10 @@ true,
 false,
 "indigo",
 },
-[98406] = {
+[122970] = {
 true,
 false,
-"blue",
+"darkorange",
 },
 [166299] = {
 true,
@@ -33441,50 +33441,50 @@ true,
 false,
 "cyan",
 },
-[213892] = {
+[144294] = {
 true,
 false,
-"cyan",
-},
-[144295] = {
-true,
-false,
-"magenta",
-},
-[204560] = {
-true,
-false,
-"fuchsia",
-},
-[173720] = {
-true,
-false,
-"blue",
-},
-[122971] = {
-true,
-false,
-"indigo",
+"deepskyblue",
 },
 [165414] = {
 true,
 false,
 "cyan",
 },
+[129879] = {
+true,
+false,
+"indigo",
+},
+[173720] = {
+true,
+false,
+"blue",
+},
+[203799] = {
+true,
+false,
+"deepskyblue",
+},
+[167998] = {
+true,
+false,
+"blue",
+},
 [105699] = {
 true,
 false,
 "darkorange",
 },
-[208521] = {
+[165483] = {
 true,
 false,
-"deepskyblue",
+"fuchsia",
 },
-[213893] = {
+[144295] = {
 true,
 false,
-"cyan",
+"magenta",
 },
 [219301] = {
 true,
@@ -33496,10 +33496,10 @@ true,
 false,
 "magenta",
 },
-[167998] = {
+[122971] = {
 true,
 false,
-"blue",
+"indigo",
 },
 [163520] = {
 true,
@@ -33526,37 +33526,37 @@ true,
 false,
 "mediumpurple",
 },
-[154020] = {
+[168246] = {
 true,
 false,
-"deepskyblue",
-},
-[165483] = {
-true,
-false,
-"fuchsia",
-},
-[177816] = {
-true,
-false,
-"cyan",
-},
-[209801] = {
-true,
-false,
-"indigo",
+"WARRIOR",
 },
 [201792] = {
 true,
 false,
 "mediumpurple",
 },
-[166302] = {
+[208521] = {
 true,
 false,
-"cyan",
+"deepskyblue",
+},
+[165111] = {
+true,
+false,
+"darkorange",
 },
 [200387] = {
+true,
+false,
+"indigo",
+},
+[154020] = {
+true,
+false,
+"deepskyblue",
+},
+[209801] = {
 true,
 false,
 "indigo",
@@ -33611,15 +33611,15 @@ true,
 false,
 "white",
 },
-[139949] = {
-true,
-false,
-"honeydew",
-},
 [197857] = {
 true,
 false,
 "darkorange",
+},
+[139949] = {
+true,
+false,
+"honeydew",
 },
 [187315] = {
 true,
@@ -33661,30 +33661,30 @@ true,
 false,
 "fuchsia",
 },
-[136139] = {
+[197905] = {
 true,
 false,
-"blue",
+"deepskyblue",
 },
 [122973] = {
 true,
 false,
 "magenta",
 },
-[197905] = {
+[196202] = {
 true,
 false,
-"deepskyblue",
+"cyan",
 },
 [129370] = {
 true,
 false,
 "cyan",
 },
-[196202] = {
+[136139] = {
 true,
 false,
-"cyan",
+"blue",
 },
 [168891] = {
 true,
@@ -33701,45 +33701,45 @@ true,
 false,
 "cyan",
 },
-[167611] = {
-true,
-false,
-"blue",
-},
 [196712] = {
 true,
 false,
 "fuchsia",
+},
+[196115] = {
+true,
+false,
+"blue",
 },
 [85232] = {
 true,
 false,
 "blue",
 },
-[190359] = {
+[167611] = {
 true,
 false,
 "blue",
 },
-[190128] = {
+[91002] = {
 true,
 false,
-"white",
+"fuchsia",
 },
 [81522] = {
 true,
 false,
 "mediumpurple",
 },
+[190359] = {
+true,
+false,
+"blue",
+},
 [98538] = {
 true,
 false,
 "mediumpurple",
-},
-[196115] = {
-true,
-false,
-"blue",
 },
 [229252] = {
 true,
@@ -33806,15 +33806,15 @@ true,
 false,
 "magenta",
 },
-[170147] = {
-true,
-false,
-"darkorange",
-},
 [195877] = {
 true,
 false,
 "cyan",
+},
+[170147] = {
+true,
+false,
+"darkorange",
 },
 [173729] = {
 true,
@@ -33991,20 +33991,20 @@ true,
 false,
 "fuchsia",
 },
-[206230] = {
+[200126] = {
 true,
 false,
-"blue",
+"cyan",
 },
 [129374] = {
 true,
 false,
 "indigo",
 },
-[200126] = {
+[206230] = {
 true,
 false,
-"cyan",
+"blue",
 },
 [114796] = {
 true,
@@ -34736,10 +34736,10 @@ true,
 false,
 "cyan",
 },
-[91002] = {
+[190128] = {
 true,
 false,
-"fuchsia",
+"white",
 },
 [84989] = {
 true,
@@ -34836,20 +34836,20 @@ true,
 false,
 "blue",
 },
-[165111] = {
+[166302] = {
 true,
 false,
-"darkorange",
+"cyan",
 },
 [189363] = {
 true,
 false,
 "darkorange",
 },
-[168246] = {
+[177816] = {
 true,
 false,
-"WARRIOR",
+"cyan",
 },
 [214439] = {
 true,
@@ -34861,7 +34861,7 @@ true,
 false,
 "indigo",
 },
-[167963] = {
+[213894] = {
 true,
 false,
 "blue",
@@ -34871,12 +34871,12 @@ true,
 false,
 "WARRIOR",
 },
-[203799] = {
+[213893] = {
 true,
 false,
-"deepskyblue",
+"cyan",
 },
-[213894] = {
+[167963] = {
 true,
 false,
 "blue",
@@ -34911,15 +34911,15 @@ true,
 false,
 "fuchsia",
 },
-[144294] = {
+[204560] = {
 true,
 false,
-"deepskyblue",
+"fuchsia",
 },
-[122970] = {
+[167956] = {
 true,
 false,
-"darkorange",
+"cyan",
 },
 [187224] = {
 true,
@@ -34946,10 +34946,10 @@ true,
 false,
 "blue",
 },
-[167731] = {
+[223357] = {
 true,
 false,
-"deepskyblue",
+"blue",
 },
 [168384] = {
 true,
@@ -35126,15 +35126,15 @@ true,
 false,
 "indigo",
 },
+[95843] = {
+true,
+false,
+"blue",
+},
 [211228] = {
 true,
 false,
 "cyan",
-},
-[154744] = {
-true,
-false,
-"blue",
 },
 [198326] = {
 true,
@@ -35146,30 +35146,30 @@ true,
 false,
 "mediumpurple",
 },
-[151657] = {
-true,
-false,
-"magenta",
-},
 [122965] = {
 true,
 false,
 "mediumpurple",
 },
-[150165] = {
+[212826] = {
 true,
 false,
-"indigo",
+"blue",
+},
+[151657] = {
+true,
+false,
+"magenta",
 },
 [97788] = {
 true,
 false,
 "indigo",
 },
-[95843] = {
+[212681] = {
 true,
 false,
-"blue",
+"darkorange",
 },
 [212400] = {
 true,
@@ -45070,14 +45070,14 @@ nil,
 1,
 0,
 },
-["spellpercent_text_enabled"] = true,
+["percent_text_enabled"] = true,
 ["actorname_text_outline"] = "NONE",
 ["big_actortitle_text_color"] = {
 1,
 0.8,
 0,
 },
-["percent_text_enabled"] = true,
+["spellpercent_text_enabled"] = true,
 ["big_actortitle_text_outline"] = "OUTLINE",
 ["percent_text_outline"] = "NONE",
 ["percent_text_font"] = "Friz Quadrata TT",
@@ -52683,6 +52683,18 @@ PlaterLogs = {
 ["_error_logs"] = {
 },
 ["_general_logs"] = {
+"2026-11-14 12:29:40 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-14 06:30:25 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-14 05:50:52 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-14 04:49:41 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 19:07:00 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 16:58:44 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 10:22:53 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 07:18:38 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 07:06:46 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 04:59:57 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-13 04:58:56 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
+"2026-11-12 19:12:52 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-12 18:56:49 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-12 17:17:28 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-12 13:10:57 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
@@ -52690,18 +52702,6 @@ PlaterLogs = {
 "2026-11-11 20:27:06 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-11 20:19:37 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
 "2026-11-11 18:17:26 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
-"2026-11-11 16:08:38 | INIT | Plater-v663-Forever | Framework v775 | 1.60.1 | enUS | Karums",
-"2026-07-08 00:55:16 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-07-08 00:54:24 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Ihavegold",
-"2026-07-08 00:52:50 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 11:45:45 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:41:59 | INIT | Plater-v630-TBC | Framework v668 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:41:40 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:36:18 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Krasivoe",
-"2026-02-08 10:34:07 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Ihavegold",
-"2026-01-30 19:14:38 | INIT | Plater-v630-TBC | Framework v661 | 2.5.5 | enUS | Krasivoe",
-"2026-01-30 19:13:56 | INIT | Plater-v626-TBC | Framework v660 | 2.5.5 | enUS | Krasivoe",
-"2026-01-30 19:13:05 | INIT | Plater-v626-TBC | Framework v660 | 2.5.5 | enUS | Krasivoe",
 },
 }
 PlaterBackup = {

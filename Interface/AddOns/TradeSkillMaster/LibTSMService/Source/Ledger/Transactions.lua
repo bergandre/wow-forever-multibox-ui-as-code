@@ -23,6 +23,10 @@ local SessionInfo = LibTSMService:From("LibTSMWoW"):Include("Util.SessionInfo")
 local private = {
 	db = nil,
 	dbSummary = nil,
+	recordBaseItems = {
+		sale = {},
+		buy = {},
+	},
 	dataChanged = false,
 	baseStatsQuery = nil,
 	levelStatsQuery = nil,
@@ -289,6 +293,9 @@ end
 ---@return (number totalAmount, number totalNum)|(nil, nil)
 function Transactions.GetSaleStats(itemString, minTime)
 	local baseItemString = ItemString.GetBaseFast(itemString)
+	if not private.recordBaseItems.sale[baseItemString] then
+		return nil, nil
+	end
 	local levelItemString = ItemString.ToLevel(itemString)
 	local isBaseItemString = itemString == baseItemString
 	local isLevelItemString = itemString == levelItemString
@@ -324,6 +331,9 @@ end
 ---@return (number totalAmount, number totalNum)|(nil, nil)
 function Transactions.GetBuyStats(itemString, totalQuantity)
 	local baseItemString = ItemString.GetBaseFast(itemString)
+	if not private.recordBaseItems.buy[baseItemString] then
+		return nil, nil
+	end
 	local levelItemString = ItemString.ToLevel(itemString)
 	local isBaseItemString = itemString == baseItemString
 	local isLevelItemString = itemString == levelItemString
@@ -805,6 +815,7 @@ function private.BulkInsertNewRowHelper(player, recordType, itemString, stackSiz
 			end
 			price = newPrice
 		end
+		private.HandleRecordInserted(recordType, baseItemString)
 		private.db:BulkInsertNewRowFast13(baseItemString, recordType, itemString, levelItemString, stackSize, quantity, price, otherPlayer, player, timestamp, source, saveTime, isCurrentRealm)
 	else
 		private.dataChanged = true
@@ -866,6 +877,13 @@ function private.SaveData(recordType)
 	end
 end
 
+function private.HandleRecordInserted(recordType, baseItemString)
+	local baseItems = private.recordBaseItems[recordType]
+	if baseItems then
+		baseItems[baseItemString] = true
+	end
+end
+
 function private.InsertRecord(recordType, itemString, source, stackSize, price, otherPlayer, timestamp)
 	private.dataChanged = true
 	assert(itemString and source and stackSize and price and otherPlayer and timestamp)
@@ -891,6 +909,7 @@ function private.InsertRecord(recordType, itemString, source, stackSize, price, 
 	if uuid then
 		private.db:UpdateRow(uuid, "quantity", prevQuantity + stackSize)
 	else
+		private.HandleRecordInserted(recordType, baseItemString)
 		private.db:InsertRow(baseItemString, recordType, itemString, levelItemString, stackSize, stackSize, price, otherPlayer, player, timestamp, source, 0, true)
 	end
 	if private.syncHashDayCache[player] then

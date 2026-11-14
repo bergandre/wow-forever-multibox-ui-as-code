@@ -304,7 +304,7 @@ function Item.GetDescription(itemID, itemEquipLoc, itemType, itemSubType)
 			ret = tokenDesc
 		end
 	elseif Companion.IsCompanion(itemID) then
-		ret = Companion.GetDescription(itemID, AtlasLoot:GameVersion_GE(AtlasLoot.WRATH_VERSION_NUM, true, false))
+		ret = Companion.GetDescription(itemID, AtlasLoot:ClientHasWrathSystems(true, false))
 	elseif ItemSet.GetSetIDforItemID(itemID) then
 		ret = AL["|cff00ff00Set item:|r "]..GetItemDescInfo(itemEquipLoc, itemType, itemSubType)
 	else
@@ -465,7 +465,7 @@ function Item.ShowQuickDressUp(itemLink, ttFrame)
 	local creatureID = Companion.GetCreatureID(itemLink)
 	if creatureID then
 		frame:SetCreature(creatureID)
-		frame:SetCamDistanceScale(AtlasLoot:GameVersion_GE(AtlasLoot.WRATH_VERSION_NUM, 1, 2))
+		frame:SetCamDistanceScale(AtlasLoot:ClientHasWrathSystems(1, 2))
 		frame:SetPortraitZoom(frame.zoomLevel)
 	else
 		frame:SetCamDistanceScale(1)

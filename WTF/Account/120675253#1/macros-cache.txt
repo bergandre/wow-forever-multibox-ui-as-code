@@ -17,12 +17,35 @@ VER 3 0000000000000004 "RXP ITEM" "134400"
 /click RXPItemFrameButton1 LeftButton
 END
 VER 3 0000000000000005 "RXPFollow" "Inv_boots_02"
-//Party Leader
+//You are not in a party.
 END
 VER 3 0000000000000001 "RXPTargeting" "Ability_eyeoftheowl"
-/targetexact Senani Thunderheart
+/targetexact Korran
+/targetexact Omusa Thunderhorn
 /tm !7
 /targetlasttarget [dead]
+END
+VER 3 000000000000000A "t:charge macro" "134400"
+#showtooltip Charge
+/cast [nostance:1] Battle Stance
+/cast Charge
+END
+VER 3 000000000000000C "t:charge tank" "134400"
+#showtooltip
+/startattack
+/cast [nocombat,nostance:1] Battle Stance
+/cast [nocombat,stance:1] Charge
+/cast [combat,nostance:2] Defensive Stance
+/cast [combat,stance:2] Sunder Armor
+END
+VER 3 000000000000000B "T;def stance" "134400"
+#showtooltip Defensive Stance
+/cast [nostance:2] Defensive Stance
+/equip Sword of the Fallen
+END
+VER 3 0000000000000009 "taunt macro" "134400"
+#showtooltip
+/cast [@mouseover,harm][] Taunt
 END
 VER 3 0000000000000006 "testes" "134400"
 /run local t,id=GetCursorInfo() if t~="item" then local _,l=GameTooltip:GetItem() id=l and tonumber(l:match("item:(%d+)")) end if id then Scrap:ToggleJunk(id) ClearCursor() end

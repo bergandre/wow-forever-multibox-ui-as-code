@@ -50,15 +50,25 @@ local function radioButton(parent, text)
     return rb
 end
 
--- An on/off setting under `anchor`.
-local function checkbox(parent, anchor, text, key)
+-- An on/off setting under `anchor`; `onChar`: a per-character one (NodeRadarCharDB), set directly
+-- and handed to `onChar()`.
+local function checkbox(parent, anchor, text, key, onChar)
     local cb = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
     cb:SetSize(24, 24)
     cb:SetPoint("TOPLEFT", anchor, "BOTTOMLEFT", 0, -4)
     local fs = label(parent, text)
     fs:SetPoint("LEFT", cb, "RIGHT", 4, 0)
-    local function sync() cb:SetChecked(NR.db[key] == true) end
-    cb:SetScript("OnClick", function() NR.Set(key, cb:GetChecked() == true); sync() end)
+    local function store() return onChar and NR.charDb or NR.db end
+    local function sync() cb:SetChecked((store() or {})[key] == true) end
+    cb:SetScript("OnClick", function()
+        if onChar then
+            if NR.charDb then NR.charDb[key] = cb:GetChecked() == true end
+            onChar()
+        else
+            NR.Set(key, cb:GetChecked() == true)
+        end
+        sync()
+    end)
     refreshers[#refreshers + 1] = sync
     Options._test.checks[key] = cb
     return cb
@@ -188,11 +198,64 @@ local function build()
     on:SetPoint("TOPLEFT", blind, "BOTTOMLEFT", 0, -12)
     -- #91: the minimap scan, opt-in, the only way to see nodes from 70862.
     local scan = checkbox(page, on, "The minimap scan (client build 70862 and later)", "moveScan")
-    local scanWhy = note(page, scan, NR.SCAN_TEXT)
+    -- #116: why the scan isn't running, when the reason lasts (MoveScan.Trouble), its hint on hover.
+    local trouble = CreateFrame("Frame", nil, page)
+    trouble:SetPoint("TOPLEFT", scan, "BOTTOMLEFT", 28, -2)
+    trouble:SetSize(532, 1)
+    local troubleText = label(trouble, "", "GameFontNormalSmall")
+    troubleText:SetPoint("TOPLEFT", trouble, "TOPLEFT", 0, 0)
+    troubleText:SetWidth(532)
+    troubleText:SetJustifyH("LEFT")
+    troubleText:SetTextColor(1, 0.35, 0.35)
+    local hint
+    trouble:SetScript("OnEnter", function(self)
+        if not hint then return end
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText(hint, 1, 1, 1, 1, true)
+        GameTooltip:Show()
+    end)
+    trouble:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    local function readTrouble()
+        local ok, key, text, h = pcall(NR.MoveScan.Trouble, GetTime())
+        if not ok then key = nil end
+        hint = key and h or nil
+        troubleText:SetText(key and ("The scan isn't running: " .. text) or "")
+        trouble:SetHeight(key and math.max(1, troubleText:GetStringHeight() or 12) or 1)
+        trouble:EnableMouse(key ~= nil)
+        Options._test.trouble = key
+    end
+    refreshers[#refreshers + 1] = readTrouble
+    -- Read again every second while the page shows (a fix made with the page open shows).
+    local since = 0
+    trouble:SetScript("OnUpdate", function(_, elapsed)
+        since = since + elapsed
+        if since >= 1 then since = 0; readTrouble() end
+    end)
+    local scanWhy = note(page, trouble, NR.SCAN_TEXT)
+    scanWhy:SetPoint("TOPLEFT", trouble, "BOTTOMLEFT", -28, -4)
     local scanEvery = radios(page, scanWhy, "The scan looks, while you move, every", "scanEvery",
         { { 1, "1 s" }, { 2, "2 s" }, { 3, "3 s" }, { 5, "5 s" } }, "s")
 
-    local looks = heading(page, scanEvery, "How often it looks")
+    -- The radar look (off): the radar face at every look instead of the minimap's own ground.
+    local radarBox = checkbox(page, scanEvery, "A radar animation over the minimap at each look (instead of the minimap's own ground)",
+        "scanRadar")
+    radarBox:SetPoint("TOPLEFT", scanEvery, "BOTTOMLEFT", 0, -8)
+
+    -- #104: the background frame rate raised while this character scans (per character, off).
+    local fpsBox = checkbox(page, radarBox, "Raise the background frame rate to 60 while the scan locates a node (this character)",
+        "scanFps", function() NR.ScanFps.Toggle() end)
+    fpsBox:SetPoint("TOPLEFT", radarBox, "BOTTOMLEFT", 0, -4)
+    local fpsWhy = note(page, fpsBox, "In a window without focus the game runs at its background frame rate (30 by "
+        .. "default), and the scan then locates nodes far more slowly. Raised only while it's locating one; yours is "
+        .. "put back a few seconds after, and at logout. Change it yourself and NodeRadar leaves it alone.")
+
+    -- #119: other addons' minimap icons quieted during a look (on by default).
+    local quietBox = checkbox(page, fpsWhy, "Quiet other addons' minimap icons during a look", "scanQuiet")
+    quietBox:SetPoint("TOPLEFT", fpsWhy, "BOTTOMLEFT", 0, -8)
+    local quietWhy = note(page, quietBox, "The minimap passes under your mouse during a look, and another addon's "
+        .. "icon there would be hovered (its tooltip can end the look) or take a click. Their mouse is off for the "
+        .. "look and put back after it.")
+    local looks = heading(page, quietWhy, "How often it looks")
     local still = radios(page, looks, "Standing still, every", "interval",
         { { 1, "1 s" }, { 2, "2 s" }, { 5, "5 s" } }, "s")
     local moving = radios(page, still, "Moving, about every", "yards",

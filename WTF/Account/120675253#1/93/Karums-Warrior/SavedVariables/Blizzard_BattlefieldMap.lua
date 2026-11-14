@@ -5,6 +5,6 @@ BattlefieldMapOptions = {
 ["showPlayers"] = true,
 ["position"] = {
 ["y"] = 336.0000610351563,
-["x"] = 2344.819580078125,
+["x"] = 2344.821533203125,
 },
 }

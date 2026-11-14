@@ -38,6 +38,9 @@ Container:OnModuleLoad(function()
 	Event.Register("ITEM_UNLOCKED", private.ItemUnlockedHandler)
 	if LibTSMWoW.IsRetail() or LibTSMWoW.IsForever() then
 		hooksecurefunc(BankFrame.BankPanel, "SetBankType", private.BankFrameShowHook) ---@diagnostic disable-line: undefined-field
+		if Addon_SetBankType then ---@diagnostic disable-line: undefined-global
+			hooksecurefunc("Addon_SetBankType", private.AddonSetBankTypeHook)
+		end
 		Event.Register("BANKFRAME_OPENED", private.BankFrameOpened)
 		Event.Register("BANKFRAME_CLOSED", private.BankFrameClosed)
 	end
@@ -333,7 +336,11 @@ end
 ---Returns whether or not the warbank is open.
 ---@return boolean
 function Container.IsWarbankOpen()
-	return Container.CanAccessWarbank() and BankPanel:GetActiveBankType() == Enum.BankType.Account
+	if not Container.CanAccessWarbank() then
+		return false
+	end
+	local bankType = Addon_GetBankType and Addon_GetBankType() or BankPanel:GetActiveBankType() ---@diagnostic disable-line: undefined-global
+	return bankType == Enum.BankType.Account
 end
 
 ---Opens all bags.
@@ -392,6 +399,13 @@ function private.ItemUnlockedHandler(_, bag, slot)
 end
 
 function private.BankFrameShowHook()
+	private.bankFrameCallbacks:CallAll(true)
+end
+
+function private.AddonSetBankTypeHook()
+	if not BankFrame:IsShown() then
+		return
+	end
 	private.bankFrameCallbacks:CallAll(true)
 end
 

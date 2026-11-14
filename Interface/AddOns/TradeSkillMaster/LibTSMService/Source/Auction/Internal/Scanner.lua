@@ -20,6 +20,7 @@ local DefaultUI = LibTSMService:From("LibTSMWoW"):Include("UI.DefaultUI")
 local private = {
 	indexDB = nil,
 	quantityDB = nil,
+	quantityBaseItems = {},
 	baseItemQuantityQuery = nil,
 	updateQuery = nil, ---@diagnostic disable-line: tsm-private
 	quantityStorage = nil,
@@ -165,6 +166,9 @@ end
 ---@return number
 function Scanner.GetQuantity(itemString)
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
+		if not private.quantityBaseItems[itemString] then
+			return 0
+		end
 		return private.baseItemQuantityQuery
 			:BindParams(itemString)
 			:Sum("auctionQuantity")
@@ -366,6 +370,7 @@ function private.RebuildQuantityDB()
 		:AsTable(updateTemp.prevQuantity, "levelItemString", "auctionQuantity")
 	private.quantityDB:TruncateAndBulkInsertStart()
 	for levelItemString, quantity in pairs(private.quantityStorage) do
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:BulkInsertNewRow(levelItemString, quantity)
 	end
 	private.quantityDB:BulkInsertEnd()

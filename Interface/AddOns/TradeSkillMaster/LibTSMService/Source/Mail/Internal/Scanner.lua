@@ -20,6 +20,7 @@ local private = {
 	mailDB = nil,
 	itemDB = nil,
 	quantityDB = nil,
+	quantityBaseItems = {},
 	baseItemQuantityQuery = nil,
 	mailCallbacks = CallbackRegistry.NewList(),
 	quantityCallbacks = CallbackRegistry.NewList(),
@@ -115,6 +116,9 @@ end
 ---@return number
 function Scanner.GetQuantity(itemString)
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
+		if not private.quantityBaseItems[itemString] then
+			return 0
+		end
 		return private.baseItemQuantityQuery
 			:BindParams(itemString)
 			:Sum("mailQuantity")
@@ -138,6 +142,7 @@ end
 function Scanner.InsertPendingMail(pendingMail)
 	private.quantityDB:BulkInsertStart()
 	for levelItemString, quantity in pairs(pendingMail) do
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:BulkInsertNewRow(levelItemString, quantity)
 	end
 	private.quantityDB:BulkInsertEnd()
@@ -164,6 +169,7 @@ function Scanner.HandlePendingMailChange(levelItemString, changeQuantity)
 		-- Create a new row
 		assert(changeQuantity > 0)
 		newValue = changeQuantity
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:InsertRow(levelItemString, changeQuantity)
 	end
 	assert(not next(private.itemsTemp))
@@ -225,6 +231,7 @@ function private.MailInboxUpdateDelayed()
 		:AsTable(updateTemp.prevQuantities, "levelItemString", "mailQuantity")
 	private.quantityDB:TruncateAndBulkInsertStart()
 	for levelItemString, quantity in pairs(private.quantityStorage) do
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:BulkInsertNewRow(levelItemString, quantity)
 	end
 	private.quantityDB:BulkInsertEnd()

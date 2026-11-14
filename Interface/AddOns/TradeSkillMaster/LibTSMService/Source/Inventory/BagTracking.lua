@@ -23,6 +23,7 @@ local DefaultUI = LibTSMService:From("LibTSMWoW"):Include("UI.DefaultUI")
 local private = {
 	slotDB = nil,
 	quantityDB = nil,
+	quantityBaseItems = {},
 	storage = {
 		bagQuantity = nil, ---@type table<string,number?>
 		bankQuantity = nil, ---@type table<string,number?>
@@ -125,6 +126,7 @@ function BagTracking.Load(bagQuantityData, bankQuantityData)
 		local bagQuantity = private.storage.bagQuantity[levelItemString] or 0
 		local bankQuantity = private.storage.bankQuantity[levelItemString] or 0
 		if (bagQuantity + bankQuantity) > 0 then
+			private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 			private.quantityDB:BulkInsertNewRow(levelItemString, bagQuantity, bankQuantity)
 		end
 	end
@@ -309,6 +311,9 @@ end
 ---@return number bankQuantity
 function BagTracking.GetQuantities(itemString)
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
+		if not private.quantityBaseItems[itemString] then
+			return 0, 0
+		end
 		private.baseItemQuantityQuery:BindParams(itemString)
 		return private.baseItemQuantityQuery:Sum("bagQuantity"), private.baseItemQuantityQuery:Sum("bankQuantity")
 	end
@@ -699,6 +704,7 @@ function private.ChangeBagItemTotal(bag, levelItemString, changeQuantity)
 		else
 			error("Unexpected bag: "..tostring(bag))
 		end
+		private.quantityBaseItems[ItemString.GetBaseFast(levelItemString)] = true
 		private.quantityDB:InsertRow(levelItemString, bagQuantity, bankQuantity)
 	end
 
@@ -733,6 +739,9 @@ end
 
 function private.GetQuantityDBField(itemString, field)
 	if not ItemString.IsLevel(itemString) and itemString == ItemString.GetBaseFast(itemString) then
+		if not private.quantityBaseItems[itemString] then
+			return 0
+		end
 		return private.baseItemQuantityQuery
 			:BindParams(itemString)
 			:Sum(field)

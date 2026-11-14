@@ -108,9 +108,20 @@ end
 ---@return self
 function ApplicationGroupTree:ToggleSelectAll()
 	local isCleared = self:IsSelectionCleared()
+	assert(not next(private.selectionTemp))
 	for _, groupPath in ipairs(self._searchStr == "" and self._allGroupPaths or self._groupPath) do
-		self:_SetSelectedCascading(groupPath, isCleared)
+		private.selectionTemp[groupPath] = true
 	end
+	for _, groupPath in ipairs(self._allGroupPaths) do
+		if not private.selectionTemp[groupPath] then
+			local parentPath = Group.GetParent(groupPath)
+			private.selectionTemp[groupPath] = parentPath and private.selectionTemp[parentPath]
+		end
+		if private.selectionTemp[groupPath] then
+			self:_SetSelected(groupPath, isCleared)
+		end
+	end
+	Table.WipeAndDeallocate(private.selectionTemp)
 	self:_SendActionScript("OnGroupSelectionChanged")
 	return self
 end
@@ -175,8 +186,7 @@ function ApplicationGroupTree.__private:_SetSelected(groupPath, selected)
 		error("Invalid context table")
 	end
 
-	local index = Table.KeyByValue(self._groupPath, groupPath)
-	local row = index and self:_GetRow(index)
+	local row = self:_GetRowForGroupPath(groupPath)
 	if row then
 		row:SetSelected(selected or false)
 		self:_DrawRowFlag(row)

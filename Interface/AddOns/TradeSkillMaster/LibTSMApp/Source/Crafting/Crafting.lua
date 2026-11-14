@@ -116,6 +116,11 @@ function Crafting.SetGatheringProfessions(professions)
 	Gathering.SetProfessions(professions)
 end
 
+---Updates the gathering data after the sources have changed.
+function Crafting.HandleGatheringSourcesChanged()
+	Gathering.HandleSourcesChanged()
+end
+
 ---Gets the available crafters to gather for.
 ---@return string[]
 function Crafting.GetGatheringCrafterList()

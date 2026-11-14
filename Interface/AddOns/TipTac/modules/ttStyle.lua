@@ -21,6 +21,7 @@ local lineRealm = LibFroznFunctions:CreatePushArray();
 local lineLevel = LibFroznFunctions:CreatePushArray();
 local lineInfo = LibFroznFunctions:CreatePushArray();
 local lineTargetedBy = LibFroznFunctions:CreatePushArray();
+local TT_IsModifyingUnitTip = false;
 
 -- WoW: Forever (interface 16001): characters have a first and last name. UnitName() returns the last name in the "realm" slot,
 -- so join it with a space instead of treating it as a foreign realm ("First - Last").
@@ -183,7 +184,7 @@ local TT_COLOR = {
 
 -- remove unwanted lines from tip, such as "Alliance", "Horde", "PvP" and "Shadow Priest".
 function ttStyle:RemoveUnwantedLinesFromTip(tip, unitRecord)
-	local hideSpecializationAndClassText = (cfg.hideSpecializationAndClassText) and (unitRecord.isPlayer) and (LibFroznFunctions.hasWoWFlavor.specializationAndClassTextInPlayerUnitTip) and (unitRecord.className);
+	local hideSpecializationAndClassText = (cfg.hideSpecializationAndClassText) and (unitRecord.isPlayer) and (LibFroznFunctions.hasWoWFlavor.specializationAndClassTextInPlayerUnitTip or TT_IsForever) and (unitRecord.className); -- WoW: Forever's own player tip has the class on a separate line, which would repeat the class TipTac puts into the level line
 	local hideRightClickForFrameSettingsTextInUnitTip = (cfg.hideRightClickForFrameSettingsTextInUnitTip) and (LibFroznFunctions.hasWoWFlavor.rightClickForFrameSettingsTextInUnitTip) and (UNIT_POPUP_RIGHT_CLICK);
 	
 	local specNames = LibFroznFunctions:CreatePushArray();
@@ -203,6 +204,9 @@ function ttStyle:RemoveUnwantedLinesFromTip(tip, unitRecord)
 		local gttLineText = gttLine:GetText();
 		
 		if (not LibFroznFunctions:IsSecretValue(gttLineText)) and (type(gttLineText) == "string") then
+			-- the game may color the text (e.g. the class line in class color), so compare without color codes
+			gttLineText = strtrim((gttLineText:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")));
+			
 			local isGttLineTextUnitPopupRightClick = (hideRightClickForFrameSettingsTextInUnitTip) and (gttLineText == UNIT_POPUP_RIGHT_CLICK);
 			
 			if (isGttLineTextUnitPopupRightClick) or
@@ -608,7 +612,24 @@ function ttStyle:GenerateNpcLines(tip, currentDisplayParams, unitRecord, first)
 	local creatureFamily = UnitCreatureFamily(unitRecord.id);
 	local creatureType = UnitCreatureType(unitRecord.id);
 	local race = creatureFamily or creatureType or TT_Unknown;
-	if (creatureFamily) or (not creatureType) or (LibFroznFunctions:IsSecretValue(creatureType)) then
+	local addRaceToLevelLine = true;
+	
+	-- if the game shows the creature type on its own line (e.g. "Humanoid" for hostile npcs), leave that line alone. blanking it prevents the game from adding quest lines later.
+	-- if the game doesn't show such a line (e.g. friendly npcs), add the creature type to the level line.
+	if (not creatureFamily) and (creatureType) and (not LibFroznFunctions:IsSecretValue(creatureType)) then
+		for i = lineLevel.Index + 1, math.min(lineLevel.Index + 2, tip:NumLines()) do
+			local gttLine = _G["GameTooltipTextLeft" .. i];
+			local gttLineText = gttLine and gttLine:GetText();
+			
+			if (type(gttLineText) == "string") and (not LibFroznFunctions:IsSecretValue(gttLineText)) and (gttLineText:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "") == creatureType) then
+				addRaceToLevelLine = false;
+				
+				break;
+			end
+		end
+	end
+	
+	if (addRaceToLevelLine) then
 		lineLevel:Push(" ");
 		lineLevel:Push(CreateColor(unpack(cfg.colorRace)):WrapTextInColorCode(race));
 	end
@@ -625,6 +646,13 @@ local mapChallengeModeIDToDungeonIndexLookup = {};
 local npcIDToEnemyIdxLookup = {};
 
 function ttStyle:ModifyUnitTooltip(tip, currentDisplayParams, unitRecord, first)
+	-- start with empty line buffers. leftovers from an earlier styling that was interrupted would otherwise be added a second time (e.g. doubled zone and target lines).
+	lineName:Clear();
+	lineRealm:Clear();
+	lineLevel:Clear();
+	lineInfo:Clear();
+	lineTargetedBy:Clear();
+	
 	-- obtain unit properties
 	unitRecord.reactionColor = CreateColor(unpack(cfg["colorReactText" .. unitRecord.reactionIndex]));
 	unitRecord.nameColor = ((not cfg.enableColorName) and CreateColor(GameTooltipTextLeft1:GetTextColor())) or (cfg.colorNameByReaction and unitRecord.reactionColor) or CreateColor(unpack(cfg.colorName));
@@ -641,7 +669,15 @@ function ttStyle:ModifyUnitTooltip(tip, currentDisplayParams, unitRecord, first)
 	end
 	
 	-- Level + Classification
-	lineLevel:Push(((UnitCanAttack(unitRecord.id, "player") or UnitCanAttack("player", unitRecord.id)) and LibFroznFunctions:GetDifficultyColorForUnit(unitRecord.id) or CreateColor(unpack(cfg.colorLevel))):WrapTextInColorCode((cfg["classification_".. (unitRecord.classification or "")] or "%s? "):format(unitRecord.level == -1 and "??" or unitRecord.level)));
+	local levelText = (cfg["classification_".. (unitRecord.classification or "")] or "%s? "):format(unitRecord.level == -1 and "??" or unitRecord.level);
+	
+	if (cfg.showFullLevelText) and (type(TOOLTIP_UNIT_LEVEL) == "string") and (not (cfg.showBattlePetTip and (unitRecord.isWildBattlePet or unitRecord.isBattlePetCompanion))) then
+		levelText = TOOLTIP_UNIT_LEVEL:format(levelText); -- "Level %s" (localized)
+	end
+	
+	local colorLevelByDifficulty = (cfg.colorLevelByDifficultyForAllUnits) or (UnitCanAttack(unitRecord.id, "player")) or (UnitCanAttack("player", unitRecord.id));
+	
+	lineLevel:Push((colorLevelByDifficulty and LibFroznFunctions:GetDifficultyColorForUnit(unitRecord.id) or CreateColor(unpack(cfg.colorLevel))):WrapTextInColorCode(levelText));
 	
 	-- Reaction Icon
 	if (cfg.reactIcon) and (TT_ReactionIcon[unitRecord.reactionIndex]) then
@@ -998,11 +1034,43 @@ function ttStyle:ModifyUnitTooltip(tip, currentDisplayParams, unitRecord, first)
 	if (lineInfo:GetCount() > 0) then
 		local tipLineInfoText = lineInfo:Concat();
 		
+		-- forget a remembered line index that no longer exists in the tip
+		if (currentDisplayParams.tipLineInfoIndex) and (currentDisplayParams.tipLineInfoIndex > GameTooltip:NumLines()) then
+			currentDisplayParams.tipLineInfoIndex = nil;
+		end
+		
+		-- if the index was lost but the tip still holds the info line from an earlier styling, reuse it instead of adding a second copy
+		if (not currentDisplayParams.tipLineInfoIndex) and (GameTooltip.ttLastInfoLineText) then
+			for i = GameTooltip:NumLines(), 2, -1 do
+				local gttLine = _G["GameTooltipTextLeft" .. i];
+				local gttLineText = gttLine and gttLine:GetText();
+				
+				if (type(gttLineText) == "string") and (not LibFroznFunctions:IsSecretValue(gttLineText)) and (gttLineText == GameTooltip.ttLastInfoLineText) then
+					currentDisplayParams.tipLineInfoIndex = i;
+					break;
+				end
+			end
+		end
+		
 		if (currentDisplayParams.tipLineInfoIndex) then
 			_G["GameTooltipTextLeft" .. currentDisplayParams.tipLineInfoIndex]:SetText(tipLineInfoText);
 		else
 			GameTooltip:AddLine(tipLineInfoText);
 			currentDisplayParams.tipLineInfoIndex = GameTooltip:NumLines();
+		end
+		
+		GameTooltip.ttLastInfoLineText = tipLineInfoText;
+		
+		-- safety net: empty any other line holding exactly the same info text (a copy added by an earlier styling that lost track of its line)
+		for i = 2, GameTooltip:NumLines() do
+			if (i ~= currentDisplayParams.tipLineInfoIndex) then
+				local gttLine = _G["GameTooltipTextLeft" .. i];
+				local gttLineText = gttLine and gttLine:GetText();
+				
+				if (type(gttLineText) == "string") and (not LibFroznFunctions:IsSecretValue(gttLineText)) and (gttLineText == tipLineInfoText) then
+					gttLine:SetText(nil);
+				end
+			end
 		end
 		
 		lineInfo:Clear();
@@ -1110,8 +1178,15 @@ function ttStyle:OnUnitTipStyle(TT_CacheForFrames, tip, currentDisplayParams, fi
 			end
 		end
 		
+		-- never ask the game again with C_TooltipInfo.GetUnit(). instead use the texts of the first lines the game has just put into the tip.
 		if (not unitTooltipData) then
-			unitTooltipData = LibFroznFunctions:GetTooltipInfo("GetUnit", unitRecord.id);
+			unitTooltipData = { lines = {} };
+			
+			for i = 1, 4 do
+				local gttLineLeft = _G["GameTooltipTextLeft" .. i];
+				
+				unitTooltipData.lines[i] = { leftText = (gttLineLeft) and (gttLineLeft:GetText()) or nil };
+			end
 		end
 		
 		unitRecord.isColorBlind = (GetCVar("colorblindMode") == "1");
@@ -1152,7 +1227,21 @@ function ttStyle:OnUnitTipStyle(TT_CacheForFrames, tip, currentDisplayParams, fi
 		end
 	end
 
-	self:ModifyUnitTooltip(tip, currentDisplayParams, unitRecord, first);
+	-- don't style the tip again while it is already being styled. adding a line to the tip can make other addons (or hooks) refresh the tip, which would
+	-- start a second styling before the first one has remembered the line it just added, so every line would be added twice (e.g. doubled zone line).
+	if (TT_IsModifyingUnitTip) then
+		return;
+	end
+	
+	TT_IsModifyingUnitTip = true;
+	
+	local ok, err = pcall(self.ModifyUnitTooltip, self, tip, currentDisplayParams, unitRecord, first);
+	
+	TT_IsModifyingUnitTip = false;
+	
+	if (not ok) then
+		geterrorhandler()(err);
+	end
 end
 
 function ttStyle:OnTipResetCurrentDisplayParams(TT_CacheForFrames, tip, currentDisplayParams)

@@ -51,6 +51,23 @@
 - **Opciones → AddOns → GatherRadar → General**: qué se ve y dónde, el radar y el tamaño de los iconos.
 - **Opciones → AddOns → GatherRadar → Datos**: nodos guardados, duplicados, importar (eligiendo los tipos), borrar y olvidar todo.
 
+## API para autores de addons
+
+De solo lectura, con versión y siempre devuelve copias. Añade `## OptionalDeps: GatherRadar` a tu TOC y llámala después de `PLAYER_LOGIN`. Las coordenadas van de 0 a 100 (como TomTom) y los IDs de nodo son los de GatherMate2.
+
+```lua
+local api = GatherRadarAPI
+if api and api.version == 1 then
+    api.KINDS                        -- { "herb", "ore", "treasure", "fish" }
+    api.FindNode("Copper Vein")      -- nodeID, kind (en inglés o en el idioma del cliente)
+    api.GetNodeInfo(201)             -- { nodeID, kind, name, englishName, item, skill }
+    api.GetNodes(1426, "ore")        -- { { x, y, nodeID }, ... } conocidos en ese mapa
+    api.GetMapsForNode(201)          -- { { mapID, count }, ... } primero el que más tiene
+    api.GetNearest("herb")           -- { mapID, x, y, nodeID, yards } o nil
+    api.HasProfession("ore")         -- true si el jugador puede recogerlo
+end
+```
+
 ## Notas
 
 - Un addon no puede preguntar al juego dónde están los nodos: GatherRadar lee el minimapa con un ratón virtual, los mismos puntos que ves tú. Sin un rastreo activado GatherRadar no muestra nada en el minimapa; los nodos guardados siguen en el mapa del mundo.

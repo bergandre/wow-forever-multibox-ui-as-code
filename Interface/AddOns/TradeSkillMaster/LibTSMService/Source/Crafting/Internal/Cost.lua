@@ -161,6 +161,9 @@ end
 function Cost.GetLowestCostByItem(itemString, optionalMats, qualityMats)
 	local levelItemString = ItemString.ToLevel(itemString)
 	local craftedItemString, levelMatItemString = CraftInfoDBUtil.GetCraftedItemString(levelItemString)
+	if not optionalMats and not CraftInfoDBUtil.HasCraftedItem(craftedItemString) then
+		return nil, nil, nil
+	end
 	local shouldReleaseOptionalMats = false
 	if not optionalMats then
 		shouldReleaseOptionalMats = true

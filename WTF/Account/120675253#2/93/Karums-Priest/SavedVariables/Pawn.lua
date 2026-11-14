@@ -1,6 +1,6 @@
 
 PawnOptions = {
-["LastVersion"] = 2.1401,
+["LastVersion"] = 2.1402,
 ["LastPlayerFullName"] = "Karums Priest",
 ["AutoSelectScales"] = false,
 ["ItemLevels"] = {
@@ -37,19 +37,19 @@ PawnOptions = {
 ["Link"] = "|cnIQ3:|Hitem:273643::::::::27:1487::1::1:28:5249:::::|h[Worgenbane Talisman]|h|r",
 },
 [15] = {
-["ID"] = 273005,
-["Level"] = 18,
-["Link"] = "|cnIQ3:|Hitem:273005::::::::16:1487::1::1:28:5244:::::|h[Satyrskin Cloak]|h|r",
+["ID"] = 15468,
+["Level"] = 29,
+["Link"] = "|cnIQ2:|Hitem:15468::::::::31:1487::11:::::::|h[Windsong Drape]|h|r",
 },
 [8] = {
-["ID"] = 271214,
-["Level"] = 24,
-["Link"] = "|cnIQ3:|Hitem:271214::::::::19:1487::1::1:28:5256:::::|h[Rotmender's Treads]|h|r",
+["ID"] = 15461,
+["Level"] = 25,
+["Link"] = "|cnIQ2:|Hitem:15461::::::::30:1487::11:::::::|h[Lightheel Boots]|h|r",
 },
 [16] = {
-["ID"] = 271216,
-["Level"] = 22,
-["Link"] = "|cnIQ3:|Hitem:271216::::::::18:1487::1::1:28:5256:::::|h[Scepter of the Abandoned]|h|r",
+["ID"] = 2816,
+["Level"] = 33,
+["Link"] = "|cnIQ3:|Hitem:2816::::::::31:1487::1::1:28:5246:::::|h[Death Speaker Scepter]|h|r",
 },
 [9] = {
 ["ID"] = 9793,
@@ -67,26 +67,26 @@ PawnOptions = {
 ["Link"] = "|cnIQ3:|Hitem:286979::::::::18:1487::1::1:28:5256:::::|h[Rotmender's Gloves]|h|r",
 },
 [17] = {
-["ID"] = 273137,
-["Level"] = 22,
-["Link"] = "|cnIQ3:|Hitem:273137::::::::22:1487::1::1:28:5254:::::|h[Skum's Bucket]|h|r",
+["ID"] = 16887,
+["Level"] = 32,
+["Link"] = "|cnIQ3:|Hitem:16887::::::::29:1487::11:::::::|h[Witch's Finger]|h|r",
 },
 [11] = {
-["ID"] = 6414,
-["Level"] = 29,
+["ID"] = 6750,
+["Level"] = 32,
 ["AlsoFitsIn"] = 12,
-["Link"] = "|cnIQ3:|Hitem:6414::::::::26:1487::11:::::::|h[Seal of Sylvanas]|h|r",
+["Link"] = "|cnIQ2:|Hitem:6750::::::::31:1487::11:::::::|h[Snake Hoop]|h|r",
 },
 [6] = {
-["ID"] = 273089,
-["Level"] = 22,
-["Link"] = "|cnIQ3:|Hitem:273089::::::::23:1487::1::1:28:5254:::::|h[Slither Cord]|h|r",
+["ID"] = 6908,
+["Level"] = 27,
+["Link"] = "|cnIQ3:|Hitem:6908::::::::29:1487::1::1:28:5237:::::|h[Ghamoo-ra's Bind]|h|r",
 },
 [12] = {
-["ID"] = 6414,
-["Level"] = 29,
+["ID"] = 15467,
+["Level"] = 31,
 ["AlsoFitsIn"] = 11,
-["Link"] = "|cnIQ3:|Hitem:6414::::::::27:1487::11:::::::|h[Seal of Sylvanas]|h|r",
+["Link"] = "|cnIQ2:|Hitem:15467::::::::31:1487::11:::::::|h[Inventor's League Ring]|h|r",
 },
 [5] = {
 ["ID"] = 271206,

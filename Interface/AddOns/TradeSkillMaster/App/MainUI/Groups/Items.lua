@@ -105,8 +105,10 @@ end
 function private.GetItemsFrame(state, groupPath)
 	assert(groupPath ~= Group.GetRootPath())
 	state.groupPath = groupPath
-	private.itemFilter:ParseStr("")
-	private.itemFilterSmartMap:Invalidate()
+	if not private.itemFilter:IsEmpty() then
+		private.itemFilter:ParseStr("")
+		private.itemFilterSmartMap:Invalidate()
+	end
 	private.ungroupedItemStringSmartMap:Invalidate()
 	state.groupedNumSelected = 0
 	state.ungroupedNumSelected = 0
@@ -287,6 +289,9 @@ function private.UngroupedItemStringLookup(itemString)
 end
 
 function private.ItemFilterLookup(itemString)
+	if private.itemFilter:IsEmpty() then
+		return true
+	end
 	local basePrice = CustomString.GetValue(private.settings.groupPriceSource, itemString)
 	return private.itemFilter:Matches(itemString, basePrice)
 end
@@ -317,10 +322,8 @@ end
 function private.PrepareQueryAndGetFields(query, itemStringField)
 	query
 		:VirtualField("name", "string", ItemInfo.GetName, itemStringField, "?")
-		:VirtualField("texture", "number", ItemInfo.GetTexture, itemStringField, ItemInfo.GetTexture(ItemString.GetUnknown()))
-		:VirtualField("coloredItemName", "string", UIUtils.GetDisplayItemName, itemStringField, Theme.GetColor("error/main"):ColorText("?"))
 		:VirtualSmartMapField("matchesFilter", private.itemFilterSmartMap, itemStringField)
 		:Equal("matchesFilter", true)
 		:OrderBy("name", true)
-	return query, itemStringField, "texture", "coloredItemName"
+	return query, itemStringField
 end

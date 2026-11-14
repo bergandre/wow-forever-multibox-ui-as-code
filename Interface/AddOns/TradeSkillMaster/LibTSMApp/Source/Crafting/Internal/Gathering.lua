@@ -142,6 +142,11 @@ function Gathering.SetProfessions(professions)
 	private.UpdateDB()
 end
 
+---Updates the gathering data after the sources have changed.
+function Gathering.HandleSourcesChanged()
+	private.UpdateDB()
+end
+
 ---Gets the available crafters to gather for.
 ---@return string[]
 function Gathering.GetCrafterList()

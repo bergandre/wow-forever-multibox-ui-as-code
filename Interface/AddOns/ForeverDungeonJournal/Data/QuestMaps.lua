@@ -139,7 +139,7 @@ FDJ.QUEST_START_MAPS = {
     [4082] = { mapID = 1418, x = 0.040, y = 0.468, label = "KILL ON SIGHT poster — Kargath, Badlands", targetName = "KILL ON SIGHT" },
     [4123] = { mapID = 1428, x = 0.652, y = 0.238, label = "Maxwort Uberglint — Burning Steppes", targetName = "Maxwort Uberglint" },
     [4126] = { mapID = 1426, x = 0.468, y = 0.524, label = "Ragnar Thunderbrew — Dun Morogh", targetName = "Ragnar Thunderbrew" },
-    [4132] = { mapID = 1418, x = 0.030, y = 0.476, label = "Warlord Goretooth — Badlands", targetName = "Warlord Goretooth" },
+    [4132] = { mapID = 1418, x = 0.058, y = 0.474, label = "Warlord Goretooth — Badlands", targetName = "Warlord Goretooth" },
     [4134] = { mapID = 1418, x = 0.030, y = 0.476, label = "Shadowmage Vivian Lagrave — Badlands", targetName = "Shadowmage Vivian Lagrave" },
     [4136] = { mapID = 1428, x = 0.660, y = 0.220, label = "Yuka Screwspigot — Burning Steppes", targetName = "Yuka Screwspigot" },
     [4241] = { mapID = 1428, x = 0.846, y = 0.688, label = "Marshal Maxwell — Burning Steppes", targetName = "Marshal Maxwell" },
@@ -153,7 +153,7 @@ FDJ.QUEST_START_MAPS = {
     [4771] = { mapID = 1423, x = 0.737, y = 0.505, label = "Betina Bigglezink — Eastern Plaguelands", targetName = "Betina Bigglezink" },
     [4862] = { mapID = 1428, x = 0.658, y = 0.220, label = "Kibler — Burning Steppes", targetName = "Kibler" },
     [4866] = { mapID = 1428, x = 0.650, y = 0.236, label = "Ragged John — Burning Steppes", targetName = "Ragged John" },
-    [4903] = { mapID = 1418, x = 0.030, y = 0.476, label = "Warlord Goretooth — Badlands", targetName = "Warlord Goretooth" },
+    [4903] = { mapID = 1418, x = 0.058, y = 0.474, label = "Warlord Goretooth — Badlands", targetName = "Warlord Goretooth" },
     [4974] = { mapID = 1454, x = 0.320, y = 0.378, label = "Thrall — Orgrimmar", targetName = "Thrall" },
     [5081] = { mapID = 1428, x = 0.846, y = 0.688, label = "Marshal Maxwell — Burning Steppes", targetName = "Marshal Maxwell" },
     [5102] = { mapID = 1428, x = 0.846, y = 0.688, label = "Marshal Maxwell — Burning Steppes", targetName = "Marshal Maxwell" },
@@ -184,7 +184,9 @@ FDJ.QUEST_START_MAPS = {
     [7065] = { mapID = 1443, x = 0.638, y = 0.106, label = "Keeper Marandis — Desolace", targetName = "Keeper Marandis" },
     [7067] = { mapID = 1443, x = 0.434, y = 0.848, label = "Centaur Pariah — Desolace", targetName = "Centaur Pariah" },
     [7068] = { mapID = 1454, x = 0.388, y = 0.854, label = "Uthel'nay — Orgrimmar", targetName = "Uthel'nay" },
-    [7070] = { mapID = 1445, x = 0.452, y = 0.244, label = "Archmage Tervosh — Dustwallow Marsh", targetName = "Archmage Tervosh" },
+    -- 2.0.4 (reported by Nyby): he is in the tower on Theramore Isle, not near
+    -- Brackenwall Village (ForeverChanges: 66.4, 49.3).
+    [7070] = { mapID = 1445, x = 0.664, y = 0.493, label = "Archmage Tervosh — Dustwallow Marsh", targetName = "Archmage Tervosh" },
     [7441] = { mapID = 1444, x = 0.768, y = 0.374, label = "Azj'Tordin — Feralas", targetName = "Azj'Tordin" },
     [7481] = { mapID = 1444, x = 0.744, y = 0.440, label = "Sage Korolusk — Feralas", targetName = "Sage Korolusk" },
     [7482] = { mapID = 1444, x = 0.310, y = 0.442, label = "Scholar Runethorn — Feralas", targetName = "Scholar Runethorn" },

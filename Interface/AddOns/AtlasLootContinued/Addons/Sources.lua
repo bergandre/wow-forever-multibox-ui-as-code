@@ -357,7 +357,8 @@ function Sources:GetSourceTypes()
 end
 
 function Sources:ItemSourcesUpdated(itemID)
-	if not itemID then return end
+	-- The cache is created in UpdateDb; vendor scans can fire before the addon is initialized
+	if not itemID or not TooltipTextCache then return end
 	TooltipTextCache[itemID] = nil
 end
 

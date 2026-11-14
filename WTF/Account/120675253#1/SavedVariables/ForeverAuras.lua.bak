@@ -9,16 +9,16 @@ ForeverAurasSaved = {
 ["minimap"] = {
 ["hide"] = false,
 },
-["historyCutoff"] = 730,
+["lastUpgrade"] = 1794403479,
 ["dbVersion"] = 91,
 ["migrationCutoff"] = 730,
-["features"] = {
+["registered"] = {
 },
 ["displays"] = {
 },
-["lastUpgrade"] = 1794403479,
+["historyCutoff"] = 730,
 ["totemNames"] = {
 },
-["registered"] = {
+["features"] = {
 },
 }

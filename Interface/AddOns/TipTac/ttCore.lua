@@ -38,7 +38,8 @@ local TT_DefaultConfig = {
 	showMinimapIcon = true,
 	minimapConfig = {},  -- set in LibDBIcon-1.0
 	gttScale = 1,
-	alwaysCompareItems = false,  -- false: TipTac keeps the game's CVar "alwaysCompareItems" at 0 (compare only while holding Shift) for better performance. true: TipTac sets it to 1.
+	manageAlwaysCompareItems = false,  -- false (default): TipTac doesn't touch the game's CVar "alwaysCompareItems". true: TipTac sets the CVar according to "alwaysCompareItems" below on login and when changed.
+	alwaysCompareItems = false,  -- only used if "manageAlwaysCompareItems" is true. false: sets the game's CVar "alwaysCompareItems" to 0 (compare only while holding Shift) for better performance. true: sets it to 1.
 	
 	showUnitTip = true,
 	showStatus = true,
@@ -46,6 +47,8 @@ local TT_DefaultConfig = {
 	showPlayerGender = false,
 	showClassOnSeparateLine = false,
 	hideSkyborneTitle = false,
+	showFullLevelText = false,
+	colorLevelByDifficultyForAllUnits = false, -- color the level by difficulty (grey/green/yellow/orange/red) for units you can't attack as well
 	showCurrentUnitSpeed = true,
 	showMythicPlusDungeonScore = true,
 	mythicPlusDungeonScoreFormat = "both",
@@ -339,6 +342,12 @@ local TT_DefaultConfig = {
 	anchorOverrideCFType = "normal",
 	anchorOverrideCFPoint = "BOTTOMRIGHT",
 	
+	anchorExcludePlumber = false, -- don't anchor tooltips shown by addon "Plumber"
+	anchorExcludeAuctionator = false, -- don't anchor tooltips shown by addon "Auctionator"
+	anchorExcludeBaganator = false, -- don't anchor tooltips shown by addon "Baganator"
+	anchorExcludeCustom = "", -- don't anchor tooltips shown by frames whose name contains one of these words (separated by comma, ignoring case)
+	keepAnchorWhenMovedByOtherAddons = false, -- re-anchor the GameTooltip after another addon (e.g. "EllesmereUI") moved it
+	
 	mouseOffsetX = 0,
 	mouseOffsetY = 0,
 	
@@ -566,7 +575,17 @@ TT_ExtendedConfig.tipsToModify = {
 						local titleRight = _G[tip:GetName() .. "TextRight1"];
 						local titleLeft = _G[tip:GetName() .. "TextLeft1"];
 						
-						if (titleRight) and (titleRight:GetText()) and (titleRight:GetRight() - closeButton:GetLeft() > 0) or (titleLeft) and (titleLeft:GetRight() - closeButton:GetLeft() > 0) then
+						local closeButtonLeft = closeButton:GetLeft();
+						
+						-- layout of close button not available (yet), nothing to adjust
+						if (not closeButtonLeft) then
+							return;
+						end
+						
+						local titleRightRight = titleRight and titleRight:GetText() and titleRight:GetRight();
+						local titleLeftRight = titleLeft and titleLeft:GetRight();
+						
+						if (titleRightRight) and (titleRightRight - closeButtonLeft > 0) or (titleLeftRight) and (titleLeftRight - closeButtonLeft > 0) then
 							local xPadding = closeButton:GetWidth() - 8;
 							currentDisplayParams.extraPaddingRightForCloseButton = xPadding;
 							
@@ -1734,25 +1753,20 @@ LibFroznFunctions:RegisterForGroupEvents(MOD_NAME, {
 			return;
 		end
 		
+		-- tell LibDBIcon-1.0 (and addons collecting minimap buttons) from the start whether the icon is hidden
+		cfg.minimapConfig.hide = (not cfg.showMinimapIcon) or nil;
+		
 		-- register minimap icon to LibDBIcon-1.0
 		LibDBIcon:Register(MOD_NAME, TT_LDB_DataObject, LibFroznFunctions:CreateLinkedTableFromTableWithKey(cfg, "minimapConfig"));
 		
 		minimapIconRegistered = true;
 	end,
 	OnApplyConfig = function(self, TT_CacheForFrames, configDb, cfg, TT_ExtendedConfig)
-		-- show/hide minimap icon
-		if (cfg.showMinimapIcon) then
-			local minimapButton = LibDBIcon:GetMinimapButton(MOD_NAME);
-			
-			if (minimapButton) and (not minimapButton:IsShown()) then
-				LibDBIcon:Show(MOD_NAME);
-			end
-		else
-			local minimapButton = LibDBIcon:GetMinimapButton(MOD_NAME);
-			
-			if (minimapButton) and (minimapButton:IsShown()) then
-				LibDBIcon:Hide(MOD_NAME);
-			end
+		-- show/hide minimap icon. set the "hide" flag of the icon's config as well, because addons collecting minimap buttons rely on it instead of the button's shown state.
+		cfg.minimapConfig.hide = (not cfg.showMinimapIcon) or nil;
+		
+		if (minimapIconRegistered) and (LibDBIcon:GetMinimapButton(MOD_NAME)) then
+			LibDBIcon:Refresh(MOD_NAME, cfg.minimapConfig);
 		end
 	end
 }, MOD_NAME .. " - Minimap Icon");
@@ -1989,6 +2003,11 @@ end
 -- set CVar "alwaysCompareItems" according to the config.
 -- performance: with "alwaysCompareItems" = 1 the game rebuilds the comparison tooltips continuously while hovering equippable items. with 0 this only happens while holding Shift.
 function tt:ApplyAlwaysCompareItemsCVar()
+	-- don't touch the player's own game setting unless asked to
+	if (not cfg.manageAlwaysCompareItems) then
+		return;
+	end
+	
 	local getCVar = (C_CVar and C_CVar.GetCVar) or GetCVar;
 	local setCVar = (C_CVar and C_CVar.SetCVar) or SetCVar;
 	
@@ -3688,8 +3707,51 @@ LibFroznFunctions:RegisterForGroupEvents(MOD_NAME, {
 --                                           Anchoring                                            --
 ----------------------------------------------------------------------------------------------------
 
+-- true while TipTac itself is setting the anchor of a tip, to tell its own SetPoint()/ClearAllPoints() calls apart from the ones of other addons.
+local TT_IsSettingAnchor = false;
+
 -- set anchor to tip
 function tt:SetAnchorToTip(tip)
+	local wasSettingAnchor = TT_IsSettingAnchor;
+	
+	TT_IsSettingAnchor = true;
+	
+	local success, errorMsg = pcall(self.SetAnchorToTipInternal, self, tip);
+	
+	TT_IsSettingAnchor = wasSettingAnchor;
+	
+	if (not success) then
+		error(errorMsg, 0);
+	end
+end
+
+-- HOOK: GameTooltip's SetPoint()/ClearAllPoints() to re-anchor the tip if another addon (e.g. "EllesmereUI" with its tooltip growth direction or movable tooltip position) has moved it after TipTac anchored it.
+-- only active if option "keepAnchorWhenMovedByOtherAddons" is set. if the other addon moves the tip again right away, the other addon wins and nothing is repeated.
+function tt:OnGameTooltipPointChanged(tip)
+	-- ignore anchoring done by TipTac itself and if option isn't set
+	if (TT_IsSettingAnchor) or (not cfg.keepAnchorWhenMovedByOtherAddons) then
+		return;
+	end
+	
+	local frameParams = TT_CacheForFrames[tip];
+	
+	if (not frameParams) or (tip:IsForbidden()) then
+		return;
+	end
+	
+	-- only for tips which were anchored by TipTac with a fixed position. an anchor to the mouse is set again every frame anyway.
+	local currentDisplayParams = frameParams.currentDisplayParams;
+	local anchorType = currentDisplayParams.anchorType;
+	
+	if (not currentDisplayParams.defaultAnchored) or ((anchorType ~= "normal") and (anchorType ~= "parent")) then
+		return;
+	end
+	
+	self:SetAnchorToTip(tip);
+end
+
+-- set anchor to tip (called by SetAnchorToTip() which marks the anchoring as made by TipTac)
+function tt:SetAnchorToTipInternal(tip)
 	-- check if insecure interaction with the tip is currently forbidden
 	if (tip:IsForbidden()) then
 		return;
@@ -3989,6 +4051,72 @@ function tt:AnchorTipToMouseOnUpdate(tip)
 	end);
 end
 
+-- check if the owner of a tip belongs to an addon the user excluded from anchoring (see options "Don't Anchor Tooltips Of These Addons").
+-- looks at the owner frame and up to 5 parents. the names of the frames are compared ignoring case.
+local TT_ExcludeAnchorMaxLevels = 6;
+local TT_ExcludeAnchorPresets = {
+	{ var = "anchorExcludePlumber", word = "plumber" },
+	{ var = "anchorExcludeAuctionator", word = "auctionator" },
+	{ var = "anchorExcludeBaganator", word = "baganator" }
+};
+
+function tt:IsTipOwnerExcludedFromAnchoring(owner)
+	-- collect words to look for
+	local words;
+	
+	for _, preset in ipairs(TT_ExcludeAnchorPresets) do
+		if (cfg[preset.var]) then
+			words = words or {};
+			words[#words + 1] = preset.word;
+		end
+	end
+	
+	if (type(cfg.anchorExcludeCustom) == "string") and (cfg.anchorExcludeCustom ~= "") then
+		for word in cfg.anchorExcludeCustom:gmatch("[^,;%s]+") do
+			words = words or {};
+			words[#words + 1] = word:lower();
+		end
+	end
+	
+	if (not words) then
+		return false;
+	end
+	
+	-- owner not usable
+	if (LibFroznFunctions:IsSecretValue(owner)) or (type(owner) ~= "table") or (type(owner.GetParent) ~= "function") then
+		return false;
+	end
+	
+	-- look at the owner and its parents
+	local frame = owner;
+	
+	for _ = 1, TT_ExcludeAnchorMaxLevels do
+		if (not frame) or (type(frame.IsForbidden) ~= "function") or (frame:IsForbidden()) then
+			return false;
+		end
+		
+		for _, getName in ipairs({ "GetName", "GetDebugName" }) do
+			if (type(frame[getName]) == "function") then
+				local ok, name = pcall(frame[getName], frame);
+				
+				if (ok) and (type(name) == "string") and (not LibFroznFunctions:IsSecretValue(name)) then
+					name = name:lower();
+					
+					for _, word in ipairs(words) do
+						if (name:find(word, 1, true)) then
+							return true;
+						end
+					end
+				end
+			end
+		end
+		
+		frame = frame:GetParent();
+	end
+	
+	return false;
+end
+
 -- HOOK: GameTooltip_SetDefaultAnchor() after set default anchor to tip
 function tt:SetDefaultAnchorHook(tip, parent)
 	-- get current display parameters
@@ -3999,6 +4127,14 @@ function tt:SetDefaultAnchorHook(tip, parent)
 	end
 	
 	local currentDisplayParams = frameParams.currentDisplayParams;
+	
+	-- tip is shown by an addon the user excluded from anchoring. keep the anchor the addon/game has set.
+	if (self:IsTipOwnerExcludedFromAnchoring(parent)) then
+		currentDisplayParams.defaultAnchored = false;
+		currentDisplayParams.defaultAnchoredParentFrame = nil;
+		
+		return;
+	end
 	
 	-- set current display params for anchoring
 	currentDisplayParams.defaultAnchored = true;
@@ -4110,6 +4246,15 @@ LibFroznFunctions:RegisterForGroupEvents(MOD_NAME, {
 			if (tip:GetObjectType() == "GameTooltip") then
 				hooksecurefunc(tip, "SetOwner", function(tip, owner, anchor, xOffset, yOffset)
 					tt:ResetCurrentDisplayParamsForAnchoring(tip, true);
+				end);
+			end
+			-- HOOK: GameTooltip's SetPoint/ClearAllPoints to keep TipTac's anchor if other addons move the tip (only if option is set)
+			if (tip == GameTooltip) then
+				hooksecurefunc(tip, "SetPoint", function(tip)
+					tt:OnGameTooltipPointChanged(tip);
+				end);
+				hooksecurefunc(tip, "ClearAllPoints", function(tip)
+					tt:OnGameTooltipPointChanged(tip);
 				end);
 			end
 		end);

@@ -9,6 +9,7 @@ local L = LibTSMApp.Locale.GetTable()
 local GroupSearch = LibTSMApp:DefineInternalClassType("GroupSearch")
 local GroupSearchContext = LibTSMApp:IncludeClassType("GroupSearchContext")
 local CustomPrice = LibTSMApp:Include("Price.CustomPrice")
+local TempTable = LibTSMApp:From("LibTSMUtil"):Include("BaseType.TempTable")
 local Group = LibTSMApp:From("LibTSMTypes"):Include("Group")
 local Threading = LibTSMApp:From("LibTSMTypes"):Include("Threading")
 local ItemString = LibTSMApp:From("LibTSMTypes"):Include("Item.ItemString")
@@ -105,16 +106,22 @@ function GroupSearch.__private:_ScanThread(auctionScan, groupList)
 	wipe(self._seenMaxPrice)
 
 	-- Create the list of items, and add filters for them
+	local groupItems = Threading.AcquireSafeTempTable()
 	for _, groupPath in ipairs(groupList) do
 		for _, itemString in Group.ItemIterator(groupPath) do
-			local isValid, maxQuantity = private.GetRestockQuantity(itemString)
-			if isValid then
-				self._maxQuantity[itemString] = maxQuantity
-				tinsert(self._itemListTemp, itemString)
-			end
+			tinsert(groupItems, itemString)
 		end
 		Threading.Yield()
 	end
+	for _, itemString in ipairs(groupItems) do
+		local isValid, maxQuantity = private.GetRestockQuantity(itemString)
+		if isValid then
+			self._maxQuantity[itemString] = maxQuantity
+			tinsert(self._itemListTemp, itemString)
+		end
+		Threading.Yield()
+	end
+	TempTable.Release(groupItems)
 	if #self._itemListTemp == 0 then
 		return false
 	end

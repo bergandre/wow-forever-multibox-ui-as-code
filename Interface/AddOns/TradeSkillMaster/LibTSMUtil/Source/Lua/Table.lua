@@ -447,7 +447,7 @@ function Table.GetChangedKeys(old, new, result)
 		end
 	end
 	for key in pairs(new) do
-		if not old[key] then
+		if old[key] == nil then
 			result[key] = true
 		end
 	end
@@ -547,7 +547,7 @@ function Table.UnpackAndWipe(tbl)
 	return private.UnpackAndWipeHelper(tbl, unpack(tbl))
 end
 
----Iterates over the table in a similar fasion to ipairs() but in reverse.
+---Iterates over the table in a similar fashion to ipairs() but in reverse.
 ---@generic V
 ---@param tbl V[]
 ---@return fun(): number, V @Iterator with fields: `index`, `value`

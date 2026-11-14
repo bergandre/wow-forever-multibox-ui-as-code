@@ -1,6 +1,6 @@
 
 PawnOptions = {
-["LastVersion"] = 2.1401,
+["LastVersion"] = 2.1402,
 ["LastPlayerFullName"] = "Karums Warrior",
 ["AutoSelectScales"] = false,
 ["ItemLevels"] = {
@@ -25,9 +25,9 @@ PawnOptions = {
 ["Link"] = "|cnIQ2:|Hitem:10423::::::::26:1491:::::::::|h[Silvered Bronze Leggings]|h|r",
 },
 [15] = {
-["ID"] = 14571,
-["Level"] = 21,
-["Link"] = "|cnIQ2:|Hitem:14571::::::::22:1491::1::1:28:5254:::::|h[Bristlebark Cape]|h|r",
+["ID"] = 16658,
+["Level"] = 32,
+["Link"] = "|cnIQ2:|Hitem:16658::::::::29:1491::11:::::::|h[Wildhunter Cloak]|h|r",
 },
 [8] = {
 ["ID"] = 273646,
@@ -40,9 +40,9 @@ PawnOptions = {
 ["Link"] = "|cnIQ3:|Hitem:286977::::::::19:1491::1::1:28:5256:::::|h[Sword of the Fallen]|h|r",
 },
 [9] = {
-["ID"] = 286981,
-["Level"] = 21,
-["Link"] = "|cnIQ3:|Hitem:286981::::::::18:1491::1::1:28:5256:::::|h[Death Bindings]|h|r",
+["ID"] = 15545,
+["Level"] = 30,
+["Link"] = "|cnIQ2:|Hitem:15545::::::::31:1491:::1:12727::::::|h[Thick Scale Bracelets of the Tiger]|h|r",
 },
 [5] = {
 ["ID"] = 2870,

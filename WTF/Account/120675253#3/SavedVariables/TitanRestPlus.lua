@@ -1,16 +1,16 @@
 
 RestPlus_Data = {
 ["Invited=CAMWOW EU4 Realm 8 PvP"] = {
-["restXP"] = 286,
+["restXP"] = 306,
 ["currXP"] = 255,
 ["nextXP"] = 400,
 ["class"] = "Wck",
-["logtime"] = 11492454,
+["logtime"] = 11493013,
 ["resting"] = true,
 ["AlertStatus"] = 1,
 ["level"] = 1,
-["wellRestedRank"] = 0,
 ["race"] = "AlR",
+["wellRestedRank"] = 0,
 },
 ["Tailoring=CAMWOW EU4 Realm 8 PvP"] = {
 ["restXP"] = 306,
@@ -21,8 +21,8 @@ RestPlus_Data = {
 ["resting"] = true,
 ["AlertStatus"] = 1,
 ["level"] = 1,
-["race"] = "Trn",
 ["wellRestedRank"] = 0,
+["race"] = "Trn",
 },
 }
 RestPlus_Settings = {

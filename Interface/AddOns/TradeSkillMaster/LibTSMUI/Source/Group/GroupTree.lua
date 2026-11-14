@@ -52,6 +52,7 @@ function GroupTree:__init()
 
 	self._groupPath = {}
 	self._allGroupPaths = {}
+	self._dataIndexLookup = {}
 	self._contextTable = nil ---@type GroupTreeContextTable!
 	self._defaultContextTable = nil ---@type GroupTreeContextTable!
 	self._hasChildrenLookup = {}
@@ -74,6 +75,7 @@ function GroupTree:Release()
 	self._moduleOperationFilter = nil
 	self._contextTable = nil
 	self._defaultContextTable = nil
+	wipe(self._dataIndexLookup)
 	wipe(self._hasChildrenLookup)
 	self.__super:Release()
 end
@@ -309,6 +311,7 @@ function GroupTree.__protected:_HandleQueryUpdate()
 	wipe(self._hasChildrenLookup)
 	wipe(self._allGroupPaths)
 	wipe(self._groupPath)
+	wipe(self._dataIndexLookup)
 	local updateTemp = private.updateTemp
 	for _, tbl in pairs(updateTemp) do
 		assert(not next(tbl))
@@ -353,6 +356,7 @@ function GroupTree.__protected:_HandleQueryUpdate()
 			local groupName = groupPath == Group.GetRootPath() and L["Base Group"] or Group.GetName(groupPath)
 			if strmatch(strlower(groupName), self._searchStr) and (self._searchStr == "" or groupPath ~= Group.GetRootPath()) then
 				tinsert(self._groupPath, groupPath)
+				self._dataIndexLookup[groupPath] = #self._groupPath
 			end
 		end
 	end
@@ -392,6 +396,6 @@ function GroupTree.__protected:_IsSelected(groupPath)
 end
 
 function GroupTree.__protected:_GetRowForGroupPath(groupPath)
-	local index = groupPath and Table.KeyByValue(self._groupPath, groupPath)
+	local index = groupPath and self._dataIndexLookup[groupPath]
 	return index and self:_GetRow(index) or nil
 end

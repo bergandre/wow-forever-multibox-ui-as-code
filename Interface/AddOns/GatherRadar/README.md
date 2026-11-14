@@ -51,6 +51,23 @@
 - **Options → AddOns → GatherRadar → General**: what to show and where, the radar and the icon sizes.
 - **Options → AddOns → GatherRadar → Data**: saved nodes, duplicates, import (choose the kinds), delete and forget everything.
 
+## API for addon authors
+
+Read-only, versioned, always returns copies. Add `## OptionalDeps: GatherRadar` to your TOC and call it after `PLAYER_LOGIN`. Coordinates are 0-100 (like TomTom); node IDs are GatherMate2's.
+
+```lua
+local api = GatherRadarAPI
+if api and api.version == 1 then
+    api.KINDS                        -- { "herb", "ore", "treasure", "fish" }
+    api.FindNode("Copper Vein")      -- nodeID, kind (English or client language)
+    api.GetNodeInfo(201)             -- { nodeID, kind, name, englishName, item, skill }
+    api.GetNodes(1426, "ore")        -- { { x, y, nodeID }, ... } known on that map
+    api.GetMapsForNode(201)          -- { { mapID, count }, ... } most nodes first
+    api.GetNearest("herb")           -- { mapID, x, y, nodeID, yards } or nil
+    api.HasProfession("ore")         -- true if the player can gather it
+end
+```
+
 ## Notes
 
 - Addons cannot ask the game where nodes are: GatherRadar reads the minimap with a virtual mouse, the same dots you see. Without a tracking spell turned on, GatherRadar shows nothing on the minimap; saved nodes are still on the world map.

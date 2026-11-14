@@ -585,16 +585,18 @@ function ProfessionScrollTable.__private:_CreateGroups()
 		ChatMessage.PrintUser(L["There is currently no profession open, so cannot create profession groups."])
 		return
 	end
-	if not Group.Exists(profName) then
-		GroupOperation.CreateGroup(profName)
-	end
 	local itemsGroupPath = Group.JoinPath(profName, L["Items"])
-	if not Group.Exists(itemsGroupPath) then
-		GroupOperation.CreateGroup(itemsGroupPath)
-	end
 	local matsGroupPath = Group.JoinPath(profName, L["Materials"])
-	if not Group.Exists(matsGroupPath) then
-		GroupOperation.CreateGroup(matsGroupPath)
+	for _ in GroupOperation.WithDBRebuildPaused() do
+		if not Group.Exists(profName) then
+			GroupOperation.CreateGroup(profName)
+		end
+		if not Group.Exists(itemsGroupPath) then
+			GroupOperation.CreateGroup(itemsGroupPath)
+		end
+		if not Group.Exists(matsGroupPath) then
+			GroupOperation.CreateGroup(matsGroupPath)
+		end
 	end
 
 	local numMats, numItems = 0, 0

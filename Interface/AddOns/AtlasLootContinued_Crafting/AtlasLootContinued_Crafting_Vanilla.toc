@@ -1,6 +1,6 @@
 ## Interface: 11509
 ## Author: Okrah, Lag
-## Version: 12920
+## Version: 12957
 ## Dependencies: AtlasLootContinued
 ## LoadOnDemand: 1
 

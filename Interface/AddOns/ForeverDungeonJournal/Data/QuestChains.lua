@@ -138,6 +138,8 @@ FDJ.QUEST_PREREQ_CHAINS = {
     -- Gnomeregan: Data Rescue needs the Prismatic Punch Card, built up card
     -- by card through four Matrix Punchograph terminals. These are item
     -- steps (placeholder IDs), shown so players know the whole route.
+    -- NOT a prerequisite: Data Rescue is picked up straight away. These
+    -- are shown as a How to complete guide (QUEST_GUIDE_CHAINS below).
     [2930] = {
         { id = 2930001, name = "White Punch Card", itemStep = true },
         { id = 2930002, name = "Yellow Punch Card (Punchograph 3005-A)", itemStep = true },
@@ -1386,7 +1388,7 @@ FDJ.QUEST_PREREQ_DETAILS = {
         objective = "Speak with Eitrigg in Orgrimmar. When you have discussed matters with Eitrigg, seek council from Thrall. You recall having seen Eitrigg in Thrall's chamber.",
         pickup = "Warlord Goretooth, Badlands",
         turnin = "Thrall, Orgrimmar",
-        map = { mapID = 1418, x = 0.030, y = 0.476, label = "Warlord Goretooth — Badlands", targetName = "Warlord Goretooth" },
+        map = { mapID = 1418, x = 0.058, y = 0.474, label = "Warlord Goretooth — Badlands", targetName = "Warlord Goretooth" },
     },
     [4974] = {
         level = 60, requires = 55,
@@ -1933,7 +1935,7 @@ FDJ.QUEST_PREREQ_DETAILS = {
     },
 
     -- Gnomeregan prerequisite steps.
-    [2926] = { level = 27, requires = 20, objective = "Use the Empty Leaden Collection Phial on a living Irradiated Invader or Irradiated Pillager, then return the full phial to Ozzie Togglevolt.", pickup = "Ozzie Togglevolt, Kharanos, Dun Morogh", turnin = "Ozzie Togglevolt, Kharanos, Dun Morogh", description = "Required before The Only Cure is More Green Glow.", map = { mapID = 1426, x = 0.450, y = 0.490, label = "Ozzie Togglevolt — Kharanos", detail = "Start Gnogaine here" } },
+    [2926] = { level = 27, requires = 20, objective = "Use the Empty Leaden Collection Phial on a living Irradiated Invader or Irradiated Pillager, then return the full phial to Ozzie Togglevolt.", pickup = "Ozzie Togglevolt, Kharanos, Dun Morogh", turnin = "Ozzie Togglevolt, Kharanos, Dun Morogh", description = "Required before The Only Cure is More Green Glow.", map = { mapID = 1426, x = 0.450, y = 0.490, label = "Ozzie Togglevolt — Kharanos", detail = "Start Gnogaine here" }, requiredItems = { {9284, "Full Leaden Collection Phial", 1, "Use the Vial on an Irradiated Invader just outside the instance", map = { mapID = 1426, x = 0.243, y = 0.398, label = "Irradiated Invaders — outside Gnomeregan", detail = "Use the Vial on an Irradiated Invader just outside the instance" }} } },
     [2841] = { level = 35, requires = 25, objective = "Accept Rig Wars from Nogg. You do not need to complete it before continuing to Chief Engineer Scooty.", pickup = "Nogg, Valley of Honor, Orgrimmar", turnin = "Nogg, Orgrimmar", description = "Rig Wars must be in progress to unlock the transporter chain in Forever.", note = "Accept Rig Wars first; completion is not required for Chief Engineer Scooty.", warning = "Accept Rig Wars before Chief Engineer Scooty. If Rig Wars disappears, abandon Chief Engineer Scooty and it will reappear.", map = { mapID = 1454, x = 0.760, y = 0.250, label = "Nogg — Valley of Honor, Orgrimmar", detail = "Accept Rig Wars here" } },
     [2842] = { level = 35, requires = 20, objective = "Speak with Scooty in Booty Bay.", pickup = "Sovik, Valley of Honor, Orgrimmar", turnin = "Scooty, Booty Bay, Stranglethorn Vale", description = "Required before Gnomer-gooooone!", map = { mapID = 1454, x = 0.756, y = 0.252, label = "Sovik — Valley of Honor, Orgrimmar", detail = "Start Chief Engineer Scooty here" } },
 
@@ -1991,6 +1993,13 @@ FDJ.QUEST_PREREQ_DETAILS = {
     [2930005] = { level = 30, requires = 25, objective = "Use Matrix Punchograph 3005-D with the Red Punch Card to get the Prismatic Punch Card, then bring it to Master Mechanic Castpipe in Ironforge.", pickup = "Matrix Punchograph 3005-D, west side of the lower level of the Engineering Labs", turnin = "Master Mechanic Castpipe, Tinker Town, Ironforge", description = "Take the elevator down; the terminal is in the first passage on the right.", startItem = {9316, "Prismatic Punch Card", 1, "From Matrix Punchograph 3005-D"} },
 
 }
+
+-- questguide: chains that are HOW to complete the quest, not quests needed
+-- before it. The journal shows them behind a red Guide button (quest list)
+-- and a How to complete button (quest page) instead of the chain icon and
+-- "Requires a quest chain first.".
+FDJ.QUEST_GUIDE_CHAINS = FDJ.QUEST_GUIDE_CHAINS or {}
+FDJ.QUEST_GUIDE_CHAINS[2930] = true -- Data Rescue: the punch cards
 
 -- Pre-quests that also start a dungeon quest elsewhere in the journal reuse
 -- that quest's giver location for their Show on Map button.

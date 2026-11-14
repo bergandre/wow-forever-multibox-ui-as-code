@@ -321,7 +321,7 @@ function TradeSkill.SetDefaultFilters()
 		ExpandTradeSkillSubClass(0)
 		SetTradeSkillInvSlotFilter(0, 1, 0)
 		SetTradeSkillSubClassFilter(0, 1, 0)
-		if LibTSMWoW.IsMistsClassic() then
+		if LibTSMWoW.IsMistsClassic() or LibTSMWoW.IsBCClassic() then
 			SetTradeSkillItemNameFilter(nil)
 			SetTradeSkillItemLevelFilter(0, 0)
 			TradeSkillOnlyShowSkillUps(false)

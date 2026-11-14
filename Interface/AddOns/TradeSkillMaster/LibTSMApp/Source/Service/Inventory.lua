@@ -97,8 +97,7 @@ end
 ---@return number
 function Inventory.GetTotalQuantity(itemString)
 	local total = 0
-	total = total + BagTracking.GetBagQuantity(itemString)
-	total = total + BagTracking.GetBankQuantity(itemString)
+	total = total + BagTracking.GetTotalQuantity(itemString)
 	total = total + WarbankTracking.GetQuantity(itemString)
 	total = total + Mail.GetQuantity(itemString)
 	total = total + Auction.GetQuantity(itemString)

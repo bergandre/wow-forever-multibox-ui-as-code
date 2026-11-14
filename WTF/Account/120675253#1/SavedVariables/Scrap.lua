@@ -1,8 +1,7 @@
 
 Scrap_Sets = {
 ["latest"] = {
-["id"] = "12.1.9",
-["who"] = "Pookie Rawr",
+["cooldown"] = 1795143602,
 },
 ["tutorial"] = 5,
 ["list"] = {

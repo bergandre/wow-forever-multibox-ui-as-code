@@ -33,7 +33,7 @@ _detalhes_database = {
 },
 ["raid_roster"] = {
 },
-["CombatStartedAt"] = 9848.189,
+["CombatStartedAt"] = 12161.863,
 ["tempo_start"] = 800.501,
 ["last_events_tables"] = {
 },
@@ -104,8 +104,8 @@ _detalhes_database = {
 ["enemy"] = "Unknown",
 ["trinketProcs"] = {
 },
-["TotalElapsedCombatTime"] = 16.75300000000061,
-["CombatEndedAt"] = 9864.942000000001,
+["TotalElapsedCombatTime"] = 29.89900000000125,
+["CombatEndedAt"] = 12191.762,
 ["aura_timeline"] = {
 },
 ["compressed_charts"] = {
@@ -113,7 +113,7 @@ _detalhes_database = {
 ["data_inicio"] = 0,
 ["end_time"] = 954.197,
 ["mapId"] = 1,
-["EncounterName"] = "Archmage Arugal",
+["EncounterName"] = "Aku'mai",
 ["overall_added"] = true,
 ["frags"] = {
 },
@@ -203,7 +203,7 @@ _detalhes_database = {
 ["utility"] = false,
 },
 },
-["combat_counter"] = 100,
+["combat_counter"] = 101,
 ["player_stats"] = {
 },
 ["force_font_outline"] = "",
@@ -211,13 +211,19 @@ _detalhes_database = {
 },
 ["arena_data_compressed"] = {
 },
-["ignore_nicktag"] = false,
+["benchmark_db"] = {
+["frame"] = {
+},
+},
 ["arena_data_index_selected"] = 1,
 ["coach"] = {
 ["enabled"] = false,
 ["welcome_panel_pos"] = {
 },
 ["last_coach_name"] = false,
+},
+["on_death_menu"] = false,
+["cached_roles"] = {
 },
 ["local_instances_config"] = {
 {
@@ -242,9 +248,9 @@ _detalhes_database = {
 ["pos"] = {
 ["normal"] = {
 ["y"] = 139.4804077148438,
-["x"] = 1186.87890625,
-["w"] = 313.2340393066406,
-["h"] = 86.84915161132812,
+["x"] = 811.245361328125,
+["w"] = 313.2341003417969,
+["h"] = 86.8491439819336,
 },
 ["solo"] = {
 ["y"] = 2,
@@ -255,16 +261,11 @@ _detalhes_database = {
 },
 },
 },
-["announce_damagerecord"] = {
+["announce_firsthit"] = {
 ["enabled"] = true,
 ["channel"] = "SELF",
 },
-["character_data"] = {
-["logons"] = 131,
-},
-["cached_talents"] = {
-},
-["last_instance_id"] = 33,
+["last_instance_id"] = 48,
 ["data_harvest_for_charsts"] = {
 ["players"] = {
 {
@@ -289,196 +290,19 @@ _detalhes_database = {
 ["custom"] = "",
 ["next"] = "",
 },
-["last_instance_time"] = 1794382664,
+["announce_prepots"] = {
+["enabled"] = false,
+["channel"] = "SELF",
+["reverse"] = false,
+},
 ["active_profile"] = "Karums-CAMWOW EU4 Realm 4 PvP",
-["mythic_dungeon_currentsaved"] = {
-["dungeon_name"] = "",
-["started"] = false,
-["segment_id"] = 0,
-["ej_id"] = 0,
-["started_at"] = 0,
-["run_id"] = 0,
-["level"] = 0,
-["dungeon_zone_id"] = 0,
-["previous_boss_killed_at"] = 0,
-},
-["damage_meter_sessions"] = {
-[91] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794502814,
-["sessionId"] = 91,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:00:14",
-["startUnixTime"] = 1794502808,
-["endTime"] = 9227.198,
-["sessionName"] = "Wildthorn Stalker",
-["startDate"] = "19:00:08",
-["startTime"] = 9221.597,
-["alreadyAdded"] = false,
-["detailsId"] = "Wildthorn Stalker91",
-},
-[92] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794502975,
-["sessionId"] = 92,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:02:55",
-["startUnixTime"] = 1794502966,
-["endTime"] = 9388.355,
-["sessionName"] = "Wildthorn Stalker",
-["startDate"] = "19:02:46",
-["startTime"] = 9379.716,
-["alreadyAdded"] = false,
-["detailsId"] = "Wildthorn Stalker92",
-},
-[93] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794503147,
-["sessionId"] = 93,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:05:47",
-["startUnixTime"] = 1794503138,
-["endTime"] = 9560.401,
-["sessionName"] = "",
-["startDate"] = "19:05:38",
-["startTime"] = 9550.747,
-["alreadyAdded"] = false,
-["detailsId"] = "93",
-},
-[94] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794503210,
-["sessionId"] = 94,
-["added"] = false,
-["playerAuras"] = {
-},
-["sessionName"] = "",
-["startUnixTime"] = 1794503152,
-["endDate"] = "19:06:50",
-["endTime"] = 9623.148000000001,
-["startDate"] = "19:05:52",
-["startTime"] = 9564.801,
-["alreadyAdded"] = false,
-["detailsId"] = "94",
-},
-[95] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794503225,
-["sessionId"] = 95,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:07:05",
-["startUnixTime"] = 1794503210,
-["endTime"] = 9638.103000000001,
-["sessionName"] = "Ashenvale Bear",
-["startDate"] = "19:06:50",
-["startTime"] = 9623.148000000001,
-["alreadyAdded"] = false,
-["detailsId"] = "Ashenvale Bear95",
-},
-[96] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794503341,
-["sessionId"] = 96,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:09:01",
-["startUnixTime"] = 1794503305,
-["endTime"] = 9754.598,
-["sessionName"] = "Laughing Sister",
-["startDate"] = "19:08:25",
-["startTime"] = 9718.32,
-["alreadyAdded"] = false,
-["detailsId"] = "Laughing Sister96",
-},
-[97] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794503366,
-["sessionId"] = 97,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:09:26",
-["startUnixTime"] = 1794503353,
-["endTime"] = 9779.354,
-["sessionName"] = "Laughing Sister",
-["startDate"] = "19:09:13",
-["startTime"] = 9765.929,
-["alreadyAdded"] = false,
-["detailsId"] = "Laughing Sister97",
-},
-[98] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794503396,
-["sessionId"] = 98,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:09:56",
-["startUnixTime"] = 1794503384,
-["endTime"] = 9809.286,
-["sessionName"] = "Laughing Sister",
-["startDate"] = "19:09:44",
-["startTime"] = 9796.953,
-["alreadyAdded"] = false,
-["detailsId"] = "Laughing Sister98",
-},
-[99] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794503452,
-["sessionId"] = 99,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "19:10:52",
-["startUnixTime"] = 1794503418,
-["endTime"] = 9865.242,
-["sessionName"] = "Laughing Sister",
-["startDate"] = "19:10:18",
-["startTime"] = 9831.59,
-["alreadyAdded"] = false,
-["detailsId"] = "Laughing Sister99",
-},
-[90] = {
-["playerCasts"] = {
-},
-["endUnixTime"] = 1794502703,
-["sessionId"] = 90,
-["added"] = false,
-["playerAuras"] = {
-},
-["endDate"] = "18:58:23",
-["startUnixTime"] = 1794502691,
-["endTime"] = 9116.676,
-["sessionName"] = "Ashenvale Bear",
-["startDate"] = "18:58:11",
-["startTime"] = 9104.475,
-["alreadyAdded"] = false,
-["detailsId"] = "Ashenvale Bear90",
-},
-},
+["last_realversion"] = 172,
+["last_instance_time"] = 1794544652,
 ["data_harvested_for_charts"] = {
 },
-["announce_firsthit"] = {
-["enabled"] = true,
-["channel"] = "SELF",
+["nick_tag_cache"] = {
+["nextreset"] = 1795211215,
+["last_version"] = 16,
 },
 ["apocalypes_info"] = {
 },
@@ -492,15 +316,14 @@ _detalhes_database = {
 ["evoker_show_realtimedps"] = false,
 ["inverse_deathlog_mplus"] = false,
 },
-["last_realversion"] = 172,
+["announce_damagerecord"] = {
+["enabled"] = true,
+["channel"] = "SELF",
+},
 ["mythic_plus_log"] = {
 },
-["on_death_menu"] = false,
-["damage_meter_session_info"] = {
-},
-["nick_tag_cache"] = {
-["nextreset"] = 1795211215,
-["last_version"] = 16,
+["auto_combatlog"] = false,
+["cached_talents"] = {
 },
 ["plugin_database"] = {
 ["DETAILS_PLUGIN_TINY_THREAT"] = {
@@ -603,6 +426,21 @@ _detalhes_database = {
 ["square_amount"] = 5,
 ["enabled"] = false,
 ["arrow_size"] = 10,
+["use_spark"] = true,
+["row_spacement"] = 21,
+["main_frame_color"] = {
+0,
+0,
+0,
+0.2,
+},
+["author"] = "Terciob",
+["arrow_texture"] = "Interface\\CHATFRAME\\ChatFrameExpandArrow",
+["font_size"] = 10,
+["y"] = 3.0517578125e-05,
+["x"] = 0.0001220703125,
+["font_face"] = "Friz Quadrata TT",
+["square_size"] = 32,
 ["per_second"] = {
 ["enabled"] = false,
 ["point"] = "CENTER",
@@ -614,21 +452,6 @@ _detalhes_database = {
 ["update_speed"] = 0.05,
 ["attribute_type"] = 1,
 },
-["row_spacement"] = 21,
-["main_frame_color"] = {
-0,
-0,
-0,
-0.2,
-},
-["author"] = "Terciob",
-["arrow_texture"] = "Interface\\CHATFRAME\\ChatFrameExpandArrow",
-["y"] = 3.0517578125e-05,
-["font_size"] = 10,
-["x"] = 0.0001220703125,
-["font_face"] = "Friz Quadrata TT",
-["square_size"] = 32,
-["use_spark"] = true,
 ["row_color"] = {
 0.1,
 0.1,
@@ -639,17 +462,30 @@ _detalhes_database = {
 ["arrow_anchor_y"] = 0,
 },
 },
+["damage_meter_sessions"] = {
+},
 ["apocalypse_hashes"] = {
 },
 ["SoloTablesSaved"] = {
 ["Mode"] = 1,
 },
-["last_version"] = "1.60.1 15402",
+["last_version"] = "1.60.1 15410",
 ["combat_id"] = 0,
 ["savedStyles"] = {
 },
-["last_day"] = "12",
-["cached_roles"] = {
+["mythic_dungeon_currentsaved"] = {
+["dungeon_name"] = "",
+["started"] = false,
+["segment_id"] = 0,
+["ej_id"] = 0,
+["started_at"] = 0,
+["run_id"] = 0,
+["level"] = 0,
+["dungeon_zone_id"] = 0,
+["previous_boss_killed_at"] = 0,
+},
+["character_data"] = {
+["logons"] = 143,
 },
 ["announce_deaths"] = {
 ["enabled"] = false,
@@ -684,7 +520,7 @@ _detalhes_database = {
 },
 },
 ["boss_hp"] = 1,
-["tempo_start"] = 1794382060,
+["tempo_start"] = 1794540437,
 ["last_events_tables"] = {
 },
 ["alternate_power"] = {
@@ -726,7 +562,7 @@ _detalhes_database = {
 ["amountCasts"] = {
 },
 ["instance_type"] = "party",
-["zoneName"] = "Shadowfang Keep",
+["zoneName"] = "Blackfathom Deeps",
 ["data_fim"] = 0,
 ["cleu_timeline"] = {
 },
@@ -737,13 +573,12 @@ _detalhes_database = {
 ["compressed_charts"] = {
 },
 ["data_inicio"] = 0,
-["mapId"] = 33,
+["mapId"] = 48,
 ["raid_roster"] = {
 },
 ["is_challenge"] = false,
 ["spells_cast_timeline"] = {
 },
-["combat_counter"] = 100,
 ["totals_grupo"] = {
 0,
 0,
@@ -765,6 +600,7 @@ _detalhes_database = {
 ["dead"] = 0,
 },
 },
+["combat_counter"] = 101,
 ["PhaseData"] = {
 {
 1,
@@ -779,27 +615,20 @@ _detalhes_database = {
 ["damage"] = {
 },
 },
-["frags"] = {
+["segments_added"] = {
 },
 ["start_time"] = 0,
 ["TimeData"] = {
 ["Raid Damage Done"] = {
 },
 },
-["segments_added"] = {
+["frags"] = {
 },
 },
-["announce_prepots"] = {
-["enabled"] = false,
-["channel"] = "SELF",
-["reverse"] = false,
-},
+["last_day"] = "14",
 ["arena_data_headers"] = {
 },
-["benchmark_db"] = {
-["frame"] = {
-},
-},
+["ignore_nicktag"] = false,
 ["announce_cooldowns"] = {
 ["enabled"] = false,
 ["ignored_cooldowns"] = {
@@ -811,8 +640,9 @@ _detalhes_database = {
 ["last_difficulty"] = 15,
 ["last_raid"] = "",
 },
-["auto_combatlog"] = false,
+["damage_meter_session_info"] = {
+},
 ["cached_specs"] = {
-["Player-6946-0092D46A"] = 1491,
+["Player-6938-008C0737"] = 1487,
 },
 }

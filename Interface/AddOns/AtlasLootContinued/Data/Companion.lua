@@ -660,7 +660,7 @@ function Companion.IsCollectedCreature(creatureID)
 end
 
 -- companions are learnd since wotlk
-if AtlasLoot:GameVersion_LT(AtlasLoot.WRATH_VERSION_NUM) then return end
+if not AtlasLoot:ClientHasWrathSystems() then return end
 
 local EventFrame = CreateFrame("FRAME")
 EventFrame:RegisterEvent("COMPANION_LEARNED")

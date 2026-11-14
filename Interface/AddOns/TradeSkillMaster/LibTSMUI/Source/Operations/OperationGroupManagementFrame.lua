@@ -89,7 +89,7 @@ function OperationGroupManagementFrame.__protected:_ActionHandler(manager, state
 		self._state.contentFrame:RemoveChild(line)
 		self:_SendActionScript("OnGroupsChanged")
 	elseif action == "ACTION_ADD_OPERATION_TO_GROUP" then
-		for groupPath in state.groupSelector:SelectedGroupIterator() do
+		for groupPath in GroupOperation.WithDBRebuildPaused(state.groupSelector:SelectedGroupIterator()) do
 			if not GroupOperation.HasOperation(groupPath, self._typeName, self._operationName) then
 				local removedOperationName = GroupOperation.Add(groupPath, self._typeName, self._operationName)
 				if removedOperationName then

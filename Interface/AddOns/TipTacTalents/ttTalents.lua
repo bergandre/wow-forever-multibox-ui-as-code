@@ -42,6 +42,7 @@ local TTT_DefaultConfig = {
 	t_showTalentText = true,              -- show talent text
 	t_colorTalentTextByClass = true,      -- color specialization text by class color
 	t_talentFormat = 1,                   -- talent Format
+	t_hideTalentsLabel = false,           -- hide the label (e.g. "Specialization:") in front of the talent text
 	
 	t_showAverageItemLevel = true,        -- show average item level (AIL)
 	t_showGearScore = false,              -- show GearScore
@@ -334,7 +335,7 @@ function TTT_UpdateTooltip(unitCacheRecord)
 		
 		-- show spec text
 		if (specText:GetCount() > 0) then
-			local tipLineTextTalents = LibFroznFunctions:FormatText("{prefix}: {specText}", {
+			local tipLineTextTalents = (cfg.t_hideTalentsLabel) and TTT_COLOR.text.spec:WrapTextInColorCode(specText:Concat()) or LibFroznFunctions:FormatText("{prefix}: {specText}", {
 				prefix = TTT_TEXT.talentsPrefix,
 				specText = TTT_COLOR.text.spec:WrapTextInColorCode(specText:Concat())
 			});

@@ -291,14 +291,17 @@ function private.ActionHandler(manager, state, action, ...)
 	if action == "ACTION_SET_SELECTED_GROUP" then
 		local groupPath = ...
 		state.groupPath = groupPath
-		local isBaseGroup = groupPath == Group.GetRootPath()
-		state.view:SetPath(isBaseGroup and "base" or "group", true)
-		if state.titleText then
-			state.titleText:SetEditing(false)
-		end
-		state.view:Draw()
-		if state.tabGroup then
-			state.tabGroup:ReloadContent()
+		local viewPath = groupPath == Group.GetRootPath() and "base" or "group"
+		if state.view:GetPath() ~= viewPath then
+			state.view:SetPath(viewPath, true)
+		else
+			if state.titleText then
+				state.titleText:SetEditing(false)
+			end
+			state.view:Draw()
+			if state.tabGroup then
+				state.tabGroup:ReloadContent()
+			end
 		end
 	elseif action == "ACTION_HANDLE_GROUP_ADDED" then
 		if state.titleText then

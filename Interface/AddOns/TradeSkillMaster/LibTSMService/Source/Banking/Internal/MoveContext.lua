@@ -138,11 +138,13 @@ end
 function MoveContext:DoMoveThreaded()
 	self._pendingSlotId = nil
 	for sourceSlotId, targetSlotId in pairs(self._slotIds) do
-		self:_MoveSlot(sourceSlotId, targetSlotId, self._slotMoveQuantity[sourceSlotId])
-		Threading.Yield()
-		if self._source == Util.FRAME.GUILD_BANK or self._target == Util.FRAME.GUILD_BANK or self._source == Util.FRAME.CONTAINER.WARBANK or self._target == Util.FRAME.CONTAINER.WARBANK then
-			self._pendingSlotId = sourceSlotId
-			return
+		if not self:_IsSourceSlotDone(sourceSlotId) then
+			self:_MoveSlot(sourceSlotId, targetSlotId, self._slotMoveQuantity[sourceSlotId])
+			Threading.Yield()
+			if self._source == Util.FRAME.GUILD_BANK or self._target == Util.FRAME.GUILD_BANK or self._source == Util.FRAME.CONTAINER.WARBANK or self._target == Util.FRAME.CONTAINER.WARBANK then
+				self._pendingSlotId = sourceSlotId
+				return
+			end
 		end
 	end
 end
@@ -154,7 +156,7 @@ end
 function MoveContext:CheckForDoneSlotsThreaded()
 	if self._pendingSlotId then
 		local slotId = self._pendingSlotId
-		if self:_IsSourceSlotDone(slotId) then
+		if self._slotIds[slotId] and self:_IsSourceSlotDone(slotId) then
 			self._slotIds[slotId] = nil
 			return slotId, self._slotItemString[slotId], self._slotMoveQuantity[slotId]
 		end

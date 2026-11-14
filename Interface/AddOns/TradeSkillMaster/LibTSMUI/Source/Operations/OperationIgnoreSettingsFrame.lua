@@ -97,12 +97,14 @@ function OperationIgnoreSettingsFrame:Configure(typeName, operationName, setting
 	Table.Sort(private.characterList)
 
 	local operationSettings = Operation.GetSettings(typeName, operationName)
-	self._state.factionrealmDropdown
-		:SetItems(private.factionrealmList, private.factionrealmList)
-		:SetSettingInfo(operationSettings, "ignoreFactionrealm")
-	self._state.characterDropdown
-		:SetItems(private.characterList, private.characterList)
-		:SetSettingInfo(operationSettings, "ignorePlayer")
+	for _ in GroupOperation.WithDBRebuildPaused() do
+		self._state.factionrealmDropdown
+			:SetItems(private.factionrealmList, private.factionrealmList)
+			:SetSettingInfo(operationSettings, "ignoreFactionrealm")
+		self._state.characterDropdown
+			:SetItems(private.characterList, private.characterList)
+			:SetSettingInfo(operationSettings, "ignorePlayer")
+	end
 
 	wipe(private.factionrealmList)
 	wipe(private.characterList)

@@ -21,14 +21,15 @@ Bagnonium_Sets = {
 },
 ["borderColor"] = {
 },
+["showBags"] = true,
 ["color"] = {
 },
-["height"] = 500.0000915527344,
+["height"] = 500.0001525878906,
 ["activeRules"] = {
 ["tabs"] = "all",
 ["sidebar"] = "all",
 },
-["width"] = 399.9998474121094,
+["width"] = 399.9999084472656,
 },
 ["guild"] = {
 ["color"] = {
@@ -77,7 +78,7 @@ Bagnonium_Sets = {
 ["tabs"] = "all",
 ["sidebar"] = "all",
 },
-["width"] = 926.9999389648438,
+["width"] = 927.0000610351562,
 },
 },
 ["customRules"] = {

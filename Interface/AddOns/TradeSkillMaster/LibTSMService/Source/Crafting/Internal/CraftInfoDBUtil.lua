@@ -51,10 +51,7 @@ end)
 ---@return boolean
 function CraftInfoDBUtil.HasCraftedItem(itemString, levelMatItemString)
 	if not levelMatItemString then
-		return CraftInfoDB.NewCraftQuery()
-			:AutoRelease()
-			:Equal("itemString", itemString)
-			:IsNotEmpty()
+		return CraftInfoDB.HasItemString(itemString)
 	end
 	local result = false
 	for _, craftString in private.CraftStringByItemIterator(itemString) do

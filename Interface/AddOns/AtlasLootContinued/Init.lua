@@ -73,7 +73,9 @@ AtlasLoot.GAME_VERSION_TEXTURES           = {
 	[AtlasLoot.CLASSIC_VERSION_NUM] = (_G.C_Seasons and C_Seasons.GetActiveSeason() == 2) and 6366097 or 538639,
 	[AtlasLoot.BC_VERSION_NUM] = 131194,
 	[AtlasLoot.WRATH_VERSION_NUM] = 235509,
-	[AtlasLoot.FOREVER_VERSION_NUM] = 235509, -- TODO: replace with World of Warcraft: Forever's own badge texture once available
+	-- Forever's own badge (Images/ForeverLogo.tga, drawn by tools/images/make_forever_logo.py). It used to reuse the
+	-- Wrath logo, which confused players.
+	[AtlasLoot.FOREVER_VERSION_NUM] = "Interface\\AddOns\\AtlasLootContinued\\Images\\ForeverLogo",
 }
 
 AtlasLoot.IS_CLASSIC                      = false
@@ -113,6 +115,25 @@ function AtlasLoot:GetGameVersion()
 	return CurrentGameVersion
 end
 
+-- Which content each client has. The version numbers say which client this is, not which content comes after which:
+-- Forever is built on Classic and has no TBC or Wrath content, so "TBC or later" has to be false there although
+-- 4 > 2. GameVersion_GE/GT/LE/LT therefore ask whether the current client has the content of a version instead of
+-- comparing numbers. A client that is not listed (an unknown one) falls back to comparing the numbers.
+local CLIENT_CONTENT = {
+	[AtlasLoot.CLASSIC_VERSION_NUM] = { [AtlasLoot.CLASSIC_VERSION_NUM] = true },
+	[AtlasLoot.BC_VERSION_NUM]      = { [AtlasLoot.CLASSIC_VERSION_NUM] = true, [AtlasLoot.BC_VERSION_NUM] = true },
+	[AtlasLoot.WRATH_VERSION_NUM]   = { [AtlasLoot.CLASSIC_VERSION_NUM] = true, [AtlasLoot.BC_VERSION_NUM] = true, [AtlasLoot.WRATH_VERSION_NUM] = true },
+	[AtlasLoot.FOREVER_VERSION_NUM] = { [AtlasLoot.CLASSIC_VERSION_NUM] = true, [AtlasLoot.FOREVER_VERSION_NUM] = true },
+}
+
+local function ClientHasContent(gameVersion)
+	local content = CLIENT_CONTENT[CurrentGameVersion]
+	if content then
+		return content[gameVersion] == true
+	end
+	return CurrentGameVersion >= gameVersion
+end
+
 -- equal
 function AtlasLoot:GameVersion_EQ(gameVersion, ret, retFalse)
 	if CurrentGameVersion == gameVersion then
@@ -131,36 +152,47 @@ function AtlasLoot:GameVersion_NE(gameVersion, ret, retFalse)
 	end
 end
 
--- not greater then
+-- has more content than gameVersion (its content, and more)
 function AtlasLoot:GameVersion_GT(gameVersion, ret, retFalse)
-	if CurrentGameVersion > gameVersion then
+	if CurrentGameVersion ~= gameVersion and ClientHasContent(gameVersion) then
 		return ret or true
 	else
 		return retFalse
 	end
 end
 
--- not lesser then
+-- does not have the content of gameVersion
 function AtlasLoot:GameVersion_LT(gameVersion, ret, retFalse)
-	if CurrentGameVersion < gameVersion then
+	if not ClientHasContent(gameVersion) then
 		return ret or true
 	else
 		return retFalse
 	end
 end
 
--- not greater equal
+-- has the content of gameVersion
 function AtlasLoot:GameVersion_GE(gameVersion, ret, retFalse)
-	if CurrentGameVersion >= gameVersion then
+	if ClientHasContent(gameVersion) then
 		return ret or true
 	else
 		return retFalse
 	end
 end
 
--- not lesser equal
+-- does not have more content than gameVersion
 function AtlasLoot:GameVersion_LE(gameVersion, ret, retFalse)
-	if CurrentGameVersion <= gameVersion then
+	if CurrentGameVersion == gameVersion or not ClientHasContent(gameVersion) then
+		return ret or true
+	else
+		return retFalse
+	end
+end
+
+-- The client has the systems that arrived with Wrath: achievements, companion tracking, the newer model viewer. That is
+-- about the client, not the content: Forever is a modern client that has them although it has no Wrath content, so it
+-- cannot be asked with GameVersion_GE(WRATH_VERSION_NUM), which is about content.
+function AtlasLoot:ClientHasWrathSystems(ret, retFalse)
+	if self:GameVersion_GE(self.WRATH_VERSION_NUM) or self:GameVersion_EQ(self.FOREVER_VERSION_NUM) then
 		return ret or true
 	else
 		return retFalse

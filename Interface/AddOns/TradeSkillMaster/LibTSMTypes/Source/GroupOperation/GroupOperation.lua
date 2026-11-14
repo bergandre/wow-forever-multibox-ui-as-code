@@ -8,6 +8,7 @@ local LibTSMTypes = select(2, ...).LibTSMTypes
 local GroupOperation = LibTSMTypes:Init("GroupOperation")
 local Group = LibTSMTypes:Include("Group")
 local Operation = LibTSMTypes:Include("Operation")
+local ContextManager = LibTSMTypes:From("LibTSMUtil"):Include("BaseType.ContextManager")
 local Iterator = LibTSMTypes:From("LibTSMUtil"):Include("BaseType.Iterator")
 local TempTable = LibTSMTypes:From("LibTSMUtil"):Include("BaseType.TempTable")
 local String = LibTSMTypes:From("LibTSMUtil"):Include("Lua.String")
@@ -17,6 +18,9 @@ local Database = LibTSMTypes:From("LibTSMDatabase"):Include("Database")
 local private = {
 	groups = nil,
 	db = nil,
+	contextManager = nil, ---@type ContextManagerObject
+	rebuildPaused = 0,
+	rebuildQueued = false,
 	groupListCache = {},
 	groupsTemp = {}, ---@type GroupPathValue[]|table<GroupPathValue,string>
 	rowTemp = {},
@@ -24,6 +28,16 @@ local private = {
 	importTemp = {},
 }
 local DEFAULT_OPERATION_NAME = "#Default"
+
+
+
+-- ============================================================================
+-- Module Loading
+-- ============================================================================
+
+GroupOperation:OnModuleLoad(function()
+	private.contextManager = ContextManager.Create(private.PauseRebuild, private.ResumeRebuild)
+end)
 
 
 
@@ -61,6 +75,11 @@ end
 
 ---Rebuilds the group operation DB.
 function GroupOperation.RebuildDB()
+	if private.rebuildPaused > 0 then
+		private.rebuildQueued = true
+		return
+	end
+	private.rebuildQueued = false
 	private.db:TruncateAndBulkInsertStart()
 	wipe(private.groupListCache)
 	for groupPath in pairs(private.groups) do
@@ -75,6 +94,17 @@ function GroupOperation.RebuildDB()
 		wipe(private.rowTemp)
 	end
 	private.db:BulkInsertEnd()
+end
+
+---Returns an iterator which executes to completion with group operation DB rebuilds paused.
+---@param func? fun(obj: any, key?: any): ... The iterator function or nil to iterate exactly once
+---@param obj? any The object to pass to the iterator function
+---@param key? any The initial key to pass to the iterator function
+---@return function
+---@return any
+---@return any
+function GroupOperation.WithDBRebuildPaused(func, obj, key)
+	return private.contextManager:With(private.db, func, obj, key)
 end
 
 ---Creates a group operation DB query.
@@ -354,28 +384,27 @@ function GroupOperation.Import(groupName, groups, items, moveExistingItems, grou
 		-- Create the groups
 		assert(not next(private.importTemp))
 		for relGroupPath in pairs(groups) do
-			tinsert(private.importTemp, relGroupPath == "" and groupName or Group.JoinPath(groupName, relGroupPath))
+			tinsert(private.importTemp, relGroupPath)
 		end
 		Group.SortPaths(private.importTemp)
-		for _, groupPath in ipairs(private.importTemp) do
+		for _, relGroupPath in ipairs(private.importTemp) do
+			local groupPath = relGroupPath == "" and groupName or Group.JoinPath(groupName, relGroupPath)
 			assert(not Group.Exists(groupPath))
 			private.CreateGroup(groupPath)
+			-- Import the operations
+			local moduleOperations = groupOperations[relGroupPath]
+			if moduleOperations then
+				for moduleName, operations in pairs(moduleOperations) do
+					if operations.override then
+						private.groups[groupPath][moduleName] = operations
+					end
+				end
+			end
 		end
 		wipe(private.importTemp)
 
 		-- Import the items
 		numItems = Group.ImportItems(groupName, items, moveExistingItems)
-
-		-- Import the operations
-		for relGroupPath, moduleOperations in pairs(groupOperations) do
-			local groupPath = relGroupPath == "" and groupName or Group.JoinPath(groupName, relGroupPath)
-			for moduleName, operations in pairs(moduleOperations) do
-				if operations.override then
-					private.groups[groupPath][moduleName] = operations
-					private.UpdateChildGroupOperations(groupPath, moduleName)
-				end
-			end
-		end
 
 		GroupOperation.RebuildDB()
 	end
@@ -627,4 +656,16 @@ end
 
 function private.HasOperationOverride(groupPath, typeName)
 	return private.groups[groupPath][typeName].override and true or false
+end
+
+function private.PauseRebuild()
+	private.rebuildPaused = private.rebuildPaused + 1
+end
+
+function private.ResumeRebuild()
+	private.rebuildPaused = private.rebuildPaused - 1
+	assert(private.rebuildPaused >= 0)
+	if private.rebuildPaused == 0 and private.rebuildQueued then
+		GroupOperation.RebuildDB()
+	end
 end

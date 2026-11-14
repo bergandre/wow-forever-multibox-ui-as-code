@@ -7,10 +7,18 @@ end
 _G.ForeverDungeonJournal_NS = FDJ
 
 FDJ.ADDON_NAME = ADDON_NAME
+-- ownfonts (2.0.8): Core/Fonts.lua (next in the .toc) replaces this with the
+-- real one, which moves a Blizzard-template button over to the journal's own
+-- fonts. Until then, or if that file ever failed to load, it does nothing.
+FDJ.OwnFonts = FDJ.OwnFonts or function(object) return object end
 FDJ.Constants = FDJ.Constants or {}
 FDJ.Constants.ALBA_FAIRMOON_LOCATION = "Alba Fairmoon, Sentinel Hill inn, Westfall"
 
 ForeverDungeonJournalDB = ForeverDungeonJournalDB or {}
+-- WoW loads the saved variables after the addon's files and replaces this
+-- table with the saved one. Still this same table at login: nothing was
+-- saved yet, so the addon was just installed (used by the tracker's note).
+FDJ.bootDB = ForeverDungeonJournalDB
 
 -- Native WoW keybinding entry (Options > Keybindings > AddOns).
 
@@ -74,7 +82,7 @@ local function ShowUpdateNotice(force)
     icon:SetSize(30, 30)
     icon:SetTexCoord(0.08, 0.92, 0.08, 0.92)
 
-    local title = f:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+    local title = f:CreateFontString(nil, "ARTWORK", "ForeverDJ_GameFontNormalLarge")
     title:SetText(L("DUNGEON_JOURNAL"))
 
     -- Centre icon + title together.
@@ -82,7 +90,7 @@ local function ShowUpdateNotice(force)
     icon:SetPoint("TOPLEFT", f, "TOP", -titleWidth / 2, -22)
     title:SetPoint("LEFT", icon, "RIGHT", 8, 0)
 
-    local body = f:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    local body = f:CreateFontString(nil, "ARTWORK", "ForeverDJ_GameFontHighlight")
     body:SetPoint("TOPLEFT", f, "TOPLEFT", 26, -64)
     body:SetPoint("TOPRIGHT", f, "TOPRIGHT", -26, -64)
     body:SetJustifyH("CENTER")
@@ -91,6 +99,7 @@ local function ShowUpdateNotice(force)
     body:SetText(L("NOTICE_RESIZE"))
 
     local ok = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+    FDJ.OwnFonts(ok) -- ownfonts (2.0.8)
     ok:SetSize(110, 24)
     ok:SetPoint("BOTTOM", f, "BOTTOM", 0, 20)
     ok:SetText(OKAY or "OK")

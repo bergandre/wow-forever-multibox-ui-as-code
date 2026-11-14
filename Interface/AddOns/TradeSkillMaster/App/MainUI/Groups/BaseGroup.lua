@@ -334,7 +334,7 @@ function private.GetSearchFrame(state)
 		:AddChild(UIElements.New("ListContainer", "list")
 			:SetMargin(8, 8, 0, 0)
 			:AddChild(UIElements.New("ItemList", "itemList")
-				:AddSectionQuery(Theme.GetColor("accent/main"):ColorText(L["Search Results"]), private.baseItemInfoQuery, "ungroupedItemString", "texture", "coloredItemName", true)
+				:AddSectionQuery(Theme.GetColor("accent/main"):ColorText(L["Search Results"]), private.baseItemInfoQuery, "ungroupedItemString", true)
 				:BindElement(state, "itemList")
 				:BindNumSelected(state, "numSelected")
 			)
@@ -438,12 +438,10 @@ function private.CreateUngroupedBagItemQueryAndGetFields()
 		:LeftJoin(Group.GetItemDBForJoin(), "ungroupedItemString", "itemString")
 		:IsNil("groupPath")
 		:VirtualField("name", "string", ItemInfo.GetName, "ungroupedItemString", "?")
-		:VirtualField("texture", "number", ItemInfo.GetTexture, "ungroupedItemString", ItemInfo.GetTexture(ItemString.GetUnknown()))
-		:VirtualField("coloredItemName", "string", UIUtils.GetDisplayItemName, "ungroupedItemString", Theme.GetColor("error/main"):ColorText("?"))
 		:VirtualSmartMapField("matchesFilter", private.itemFilterSmartMap, "ungroupedItemString")
 		:Equal("matchesFilter", true)
 		:OrderBy("name", true)
-	return query, "ungroupedItemString", "texture", "coloredItemName"
+	return query, "ungroupedItemString"
 end
 
 function private.UpdateBaseItemInfoQuery()
@@ -458,7 +456,6 @@ function private.UpdateBaseItemInfoQuery()
 		:IsNil("groupPath")
 		:Equal("isBOP", 0)
 		:OrderBy("name", true)
-		:VirtualField("coloredItemName", "string", UIUtils.GetDisplayItemName, "itemString", Theme.GetColor("error/main"):ColorText("?"))
 	if shouldPause then
 		private.baseItemInfoQuery:SetUpdatesPaused(false)
 	end

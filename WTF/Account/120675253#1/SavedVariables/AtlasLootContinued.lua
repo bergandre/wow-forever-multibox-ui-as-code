@@ -6,7 +6,7 @@ AtlasLootDB = {
 ["Karums - CAMWOW EU5 Realm 4 PvP"] = "Karums - CAMWOW EU5 Realm 4 PvP",
 },
 ["global"] = {
-["__addonrevision"] = 12920,
+["__addonrevision"] = 12957,
 },
 ["profiles"] = {
 ["Karums Warrior"] = {

@@ -14,7 +14,9 @@ local L = LibTSMUI.Locale.GetTable()
 local Hash = LibTSMUI:From("LibTSMUtil"):Include("Util.Hash")
 local Table = LibTSMUI:From("LibTSMUtil"):Include("Lua.Table")
 local Range = LibTSMUI:From("LibTSMUtil"):IncludeClassType("Range")
+local ItemString = LibTSMUI:From("LibTSMTypes"):Include("Item.ItemString")
 local DelayTimer = LibTSMUI:From("LibTSMWoW"):IncludeClassType("DelayTimer")
+local ItemInfo = LibTSMUI:From("LibTSMService"):Include("Item.ItemInfo")
 local Theme = LibTSMUI:From("LibTSMService"):Include("UI.Theme")
 local private = {
 	dragContextTimer = DelayTimer.New("ITEM_LIST_DRAG_CONTEXT", DragContext.Clear),
@@ -54,12 +56,10 @@ function ItemList:__init()
 	self._sectionNumRows = {}
 	self._sectionCollapsed = {}
 	self._queries = {}
-	self._queryFields = {}
+	self._itemStringField = {}
 	self._autoReleaseQuery = {}
 	self._data = {}
 	self._itemString = {}
-	self._icon = {}
-	self._text = {}
 	self._selectedData = {}
 	self._dragItems = {}
 end
@@ -91,8 +91,6 @@ function ItemList:Release()
 	wipe(self._sectionCollapsed)
 	wipe(self._data)
 	wipe(self._itemString)
-	wipe(self._icon)
-	wipe(self._text)
 	wipe(self._selectedData)
 	wipe(self._dragItems)
 	self.__super:Release()
@@ -102,7 +100,7 @@ function ItemList:Release()
 		end
 	end
 	wipe(self._queries)
-	wipe(self._queryFields)
+	wipe(self._itemStringField)
 	wipe(self._autoReleaseQuery)
 end
 
@@ -115,14 +113,11 @@ end
 ---Sets a single query to use to populate the list (no sections).
 ---@param query DatabaseQuery The query
 ---@param itemStringField string The item string field
----@param iconField string The icon field
----@param textField string The text field
 ---@return self
-function ItemList:SetSingleQuery(query, itemStringField, iconField, textField)
+function ItemList:SetSingleQuery(query, itemStringField)
 	assert(#self._headings == 0 and #self._queries == 0 and #self._sectionNumRows == 0)
 	tinsert(self._queries, query)
-	self._queryFields[query] = #self._queryFields + 1
-	Table.InsertMultiple(self._queryFields, itemStringField, iconField, textField)
+	self._itemStringField[query] = itemStringField
 	self._autoReleaseQuery[query] = true
 	self:_AddQueryUpdatePublisher(query, self:__closure("_HandleQueryUpdate"))
 	return self
@@ -132,18 +127,15 @@ end
 ---@param heading string The heading text
 ---@param query DatabaseQuery The query
 ---@param itemStringField string The item string field
----@param iconField string The icon field
----@param textField string The text field
 ---@param noAutoRelease? boolean Don't auto-release the query when the ItemList is released
 ---@return self
-function ItemList:AddSectionQuery(heading, query, itemStringField, iconField, textField, noAutoRelease)
+function ItemList:AddSectionQuery(heading, query, itemStringField, noAutoRelease)
 	assert(#self._headings == #self._queries and #self._headings == #self._sectionNumRows)
 	assert(not Table.KeyByValue(self._headings, heading))
 	tinsert(self._headings, heading)
 	tinsert(self._sectionNumRows, 0)
 	tinsert(self._queries, query)
-	self._queryFields[query] = #self._queryFields + 1
-	Table.InsertMultiple(self._queryFields, itemStringField, iconField, textField)
+	self._itemStringField[query] = itemStringField
 	self._autoReleaseQuery[query] = not noAutoRelease
 	self:_AddQueryUpdatePublisher(query, self:__closure("_HandleQueryUpdate"))
 	return self
@@ -228,7 +220,7 @@ function ItemList:_HandleQueryUpdate(query)
 
 	local selectionChanged = false
 	local sectionIndex = #self._sectionNumRows > 0 and Table.KeyByValue(self._queries, query) or nil
-	local queryFieldsStartIndex = self._queryFields[query]
+	local itemStringField = self._itemStringField[query]
 	-- TODO: Support updating collapsed sections with a UUID diff
 	if not isCollapsed and #oldUUIDs > 0 and query:UUIDDiffPrepare(oldUUIDs) then
 		for _, action, startIndex, uuids in query:UUIDDiffIterator() do
@@ -244,8 +236,6 @@ function ItemList:_HandleQueryUpdate(query)
 					local itemString = self._itemString[uuid]
 					assert(itemString)
 					self._itemString[uuid] = nil
-					self._icon[uuid] = nil
-					self._text[uuid] = nil
 					if self._selectedData[itemString] then
 						self._selectedData[itemString] = nil
 						selectionChanged = true
@@ -262,10 +252,7 @@ function ItemList:_HandleQueryUpdate(query)
 				Table.InsertFill(self._data, startIndex, #uuids, 0)
 				for i, uuid in ipairs(uuids) do
 					self._data[startIndex + i - 1] = uuid
-					local itemString, icon, text = query:GetResultByUUID(uuid, unpack(self._queryFields, queryFieldsStartIndex, queryFieldsStartIndex + 2))
-					self._itemString[uuid] = itemString
-					self._icon[uuid] = icon
-					self._text[uuid] = text
+					self._itemString[uuid] = query:GetResultByUUID(uuid, itemStringField)
 				end
 				local range = Range.AcquireStartLength(rowStartOffset + startIndex, #uuids)
 				self:_AddRows(range)
@@ -278,7 +265,7 @@ function ItemList:_HandleQueryUpdate(query)
 
 		for i = 1, dataLen do
 			local uuid = self._data[dataStartOffset + i]
-			local itemString, icon, text = query:GetResultByUUID(uuid, unpack(self._queryFields, queryFieldsStartIndex, queryFieldsStartIndex + 2))
+			local itemString = query:GetResultByUUID(uuid, itemStringField)
 			local prevItemString = self._itemString[uuid]
 			if prevItemString ~= itemString then
 				self._itemString[uuid] = itemString
@@ -288,15 +275,9 @@ function ItemList:_HandleQueryUpdate(query)
 					selectionChanged = true
 				end
 			end
-			if self._icon[uuid] ~= icon or self._text[uuid] ~= text then
-				self._icon[uuid] = icon
-				self._text[uuid] = text
-				local row = self:_GetRow(rowStartOffset + i)
-				if row then
-					self:_DrawItemRowIconAndText(row, uuid)
-				end
-			end
 		end
+		local firstRowIndex = rowStartOffset + dataStartOffset + 1
+		self:_DrawRowsForUpdatedData(firstRowIndex, firstRowIndex + dataLen - 1)
 	else
 		-- We weren't able to calculate the diff, so just rebuild this section completely
 		assert(not next(private.prevSelectedTemp))
@@ -308,16 +289,12 @@ function ItemList:_HandleQueryUpdate(query)
 		if dataLen == #self._data then
 			wipe(self._data)
 			wipe(self._itemString)
-			wipe(self._icon)
-			wipe(self._text)
 			wipe(self._selectedData)
 		else
 			for i = 1, dataLen do
 				local uuid = self._data[dataStartOffset + i]
 				local prevItemString = self._itemString[uuid]
 				self._itemString[uuid] = nil
-				self._icon[uuid] = nil
-				self._text[uuid] = nil
 				if self._selectedData[prevItemString] then
 					-- Just clear the previous selection (may be set again when we add data back)
 					self._selectedData[prevItemString] = nil
@@ -332,12 +309,10 @@ function ItemList:_HandleQueryUpdate(query)
 			Table.InsertFill(self._data, dataStartOffset + 1, dataLen, 0)
 		end
 		local index = 0
-		for uuid, itemString, icon, text in query:Iterator(unpack(self._queryFields, queryFieldsStartIndex, queryFieldsStartIndex + 2)) do
+		for uuid, itemString in query:Iterator(itemStringField) do
 			index = index + 1
 			self._data[dataStartOffset + index] = uuid
 			self._itemString[uuid] = itemString
-			self._icon[uuid] = icon
-			self._text[uuid] = text
 			self._selectedData[itemString] = private.prevSelectedTemp[itemString]
 		end
 		wipe(private.prevSelectedTemp)
@@ -412,10 +387,10 @@ function ItemList.__protected:_HandleRowDraw(row)
 		self:_DrawHeadingRowText(row, headingText)
 		self:_DrawHeadingCollapsedState(row, self._sectionCollapsed[sectionIndex])
 	else
-		local uuid = self._data[dataIndex]
+		local itemString = self._itemString[self._data[dataIndex]]
 		self:_DrawItemRowLayout(row)
-		self:_DrawItemRowSelectedState(row, self._selectedData[self._itemString[uuid]])
-		self:_DrawItemRowIconAndText(row, uuid)
+		self:_DrawItemRowSelectedState(row, self._selectedData[itemString])
+		self:_DrawItemRowIconAndText(row, itemString)
 	end
 end
 
@@ -470,9 +445,9 @@ function ItemList.__private:_DrawItemRowSelectedState(row, isSelected)
 end
 
 ---@param row ListRow
-function ItemList.__private:_DrawItemRowIconAndText(row, uuid)
-	row:GetTexture("icon"):SetTexture(self._icon[uuid])
-	row:GetText("text"):SetText(self._text[uuid])
+function ItemList.__private:_DrawItemRowIconAndText(row, itemString)
+	row:GetTexture("icon"):SetTexture(ItemInfo.GetTexture(itemString) or ItemInfo.GetTexture(ItemString.GetUnknown()))
+	row:GetText("text"):SetText(private.GetItemText(itemString))
 end
 
 ---@param row ListRow
@@ -561,7 +536,7 @@ function ItemList.__private:_HandleRowDragStart(row)
 	assert(dataIndex)
 	local uuid = self._data[dataIndex]
 	local itemString = self._itemString[uuid]
-	local text = self._text[uuid]
+	local text = private.GetItemText(itemString)
 	self._moveFrame:Show()
 	self._moveFrame:SetHeight(self.ROW_HEIGHT)
 	wipe(self._dragItems)
@@ -624,6 +599,10 @@ end
 -- ============================================================================
 -- Private Helper Functions
 -- ============================================================================
+
+function private.GetItemText(itemString)
+	return UIUtils.GetDisplayItemName(itemString) or Theme.GetColor("error/main"):ColorText("?")
+end
 
 function private.MoveFrameOnUpdate(frame)
 	local uiScale = frame:_GetBaseFrame():GetEffectiveScale()

@@ -220,17 +220,17 @@ end
 ---Handle a group being moved.
 ---@param changes table<GroupPathValue,GroupPathValue> The changes
 function Group.HandleGroupMoved(changes)
-	for oldPath, newPath in Group.WithItemDBQueryUpdatesPaused(pairs(changes)) do
+	for oldPath, newPath in pairs(changes) do
 		private.groupPaths[oldPath] = nil
 		private.groupPaths[newPath] = true
-		assert(not next(private.itemsTemp))
-		private.itemDB:Move(oldPath, newPath, private.itemsTemp)
-		for _, itemString in ipairs(private.itemsTemp) do
-			assert(private.items[itemString])
-			private.items[itemString] = newPath
-		end
-		wipe(private.itemsTemp)
 	end
+	assert(not next(private.itemsTemp))
+	private.itemDB:Move(changes, private.itemsTemp)
+	for itemString, newPath in pairs(private.itemsTemp) do
+		assert(private.items[itemString])
+		private.items[itemString] = newPath
+	end
+	Table.WipeAndDeallocate(private.itemsTemp)
 end
 
 ---Handles a group being deleted.
