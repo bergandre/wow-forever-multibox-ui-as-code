@@ -1,0 +1,5 @@
+# chat logs written by the client (private messages, other players)
+chat-cache.*
+chat-frontend-cache.*
+
+__pycache__/
