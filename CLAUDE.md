@@ -133,4 +133,6 @@ fixed in `dotfiles/hypr/hyprland.lua` with window rule `render_unfocused = true`
 Conventional commits, English. Large `dump` commits of WTF state are normal here.
 The repo is **public** (README.md is the public face). Client chat logs (`chat-cache.*`,
 `chat-frontend-cache.*`) hold whispers and are gitignored; they were purged from history on 2026-11-15
-(filter-branch + force-push). Keep anything private (chat, emails, real names) out of commits.
+(filter-branch + force-push). Per-character `Prat-3.0.lua` (chat scrollback, incl. whispers) is
+gitignored too and was purged the same way on 2026-11-17; account-wide Prat settings stay tracked.
+Keep anything private (chat, emails, real names) out of commits.
