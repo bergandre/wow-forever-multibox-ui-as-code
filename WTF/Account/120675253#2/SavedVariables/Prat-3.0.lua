@@ -28,10 +28,10 @@ Prat3DB = {
 ["profiles"] = {
 ["Default"] = {
 ["initialized"] = true,
-["minchatheightdefault"] = 119.9999847412109,
-["maxchatheightdefault"] = 800.0000610351562,
 ["minchatwidthdefault"] = 250,
+["maxchatheightdefault"] = 800.0000610351562,
 ["maxchatwidthdefault"] = 800.0000610351562,
+["minchatheightdefault"] = 119.9999847412109,
 },
 },
 },
@@ -39,6 +39,7 @@ Prat3DB = {
 ["profileKeys"] = {
 ["Karums Warrior"] = "Default",
 ["Karums Priest"] = "Default",
+["Hypr Land"] = "Default",
 ["Gniloe Forever"] = "Default",
 },
 ["profiles"] = {

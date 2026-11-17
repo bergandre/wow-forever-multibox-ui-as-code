@@ -1,5 +1,15 @@
 
 ForeverDungeonJournalDB = {
+["rpgAccount"] = {
+["rpgQuests"] = {
+},
+["rpgBosses"] = {
+},
+["rpgKills"] = {
+},
+["rpgMaps"] = {
+},
+},
 ["questFaction"] = "Horde",
 ["portraitCacheVersion"] = 2,
 ["lastMode"] = "bosses",
@@ -8,10 +18,52 @@ ForeverDungeonJournalDB = {
 ["hide"] = false,
 },
 ["displayIDs"] = {
-[262297] = 143122,
+[260801] = 11315,
+[255070] = 612,
+[247003] = 130224,
+[260802] = 1339,
+[260810] = 7114,
+[246992] = 130218,
 [250034] = 2424,
-[7023] = 5285,
+[260799] = 949,
+[260803] = 1088,
+[246888] = 130208,
+[262297] = 143122,
+[260796] = 1035,
+[246993] = 130220,
+[260800] = 1337,
 [261974] = 143035,
+[7023] = 5285,
+[260804] = 545,
+[247001] = 130223,
+[246600] = 14272,
+[246990] = 130218,
+[274715] = 807,
+[255069] = 200,
+[255068] = 9786,
+[16059] = 15981,
+},
+["trackerHintShown"] = true,
+["bossHintShown"] = true,
+["lootFilter"] = {
+["enabled"] = false,
+["classOnly"] = false,
+["recipes"] = false,
+["schools"] = {
+},
+["matchAll"] = true,
+["resists"] = {
+},
+["weaponTypes"] = {
+},
+["stats"] = {
+},
+["armorTypes"] = {
+},
+},
+["portraitTexturesByNpcID"] = {
+},
+["learnedQuestIDs"] = {
 },
 ["learnedItemIDs"] = {
 ["grips of control"] = {
@@ -34,13 +86,17 @@ ForeverDungeonJournalDB = {
 ["id"] = 280056,
 ["name"] = "Flameslash Crescent",
 },
+["cutthroat chestguard"] = {
+["id"] = 276739,
+["name"] = "Cutthroat Chestguard",
+},
 ["bleak eye shoulderplates"] = {
 ["id"] = 280075,
 ["name"] = "Bleak Eye Shoulderplates",
 },
-["tidesong wand"] = {
-["id"] = 276735,
-["name"] = "Tidesong Wand",
+["behemoth bones"] = {
+["id"] = 280065,
+["name"] = "Behemoth Bones",
 },
 ["satyr's touch"] = {
 ["id"] = 287036,
@@ -58,33 +114,13 @@ ForeverDungeonJournalDB = {
 ["id"] = 280070,
 ["name"] = "Veilpiercer Girdle",
 },
-["behemoth bones"] = {
-["id"] = 280065,
-["name"] = "Behemoth Bones",
+["reward voucher"] = {
+["id"] = 8070,
+["name"] = "Reward Voucher",
 },
-["cutthroat chestguard"] = {
-["id"] = 276739,
-["name"] = "Cutthroat Chestguard",
-},
-},
-["portraitTexturesByNpcID"] = {
-},
-["learnedQuestIDs"] = {
-},
-["lootFilter"] = {
-["enabled"] = false,
-["classOnly"] = false,
-["recipes"] = false,
-["schools"] = {
-},
-["matchAll"] = true,
-["resists"] = {
-},
-["armorTypes"] = {
-},
-["stats"] = {
-},
-["weaponTypes"] = {
+["tidesong wand"] = {
+["id"] = 276735,
+["name"] = "Tidesong Wand",
 },
 },
 }

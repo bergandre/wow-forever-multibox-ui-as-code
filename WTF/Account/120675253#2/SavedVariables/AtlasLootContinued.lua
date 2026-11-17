@@ -1,17 +1,16 @@
 
 AtlasLootDB = {
 ["profileKeys"] = {
-["Karums - CAMWOW EU4 Realm 4 PvP"] = "Karums - CAMWOW EU4 Realm 4 PvP",
 ["Gniloe - CAMWOW EU4 Realm 4 PvP"] = "Gniloe - CAMWOW EU4 Realm 4 PvP",
 ["Gniloe Forever"] = "Gniloe Forever",
 ["Karums Priest"] = "Karums Priest",
+["Hypr Land"] = "Hypr Land",
+["Karums - CAMWOW EU4 Realm 4 PvP"] = "Karums - CAMWOW EU4 Realm 4 PvP",
 },
 ["global"] = {
-["__addonrevision"] = 12957,
+["__addonrevision"] = 12958,
 },
 ["profiles"] = {
-["Karums - CAMWOW EU4 Realm 4 PvP"] = {
-},
 ["Gniloe - CAMWOW EU4 Realm 4 PvP"] = {
 },
 ["Gniloe Forever"] = {
@@ -20,6 +19,10 @@ AtlasLootDB = {
 ["minimap"] = {
 ["minimapPos"] = 197.1880540290187,
 },
+},
+["Hypr Land"] = {
+},
+["Karums - CAMWOW EU4 Realm 4 PvP"] = {
 },
 },
 }

@@ -2,8 +2,9 @@
 DecursiveDB = {
 ["profileKeys"] = {
 ["Invited Friend"] = "Default",
-["Invited Undead"] = "Default",
+["Mining Altchar"] = "Default",
 ["Tailoring Altchar"] = "Default",
+["Invited Undead"] = "Default",
 },
 ["global"] = {
 ["LastVersionAnnounce"] = 1794214887,
@@ -11,23 +12,23 @@ DecursiveDB = {
 ["t_SpellIDsSoundReg"] = {
 [12279] = {
 ["enabled"] = true,
-["spellType"] = 4,
 ["from"] = "history",
+["spellType"] = 4,
 },
 [8138] = {
 ["enabled"] = true,
-["spellType"] = 16,
 ["from"] = "history",
-},
-[16458] = {
-["enabled"] = true,
 ["spellType"] = 16,
-["from"] = "history",
 },
 [13884] = {
 ["enabled"] = true,
-["spellType"] = 8,
 ["from"] = "history",
+["spellType"] = 8,
+},
+[16458] = {
+["enabled"] = true,
+["from"] = "history",
+["spellType"] = 16,
 },
 },
 },

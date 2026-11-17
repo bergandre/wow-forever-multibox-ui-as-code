@@ -1,5 +1,7 @@
 
 WT_SpellbookIcon = "question"
+WT_Minimap = {
+}
 WT_WeaponGrouping = "weaponskill"
 WT_ShowKnownWeaponSkills = false
 WT_SpellDisplay = "ledger"
@@ -9,3 +11,5 @@ WT_FloatingFramePoint = nil
 WT_WaypointProvider = nil
 WT_ProfessionTabPosition = nil
 WT_ProfessionIcon = "question"
+WT_HideProfessionTab = false
+WT_TrainAll = nil

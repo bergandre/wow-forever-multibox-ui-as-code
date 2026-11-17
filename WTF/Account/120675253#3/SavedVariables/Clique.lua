@@ -8,13 +8,23 @@ CliqueDB3 = {
 ["version"] = "5.1",
 ["bindings"] = "CL02:8bae562a4e2d2956b2aa564a494d4b2ccd2951b22a292a4dadd5512aa92c4855b2522a492c4a4f2d51d251ca4ead04729d424342fcfd0c81fcd2bc4ca062a5dcfcd2e2d4fcb2d422a55a9d6a98a6dcd4bc52342d46403e76ab6a6301",
 },
-["Invited Undead"] = {
-["created"] = 1794395146,
+["Tailoring Altchar"] = {
+["created"] = 1794394032,
 ["version"] = "5.1",
 ["bindings"] = "CL02:8bae562a4e2d2956b2aa564a494d4b2ccd2951b22a292a4dadd5512aa92c4855b2522a492c4a4f2d51d251ca4ead04729d424342fcfd0c81fcd2bc4ca062a5dcfcd2e2d4fcb2d422a55a9d6a98a6dcd4bc52342d46403e76ab6a6301",
 },
-["Tailoring Altchar"] = {
-["created"] = 1794394032,
+["Mining Altchar"] = {
+["created"] = 1794839169,
+["version"] = "5.1",
+["bindings"] = "CL02:8bae562a4e2d2956b2aa564a494d4b2ccd2951b22a292a4dadd5512aa92c4855b2522a492c4a4f2d51d251ca4ead04729d424342fcfd0c81fcd2bc4ca062a5dcfcd2e2d4fcb2d422a55a9d6a98a6dcd4bc52342d46403e76ab6a6301",
+},
+["Herbalism Altchair"] = {
+["created"] = 1794843387,
+["version"] = "5.1",
+["bindings"] = "CL02:8bae562a4e2d2956b2aa564a494d4b2ccd2951b22a292a4dadd5512aa92c4855b2522a492c4a4f2d51d251ca4ead04729d424342fcfd0c81fcd2bc4ca062a5dcfcd2e2d4fcb2d422a55a9d6a98a6dcd4bc52342d46403e76ab6a6301",
+},
+["Invited Undead"] = {
+["created"] = 1794395146,
 ["version"] = "5.1",
 ["bindings"] = "CL02:8bae562a4e2d2956b2aa564a494d4b2ccd2951b22a292a4dadd5512aa92c4855b2522a492c4a4f2d51d251ca4ead04729d424342fcfd0c81fcd2bc4ca062a5dcfcd2e2d4fcb2d422a55a9d6a98a6dcd4bc52342d46403e76ab6a6301",
 },
@@ -22,8 +32,10 @@ CliqueDB3 = {
 },
 ["profileKeys"] = {
 ["Invited Friend"] = "Invited Friend",
-["Invited Undead"] = "Invited Undead",
 ["Tailoring Altchar"] = "Tailoring Altchar",
+["Mining Altchar"] = "Mining Altchar",
+["Herbalism Altchair"] = "Herbalism Altchair",
+["Invited Undead"] = "Invited Undead",
 },
 ["profiles"] = {
 ["Invited Friend"] = {
@@ -45,7 +57,7 @@ CliqueDB3 = {
 },
 },
 },
-["Invited Undead"] = {
+["Tailoring Altchar"] = {
 ["bindings"] = {
 {
 ["sets"] = {
@@ -64,7 +76,45 @@ CliqueDB3 = {
 },
 },
 },
-["Tailoring Altchar"] = {
+["Mining Altchar"] = {
+["bindings"] = {
+{
+["type"] = "target",
+["sets"] = {
+["default"] = true,
+},
+["key"] = "BUTTON1",
+["unit"] = "mouseover",
+},
+{
+["type"] = "menu",
+["key"] = "BUTTON2",
+["sets"] = {
+["default"] = true,
+},
+},
+},
+},
+["Herbalism Altchair"] = {
+["bindings"] = {
+{
+["sets"] = {
+["default"] = true,
+},
+["type"] = "target",
+["key"] = "BUTTON1",
+["unit"] = "mouseover",
+},
+{
+["type"] = "menu",
+["key"] = "BUTTON2",
+["sets"] = {
+["default"] = true,
+},
+},
+},
+},
+["Invited Undead"] = {
 ["bindings"] = {
 {
 ["sets"] = {

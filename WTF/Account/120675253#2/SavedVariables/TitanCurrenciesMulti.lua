@@ -7,6 +7,11 @@ TitanCurrenciesMultiDb = {
 ["name"] = "|cff3fc7ebGniloe",
 ["faction"] = "Horde",
 },
+["Hypr-Land"] = {
+["currency"] = 0,
+["name"] = "|cffffffffHypr",
+["faction"] = "Horde",
+},
 ["Karums-Priest"] = {
 ["currency"] = 0,
 ["name"] = "|cffffffffKarums",
@@ -22,8 +27,14 @@ TitanCurrenciesMultiDb = {
 ["name"] = "|cff3fc7ebGniloe",
 ["realm"] = "Forever",
 },
+["Hypr-Land"] = {
+["value"] = 0,
+["faction"] = "Horde",
+["name"] = "|cffffffffHypr",
+["realm"] = "Land",
+},
 ["Karums-Priest"] = {
-["value"] = 101678,
+["value"] = 175505,
 ["realm"] = "Priest",
 ["name"] = "|cffffffffKarums",
 ["faction"] = "Horde",
@@ -35,6 +46,11 @@ TitanCurrenciesMultiDb = {
 ["Gniloe-Forever"] = {
 ["currency"] = 0,
 ["name"] = "|cff3fc7ebGniloe",
+["faction"] = "Horde",
+},
+["Hypr-Land"] = {
+["currency"] = 0,
+["name"] = "|cffffffffHypr",
 ["faction"] = "Horde",
 },
 ["Karums-Priest"] = {
@@ -51,6 +67,11 @@ TitanCurrenciesMultiDb = {
 ["name"] = "|cff3fc7ebGniloe",
 ["faction"] = "Horde",
 },
+["Hypr-Land"] = {
+["currency"] = 0,
+["name"] = "|cffffffffHypr",
+["faction"] = "Horde",
+},
 ["Karums-Priest"] = {
 ["currency"] = 0,
 ["name"] = "|cffffffffKarums",
@@ -63,6 +84,11 @@ TitanCurrenciesMultiDb = {
 ["Gniloe-Forever"] = {
 ["currency"] = 0,
 ["name"] = "|cff3fc7ebGniloe",
+["faction"] = "Horde",
+},
+["Hypr-Land"] = {
+["currency"] = 0,
+["name"] = "|cffffffffHypr",
 ["faction"] = "Horde",
 },
 ["Karums-Priest"] = {
@@ -79,8 +105,13 @@ TitanCurrenciesMultiDb = {
 ["name"] = "|cff3fc7ebGniloe",
 ["faction"] = "Horde",
 },
+["Hypr-Land"] = {
+["currency"] = 0,
+["name"] = "|cffffffffHypr",
+["faction"] = "Horde",
+},
 ["Karums-Priest"] = {
-["currency"] = 5,
+["currency"] = 37,
 ["name"] = "|cffffffffKarums",
 ["faction"] = "Horde",
 },

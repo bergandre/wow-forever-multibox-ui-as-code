@@ -1,9 +1,10 @@
 
 ForeverAurasSaved = {
-["totemSpells"] = {
-},
-["login_squelch_time"] = 10,
 ["dynamicIconCache"] = {
+},
+["displays"] = {
+},
+["totemSpells"] = {
 },
 ["lastArchiveClear"] = 1794403477,
 ["minimap"] = {
@@ -12,13 +13,12 @@ ForeverAurasSaved = {
 ["lastUpgrade"] = 1794403479,
 ["dbVersion"] = 91,
 ["migrationCutoff"] = 730,
-["registered"] = {
-},
-["displays"] = {
-},
-["historyCutoff"] = 730,
-["totemNames"] = {
-},
 ["features"] = {
 },
+["login_squelch_time"] = 10,
+["registered"] = {
+},
+["totemNames"] = {
+},
+["historyCutoff"] = 730,
 }

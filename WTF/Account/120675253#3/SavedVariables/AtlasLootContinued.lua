@@ -1,22 +1,28 @@
 
 AtlasLootDB = {
+["global"] = {
+["__addonrevision"] = 12958,
+},
 ["profileKeys"] = {
-["Invited Friend"] = "Invited Friend",
-["Invited Undead"] = "Invited Undead",
 ["Invited - CAMWOW EU4 Realm 8 PvP"] = "Invited - CAMWOW EU4 Realm 8 PvP",
 ["Tailoring Altchar"] = "Tailoring Altchar",
-},
-["global"] = {
-["__addonrevision"] = 12920,
+["Herbalism Altchair"] = "Herbalism Altchair",
+["Mining Altchar"] = "Mining Altchar",
+["Invited Friend"] = "Invited Friend",
+["Invited Undead"] = "Invited Undead",
 },
 ["profiles"] = {
-["Invited Friend"] = {
-},
-["Invited Undead"] = {
-},
 ["Invited - CAMWOW EU4 Realm 8 PvP"] = {
 },
 ["Tailoring Altchar"] = {
+},
+["Herbalism Altchair"] = {
+},
+["Mining Altchar"] = {
+},
+["Invited Friend"] = {
+},
+["Invited Undead"] = {
 },
 },
 }

@@ -1,6 +1,6 @@
 
 PawnOptions = {
-["LastVersion"] = 2.1401,
+["LastVersion"] = 2.1403,
 ["LastPlayerFullName"] = "Tailoring Altchar",
 ["AutoSelectScales"] = false,
 ["ItemLevels"] = {

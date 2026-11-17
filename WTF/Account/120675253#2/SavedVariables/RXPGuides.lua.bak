@@ -20,9 +20,10 @@ RXPDB = {
 ["profileKeys"] = {
 ["Karums - PvP"] = "global",
 ["Karums Warrior"] = "global",
+["Gniloe Forever"] = "global",
 ["Karums Priest"] = "global",
 ["Opikol - PvP"] = "global",
-["Gniloe Forever"] = "global",
+["Hypr Land"] = "global",
 },
 ["profiles"] = {
 ["global"] = {
@@ -54,8 +55,8 @@ RXPDB = {
 },
 ["Karums Priest|PRIEST|CAMWOW EU4 Realm 4 PvP"] = {
 ["current"] = {
-["duration"] = 7790,
-["text"] = "Level Time: 02:09:50",
+["duration"] = 15071,
+["text"] = "Level Time: 04:11:11",
 },
 ["title"] = "Karums Priest (PRIEST) - CAMWOW EU4 Realm 4 PvP",
 ["history"] = {
@@ -168,12 +169,27 @@ nil,
 ["text"] = "Level 31    97:09:25",
 ["duration"] = 15200,
 },
+{
+["totalDuration"] = 375636,
+["text"] = "Level 32   104:20:36",
+["duration"] = 25871,
+},
+{
+["totalDuration"] = 405863,
+["text"] = "Level 33   112:44:23",
+["duration"] = 30227,
+},
+{
+["totalDuration"] = 440594,
+["text"] = "Level 34   122:23:14",
+["duration"] = 34731,
+},
 },
 },
 ["reportKey"] = "Karums Priest|PRIEST|CAMWOW EU4 Realm 4 PvP",
 ["total"] = {
-["duration"] = 357575,
-["text"] = "Total Time: 99:19:35",
+["duration"] = 455688,
+["text"] = "Total Time: 126:34:48",
 },
 },
 },
@@ -185,9 +201,10 @@ RXPSettings = {
 ["profileKeys"] = {
 ["Karums - PvP"] = "Karums - PvP",
 ["Karums Warrior"] = "Karums Warrior",
+["Gniloe Forever"] = "Gniloe Forever",
 ["Karums Priest"] = "Karums Warrior",
 ["Opikol - PvP"] = "Opikol - PvP",
-["Gniloe Forever"] = "Gniloe Forever",
+["Hypr Land"] = "Hypr Land",
 },
 ["profiles"] = {
 ["Karums - PvP"] = {
@@ -319,34 +336,34 @@ nil,
 ["tbcStart"] = 2,
 ["hardcore"] = false,
 ["anchorOrientation"] = "bottom",
-["frameSizes"] = {
-["activeItemFrame"] = {
-80.61359405517578,
-42.99985885620117,
-},
-["arrowFrame"] = {
-49.59978103637695,
-49.60000228881836,
-},
-["RXPFrame"] = {
-444.9991760253906,
-27.99999618530273,
-},
-["activeTargetFrame"] = {
-84.369873046875,
-18.00000762939453,
-},
-["levelSplits"] = {
-159.4238128662109,
-230.8910217285156,
-},
-},
+["enableQuestRewardAutomation"] = true,
 ["enableTrainerAutomation"] = false,
 ["season"] = 0,
 ["guideFontSize"] = 11,
 ["createFollowMacro"] = true,
 ["enablelevelSplits"] = true,
-["enableQuestRewardAutomation"] = true,
+["frameSizes"] = {
+["activeItemFrame"] = {
+80.61363983154297,
+42.9998664855957,
+},
+["arrowFrame"] = {
+49.60019683837891,
+49.60000228881836,
+},
+["RXPFrame"] = {
+444.9991760253906,
+27.9999942779541,
+},
+["activeTargetFrame"] = {
+84.3698959350586,
+43.00000762939453,
+},
+["levelSplits"] = {
+163.6923065185547,
+230.8911590576172,
+},
+},
 ["hideCompletedSteps"] = true,
 ["openTrackerReportOnCharOpen"] = true,
 ["arrowScale"] = 1.55,
@@ -372,8 +389,8 @@ nil,
 "CENTER",
 nil,
 "CENTER",
--106.9739532470703,
--197.7816314697266,
+-106.9739456176758,
+-197.7816009521484,
 },
 },
 ["arrowFrame"] = {
@@ -381,8 +398,8 @@ nil,
 "BOTTOM",
 nil,
 "BOTTOM",
-666.1522216796875,
-98.8810806274414,
+666.1522827148438,
+98.88106536865234,
 },
 },
 ["RXPFrame"] = {
@@ -390,8 +407,8 @@ nil,
 "BOTTOMRIGHT",
 nil,
 "BOTTOMRIGHT",
--231.6944427490234,
-79.3729476928711,
+-230.9185791015625,
+212.8636322021484,
 },
 },
 ["activeTargetFrame"] = {
@@ -399,21 +416,95 @@ nil,
 "TOP",
 nil,
 "TOP",
-260.9994201660156,
--133.9999694824219,
+260.9993896484375,
+-133.9999542236328,
 },
 },
 ["levelSplits"] = {
 {
-"RIGHT",
+"LEFT",
 nil,
-"RIGHT",
--199.7274017333984,
--68.58075714111328,
+"LEFT",
+153.9300842285156,
+-77.11788177490234,
 },
 },
 },
 ["enableCompleteStepAnnouncements"] = true,
+},
+["Gniloe Forever"] = {
+["gnomeTele"] = false,
+["hardcore"] = false,
+["framePositions"] = {
+["activeItemFrame"] = {
+{
+"CENTER",
+"UIParent",
+"CENTER",
+0,
+0,
+},
+},
+["activeTargetFrame"] = {
+{
+"CENTER",
+"UIParent",
+"CENTER",
+0,
+0,
+},
+},
+["RXPV2GuideConfigurator"] = {
+{
+"TOP",
+"UIParent",
+"TOP",
+400.0000305175781,
+-60,
+},
+},
+["RXPFrame"] = {
+{
+"LEFT",
+"UIParent",
+"LEFT",
+0,
+35,
+},
+},
+["arrowFrame"] = {
+{
+"TOP",
+"UIParent",
+"TOP",
+0,
+0,
+},
+},
+},
+["season"] = 0,
+["tbcStart"] = 2,
+["portalTele"] = true,
+["frameSizes"] = {
+["activeTargetFrame"] = {
+0,
+40.00000381469727,
+},
+["RXPFrame"] = {
+235.0000152587891,
+124.9999389648438,
+},
+["activeItemFrame"] = {
+78.25634765625,
+42.9999885559082,
+},
+["arrowFrame"] = {
+31.99990081787109,
+31.99999046325684,
+},
+},
+["goblinTele"] = false,
+["tbcWBF"] = true,
 },
 ["Karums Priest"] = {
 ["gnomeTele"] = false,
@@ -545,19 +636,11 @@ nil,
 ["goblinTele"] = false,
 ["tbcWBF"] = true,
 },
-["Gniloe Forever"] = {
+["Hypr Land"] = {
 ["gnomeTele"] = false,
+["macroAnnounced"] = true,
 ["hardcore"] = false,
 ["framePositions"] = {
-["activeItemFrame"] = {
-{
-"CENTER",
-"UIParent",
-"CENTER",
-0,
-0,
-},
-},
 ["activeTargetFrame"] = {
 {
 "CENTER",
@@ -567,22 +650,22 @@ nil,
 0,
 },
 },
-["RXPV2GuideConfigurator"] = {
-{
-"TOP",
-"UIParent",
-"TOP",
-400.0000305175781,
--60,
-},
-},
 ["RXPFrame"] = {
 {
 "LEFT",
-"UIParent",
+nil,
 "LEFT",
 0,
 35,
+},
+},
+["activeItemFrame"] = {
+{
+"CENTER",
+"UIParent",
+"CENTER",
+0,
+0,
 },
 },
 ["arrowFrame"] = {
@@ -597,23 +680,23 @@ nil,
 },
 ["season"] = 0,
 ["tbcStart"] = 2,
-["portalTele"] = true,
+["portalTele"] = false,
 ["frameSizes"] = {
 ["activeTargetFrame"] = {
-0,
-40.00000381469727,
+84.37007904052734,
+43.00000762939453,
 },
 ["RXPFrame"] = {
-235.0000152587891,
-124.9999389648438,
+235,
+124.9999923706055,
 },
 ["activeItemFrame"] = {
-78.25634765625,
-42.9999885559082,
+80.61363983154297,
+43.00000762939453,
 },
 ["arrowFrame"] = {
-31.99990081787109,
-31.99999046325684,
+32.00000762939453,
+32.00000762939453,
 },
 },
 ["goblinTele"] = false,

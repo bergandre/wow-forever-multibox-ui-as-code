@@ -59,6 +59,7 @@ Quartz3DB = {
 },
 },
 ["profileKeys"] = {
+["Mining Altchar"] = "Default",
 ["Invited Undead"] = "Default",
 ["Tailoring Altchar"] = "Default",
 },

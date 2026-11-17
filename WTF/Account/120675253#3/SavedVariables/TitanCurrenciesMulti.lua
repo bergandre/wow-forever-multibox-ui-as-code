@@ -2,14 +2,24 @@
 TitanCurrenciesMultiDb = {
 ["TITAN_FOREVER_UNDERMINEREAL"] = {
 ["charTable"] = {
-["Tailoring-Altchar"] = {
+["Herbalism-Altchair"] = {
 ["currency"] = 0,
-["name"] = "|cffff7c0aTailoring",
+["name"] = "|cffff7c0aHerbalism",
 ["faction"] = "Horde",
 },
 ["Invited-Undead"] = {
 ["currency"] = 0,
 ["name"] = "|cff8788eeInvited",
+["faction"] = "Horde",
+},
+["Tailoring-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aTailoring",
+["faction"] = "Horde",
+},
+["Mining-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aMining",
 ["faction"] = "Horde",
 },
 ["Invited-Friend"] = {
@@ -21,36 +31,58 @@ TitanCurrenciesMultiDb = {
 },
 ["TITAN_OUROM"] = {
 ["charTable"] = {
-["Tailoring-Altchar"] = {
-["value"] = 2940,
+["Herbalism-Altchair"] = {
+["value"] = 0,
 ["faction"] = "Horde",
-["name"] = "|cffff7c0aTailoring",
-["realm"] = "Altchar",
+["name"] = "|cffff7c0aHerbalism",
+["realm"] = "Altchair",
 },
 ["Invited-Undead"] = {
-["value"] = 66484,
-["realm"] = "Undead",
-["name"] = "|cff8788eeInvited",
+["value"] = 148243,
 ["faction"] = "Horde",
+["name"] = "|cff8788eeInvited",
+["realm"] = "Undead",
+},
+["Tailoring-Altchar"] = {
+["value"] = 2940,
+["realm"] = "Altchar",
+["name"] = "|cffff7c0aTailoring",
+["faction"] = "Horde",
+},
+["Mining-Altchar"] = {
+["value"] = 5000,
+["faction"] = "Horde",
+["name"] = "|cffff7c0aMining",
+["realm"] = "Altchar",
 },
 ["Invited-Friend"] = {
 ["value"] = 312,
-["realm"] = "Friend",
-["name"] = "|cff0070ddInvited",
 ["faction"] = "Horde",
+["name"] = "|cff0070ddInvited",
+["realm"] = "Friend",
 },
 },
 },
 ["TITAN_FOREVER_RANKPOINTS"] = {
 ["charTable"] = {
-["Tailoring-Altchar"] = {
+["Herbalism-Altchair"] = {
 ["currency"] = 0,
-["name"] = "|cffff7c0aTailoring",
+["name"] = "|cffff7c0aHerbalism",
 ["faction"] = "Horde",
 },
 ["Invited-Undead"] = {
 ["currency"] = 0,
 ["name"] = "|cff8788eeInvited",
+["faction"] = "Horde",
+},
+["Tailoring-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aTailoring",
+["faction"] = "Horde",
+},
+["Mining-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aMining",
 ["faction"] = "Horde",
 },
 ["Invited-Friend"] = {
@@ -62,14 +94,24 @@ TitanCurrenciesMultiDb = {
 },
 ["TITAN_FOREVER_MERCHANTSFAVOR"] = {
 ["charTable"] = {
-["Tailoring-Altchar"] = {
+["Herbalism-Altchair"] = {
 ["currency"] = 0,
-["name"] = "|cffff7c0aTailoring",
+["name"] = "|cffff7c0aHerbalism",
 ["faction"] = "Horde",
 },
 ["Invited-Undead"] = {
 ["currency"] = 0,
 ["name"] = "|cff8788eeInvited",
+["faction"] = "Horde",
+},
+["Tailoring-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aTailoring",
+["faction"] = "Horde",
+},
+["Mining-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aMining",
 ["faction"] = "Horde",
 },
 ["Invited-Friend"] = {
@@ -81,14 +123,24 @@ TitanCurrenciesMultiDb = {
 },
 ["TITAN_DRKTKM"] = {
 ["charTable"] = {
-["Tailoring-Altchar"] = {
+["Herbalism-Altchair"] = {
 ["currency"] = 0,
-["name"] = "|cffff7c0aTailoring",
+["name"] = "|cffff7c0aHerbalism",
 ["faction"] = "Horde",
 },
 ["Invited-Undead"] = {
 ["currency"] = 0,
 ["name"] = "|cff8788eeInvited",
+["faction"] = "Horde",
+},
+["Tailoring-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aTailoring",
+["faction"] = "Horde",
+},
+["Mining-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aMining",
 ["faction"] = "Horde",
 },
 ["Invited-Friend"] = {
@@ -100,14 +152,24 @@ TitanCurrenciesMultiDb = {
 },
 ["TITAN_PVHNRM"] = {
 ["charTable"] = {
-["Tailoring-Altchar"] = {
+["Herbalism-Altchair"] = {
 ["currency"] = 0,
-["name"] = "|cffff7c0aTailoring",
+["name"] = "|cffff7c0aHerbalism",
 ["faction"] = "Horde",
 },
 ["Invited-Undead"] = {
 ["currency"] = 0,
 ["name"] = "|cff8788eeInvited",
+["faction"] = "Horde",
+},
+["Tailoring-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aTailoring",
+["faction"] = "Horde",
+},
+["Mining-Altchar"] = {
+["currency"] = 0,
+["name"] = "|cffff7c0aMining",
 ["faction"] = "Horde",
 },
 ["Invited-Friend"] = {

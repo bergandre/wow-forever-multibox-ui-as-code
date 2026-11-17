@@ -1,12 +1,12 @@
 
 AtlasLootDB = {
-["global"] = {
-["__addonrevision"] = 12957,
-},
 ["profileKeys"] = {
 ["Karums Warrior"] = "Karums Warrior",
 ["Opikol Forever"] = "Opikol Forever",
 ["Karums - CAMWOW EU5 Realm 4 PvP"] = "Karums - CAMWOW EU5 Realm 4 PvP",
+},
+["global"] = {
+["__addonrevision"] = 12958,
 },
 ["profiles"] = {
 ["Karums Warrior"] = {
@@ -23,8 +23,8 @@ nil,
 },
 ["selected"] = {
 nil,
-"WailingCavernsForever",
-nil,
+"RazorfenKraulForever",
+4,
 1,
 0,
 },

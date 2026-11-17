@@ -81,3 +81,4 @@ Decursive: disabled
 Quartz: disabled
 ForeverAurasCompanion: enabled
 ForeverAurasArchive: enabled
+InstanceAtlas: disabled

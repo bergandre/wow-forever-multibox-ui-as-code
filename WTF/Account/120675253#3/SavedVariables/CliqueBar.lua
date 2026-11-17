@@ -2,15 +2,21 @@
 CliqueBarDB = {
 ["profileKeys"] = {
 ["Invited Friend"] = "Invited Friend",
-["Invited Undead"] = "Invited Undead",
 ["Tailoring Altchar"] = "Tailoring Altchar",
+["Mining Altchar"] = "Mining Altchar",
+["Herbalism Altchair"] = "Herbalism Altchair",
+["Invited Undead"] = "Invited Undead",
 },
 ["profiles"] = {
 ["Invited Friend"] = {
 },
-["Invited Undead"] = {
-},
 ["Tailoring Altchar"] = {
+},
+["Mining Altchar"] = {
+},
+["Herbalism Altchair"] = {
+},
+["Invited Undead"] = {
 },
 },
 }

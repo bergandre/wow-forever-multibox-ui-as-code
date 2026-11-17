@@ -2,11 +2,14 @@
 CliqueBarDB = {
 ["profileKeys"] = {
 ["Invited Friend"] = "Invited Friend",
+["Mining Altchar"] = "Mining Altchar",
 ["Tailoring Altchar"] = "Tailoring Altchar",
 ["Invited Undead"] = "Invited Undead",
 },
 ["profiles"] = {
 ["Invited Friend"] = {
+},
+["Mining Altchar"] = {
 },
 ["Tailoring Altchar"] = {
 },

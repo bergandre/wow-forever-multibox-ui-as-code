@@ -3,6 +3,7 @@ SilverDragon3DB = {
 ["profileKeys"] = {
 ["Karums Warrior"] = "Default",
 ["Karums Priest"] = "Default",
+["Hypr Land"] = "Default",
 ["Gniloe Forever"] = "Default",
 },
 ["namespaces"] = {

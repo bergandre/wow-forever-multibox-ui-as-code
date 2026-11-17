@@ -32,8 +32,8 @@ Prat3DB = {
 ["Prat_Frames"] = {
 ["profiles"] = {
 ["Default"] = {
-["minchatwidthdefault"] = 250,
 ["initialized"] = true,
+["minchatwidthdefault"] = 250,
 ["maxchatheightdefault"] = 799.9999389648438,
 ["maxchatwidthdefault"] = 799.9999389648438,
 ["minchatheightdefault"] = 119.9999923706055,
@@ -42,10 +42,12 @@ Prat3DB = {
 },
 },
 ["profileKeys"] = {
-["Karums Warrior"] = "Default",
-["Invited Undead"] = "Default",
 ["Invited Friend"] = "Default",
 ["Tailoring Altchar"] = "Default",
+["Karums Warrior"] = "Default",
+["Mining Altchar"] = "Default",
+["Herbalism Altchair"] = "Default",
+["Invited Undead"] = "Default",
 },
 ["profiles"] = {
 ["Default"] = {

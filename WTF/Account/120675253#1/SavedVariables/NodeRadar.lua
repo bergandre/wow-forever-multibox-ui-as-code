@@ -7,25 +7,8 @@ NodeRadarDB = {
 ["minimap"] = {
 ["hide"] = false,
 },
-["shareNodes"] = true,
-["moveScanAsked"] = true,
-["scanLogPrevious"] = {
-["stats"] = {
-["valid"] = 0,
-["bursts"] = 0,
-["unread"] = 0,
-["windows"] = 0,
-},
-["version"] = "v1.11.0",
-["saved"] = 1794654519,
-["lines"] = {
-"29790.4 alert: a new area, counts from zero",
-},
-["build"] = 70938,
-},
-["softCVars"] = {
-},
 ["moveScan"] = true,
+["moveScanAsked"] = true,
 ["scanLog"] = {
 ["stats"] = {
 ["valid"] = 0,
@@ -34,26 +17,44 @@ NodeRadarDB = {
 ["unread"] = 0,
 },
 ["version"] = "v1.11.0",
-["saved"] = 1794663061,
+["saved"] = 1794921499,
 ["lines"] = {
-"31982.1 alert: a new area, counts from zero",
-"31984.0 alert: reset (tracking changed): the next read is a silent baseline",
-"31985.0 alert: a new area, counts from zero",
-"32704.5 alert: a new area, counts from zero",
-"33449.3 alert: a new area, counts from zero",
-"33570.1 alert: a new area, counts from zero",
-"34408.1 alert: a new area, counts from zero",
-"34417.9 alert: a new area, counts from zero",
-"34418.4 alert: reset (tracking changed): the next read is a silent baseline",
-"38653.3 alert: a new area, counts from zero",
-"38653.3 alert: reset (tracking changed): the next read is a silent baseline",
-"38653.9 alert: a new area, counts from zero",
+"10225.9 alert: a new area, counts from zero",
+"10501.0 alert: a new area, counts from zero",
+"10501.7 alert: a new area, counts from zero",
+"10644.2 alert: a new area, counts from zero",
+"10644.9 alert: a new area, counts from zero",
+"11630.2 alert: a new area, counts from zero",
+"11631.1 alert: a new area, counts from zero",
+},
+["build"] = 70938,
+},
+["softCVars"] = {
+},
+["shareNodes"] = true,
+["scanLogPrevious"] = {
+["stats"] = {
+["valid"] = 0,
+["bursts"] = 0,
+["unread"] = 0,
+["windows"] = 0,
+},
+["version"] = "v1.11.0",
+["saved"] = 1794920025,
+["lines"] = {
+"9703.3 alert: a new area, counts from zero",
+"10172.7 alert: reset (tracking changed): the next read is a silent baseline",
 },
 ["build"] = 70938,
 },
 ["schema"] = 2,
 ["learned"] = {
 ["enUS"] = {
+["Mithril Deposit"] = {
+["kind"] = "ore",
+["source"] = "gather",
+["build"] = "70938",
+},
 ["Iron Deposit"] = {
 ["kind"] = "ore",
 ["source"] = "gather",
@@ -65,6 +66,11 @@ NodeRadarDB = {
 ["build"] = "70938",
 },
 ["Copper Vein"] = {
+["kind"] = "ore",
+["source"] = "gather",
+["build"] = "70938",
+},
+["Incendicite Mineral Vein"] = {
 ["kind"] = "ore",
 ["source"] = "gather",
 ["build"] = "70938",

@@ -116,6 +116,9 @@ PawnCommon = {
 ["ClassID"] = 5,
 ["LocalizedName"] = "Priest: Discipline",
 ["PerCharacterOptions"] = {
+["Hypr Land"] = {
+["Visible"] = true,
+},
 ["Karums Priest"] = {
 ["Visible"] = true,
 },
@@ -158,6 +161,9 @@ PawnCommon = {
 ["ClassID"] = 5,
 ["LocalizedName"] = "Priest: Shadow",
 ["PerCharacterOptions"] = {
+["Hypr Land"] = {
+["Visible"] = true,
+},
 ["Karums Priest"] = {
 ["Visible"] = true,
 },
@@ -393,6 +399,9 @@ PawnCommon = {
 ["ClassID"] = 5,
 ["LocalizedName"] = "Priest: Holy",
 ["PerCharacterOptions"] = {
+["Hypr Land"] = {
+["Visible"] = true,
+},
 ["Karums Priest"] = {
 ["Visible"] = true,
 },
@@ -411,6 +420,6 @@ PawnCommon = {
 ["ButtonPosition"] = 2,
 ["Digits"] = 1,
 ["ShowQuestUpgradeAdvisor"] = true,
-["LastVersion"] = 2.1402,
+["LastVersion"] = 2.1403,
 ["ShowUpgradesOnTooltips"] = true,
 }

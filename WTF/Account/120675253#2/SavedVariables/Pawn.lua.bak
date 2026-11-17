@@ -10,7 +10,7 @@ PawnCommon = {
 ["ColorTooltipBorder"] = true,
 ["ShowUpgradesOnTooltips"] = true,
 ["ShowTooltipIcons"] = true,
-["LastVersion"] = 2.1402,
+["LastVersion"] = 2.1403,
 ["ShowSocketingAdvisor"] = true,
 ["ShowSpecIcons"] = true,
 ["IgnoreGemsWhileLeveling"] = true,
@@ -123,6 +123,9 @@ PawnCommon = {
 ["LocalizedName"] = "Priest: Discipline",
 ["ClassID"] = 5,
 ["PerCharacterOptions"] = {
+["Hypr Land"] = {
+["Visible"] = true,
+},
 ["Karums Priest"] = {
 ["Visible"] = true,
 },
@@ -165,6 +168,9 @@ PawnCommon = {
 ["LocalizedName"] = "Priest: Shadow",
 ["ClassID"] = 5,
 ["PerCharacterOptions"] = {
+["Hypr Land"] = {
+["Visible"] = true,
+},
 ["Karums Priest"] = {
 ["Visible"] = true,
 },
@@ -400,6 +406,9 @@ PawnCommon = {
 ["LocalizedName"] = "Priest: Holy",
 ["ClassID"] = 5,
 ["PerCharacterOptions"] = {
+["Hypr Land"] = {
+["Visible"] = true,
+},
 ["Karums Priest"] = {
 ["Visible"] = true,
 },

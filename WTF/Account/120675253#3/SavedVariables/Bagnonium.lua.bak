@@ -22,12 +22,12 @@ Bagnonium_Sets = {
 ["point"] = "BOTTOMRIGHT",
 ["color"] = {
 },
-["width"] = 399.9996948242188,
+["width"] = 399.9994506835938,
 ["y"] = 0,
 ["x"] = 1.629982466511137e-05,
 ["borderColor"] = {
 },
-["height"] = 499.99951171875,
+["height"] = 499.9993286132813,
 ["activeRules"] = {
 ["tabs"] = "all",
 ["sidebar"] = "all",
@@ -76,10 +76,10 @@ Bagnonium_Sets = {
 ["showBags"] = true,
 ["color"] = {
 },
-["height"] = 674,
+["height"] = 673.9998168945312,
 ["activeRules"] = {
 ["tabs"] = "all",
-["sidebar"] = "all",
+["sidebar"] = "tradegoods",
 },
 ["width"] = 926.9998779296875,
 },
@@ -95,15 +95,15 @@ Bagnonium_Sets = {
 },
 ["soul"] = {
 },
-["fridge"] = {
+["reagent"] = {
 },
 ["mine"] = {
 },
 ["engineer"] = {
 },
-["leather"] = {
+["inscribe"] = {
 },
-["reagent"] = {
+["fridge"] = {
 },
 ["gem"] = {
 },
@@ -111,7 +111,7 @@ Bagnonium_Sets = {
 },
 ["tackle"] = {
 },
-["inscribe"] = {
+["leather"] = {
 },
 ["normal"] = {
 },

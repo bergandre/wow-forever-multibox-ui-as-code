@@ -29,7 +29,7 @@ Bagnonium_Sets = {
 ["tabs"] = "all",
 ["sidebar"] = "all",
 },
-["width"] = 400.0000610351563,
+["width"] = 400.0002136230469,
 },
 ["guild"] = {
 ["color"] = {

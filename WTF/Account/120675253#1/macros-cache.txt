@@ -8,6 +8,9 @@ END
 VER 3 0000000000000007 "Decursive" "INV_MISC_QUESTIONMARK"
 /script DecursiveRootTable.Dcr:Println('No spell available')
 END
+VER 3 000000000000000F "focus KP" "134400"
+/focus Karums Priest
+END
 VER 3 0000000000000008 "plater toggle th" "134400"
 /run Plater.ToggleThreatColorMode()
 END
@@ -17,13 +20,17 @@ VER 3 0000000000000004 "RXP ITEM" "134400"
 /click RXPItemFrameButton1 LeftButton
 END
 VER 3 0000000000000005 "RXPFollow" "Inv_boots_02"
-//You are not in a party.
+//Party Leader
 END
 VER 3 0000000000000001 "RXPTargeting" "Ability_eyeoftheowl"
-/targetexact Korran
-/targetexact Omusa Thunderhorn
+/targetexact Thicket Matriarch
+/targetexact Thicket Hunter
+/targetexact Thicket Lurker
 /tm !7
 /targetlasttarget [dead]
+END
+VER 3 000000000000000D "skull" "134400"
+/run if GetRaidTargetIndex("target")~=8 then SetRaidTarget("target",8) end
 END
 VER 3 000000000000000A "t:charge macro" "134400"
 #showtooltip Charge
@@ -41,7 +48,14 @@ END
 VER 3 000000000000000B "T;def stance" "134400"
 #showtooltip Defensive Stance
 /cast [nostance:2] Defensive Stance
-/equip Sword of the Fallen
+/equip Corpsemaker
+END
+VER 3 000000000000000E "taunt from pries" "134400"
+#showtooltip Taunt
+/assist focus
+/startattack
+/cast [nostance:2] Defensive Stance
+/cast Taunt
 END
 VER 3 0000000000000009 "taunt macro" "134400"
 #showtooltip
