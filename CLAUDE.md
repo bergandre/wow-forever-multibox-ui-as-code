@@ -115,7 +115,7 @@ fixed in `dotfiles/hypr/hyprland.lua` with window rule `render_unfocused = true`
 - WoW skills live in the **`wow` plugin**: `~/.claude/skills/wow/` (dotfiles repo, auto-loads as
   `wow@skills-dir`): `/wow:profession-plan`, `/wow:dungeon-quests`, `/wow:dungeon-cheatsheet`, `/wow:notes`. Scripts read this
   repo via `WOW_REPO` (default `~/repositories/wow-forever-addon-settings`). Notes go to the Obsidian
-  vault `~/Documents/obsidian/gaming/Wow_FOREVER/` (one folder per dungeon: `dungeons/<Dungeon>/` with main note, `<Dungeon> tactics.md`, map; shared `items/` and `abilities/` cards).
+  vault `~/Documents/obsidian/gaming/Wow_FOREVER/` (one folder per dungeon: `dungeons/<Dungeon>/` holds only the main note (TLDR + interactive map + links); `notes/` = quests + loot notes, `map/` = map data (boss/trash banner source), image, generated map; `art/`; shared `items/` and `abilities/` cards). Boss pin clicks → banner need the vault plugin `.obsidian/plugins/wowmap-jump` (notes can't run JS; plain `#id` links get eaten by Obsidian's image click).
   Quest completion is not in SavedVariables; dungeon-quests prints an in-game `/run` check macro.
   Best local Forever quest data: `Interface/AddOns/ForeverDungeonJournal/Data/Dungeons.lua` (per-dungeon
   quests: faction, givers, levels, rewards, warnings) + `QuestChains.lua` (prereqs, e.g. Horde
