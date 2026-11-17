@@ -35,6 +35,13 @@ the **Forever** flavor selected; not every Classic addon exists for Forever (e.g
 | `120675253#3`    | Invited-*, Tailoring-Altchar                 | alts |
 
 Warrior + priest are multiboxed together (dungeons as a duo). Priest macros use `focus` = warrior.
+Hyper + key → the WoW on the top monitor (DP-2) is done by Hyprland: `~/repositories/dotfiles/hypr/wow.lua`
+(focus target → send key → focus back). If hyper keys stop working: check
+`$XDG_RUNTIME_DIR/hypr/*/hyprland.log` for `Lua error`, run `hyprctl reload` to reset the script state.
+Stuck `cursor:no_warps = true` = a send job died halfway (fixed 2026-11-17 with pcall + `finish()`).
+WoW on a hidden workspace stalls (no frames → Vulkan present blocks → movement/loading freeze):
+fixed in `dotfiles/hypr/hyprland.lua` with window rule `render_unfocused = true` (class
+`steam_proton`, title `World of Warcraft`) + `misc.render_unfocused_fps = 60` (default 15).
 
 ## Editing SavedVariables safely
 
@@ -75,7 +82,11 @@ Warrior + priest are multiboxed together (dungeons as a duo). Priest macros use 
   - Aura tracklist matches **by spell ID only** — by-name entries (`[id] = true`) don't work.
     `aura_tracker.debuff_tracked` (any caster, tracking stays **Automatic**) lists every rank with
     `= false`: warrior = SW:P ranks; priest = Rend + Sunder Armor ranks.
+  - Builtin mod `Players Targeting a Target [Plater]` spams errors (GUIDs are "secret" values,
+    comparing them taints) → disable it in every profile.
   - Global `GetSpellInfo` doesn't exist on Forever (use `C_Spell.GetSpellInfo` in `/run` tests).
+  - Inside instances the player position is hidden: `UnitPosition` → nil (only instance ID),
+    `C_Map.GetBestMapForUnit` → nil. No addon can record a dungeon route (tested 2026-11-17).
   Threat colors (`tank.colors` / `dps.colors`): gray = fine (tank holds it), orange = act,
   yellow = threat switching, teal = (DPS/healer) mob is on someone else / the warrior. `tank_threat_colors` forces tank colors on Classic clients (auto-detect = Defensive
   Stance only): warrior `true` (tanks the duo in Battle Stance), priest `false`. Warrior macro
@@ -86,6 +97,7 @@ Warrior + priest are multiboxed together (dungeons as a duo). Priest macros use 
   that account (priest copy; warrior edit at 16:08). Before editing, confirm the account just did
   a full logout save: `find WTF/Account/<acc>/SavedVariables -name '*.lua' -mmin -15 | wc -l`
   should be ~40+. After the next login/logout, re-check the values are still there.
+- Raid marks (Skull/Cross): built-in Keybindings → Raid Target, no macro needed (party sees them).
 - Decursive installed for dispels. Clique (click-casting) recommended, not installed yet.
 - User prefers existing addons over writing custom ones (a custom PartyAuras addon was tried and dropped).
 
@@ -96,14 +108,29 @@ Warrior + priest are multiboxed together (dungeons as a duo). Priest macros use 
 
 ## Scripts here
 
+- Profession skills per char: TSM `playerProfessions` misses some (priest's Herbalism + Skinning);
+  the complete source is `ZygorGuidesViewerForever.lua` → `SkillsKnown` (level/max) in each account.
 - `tsm-*.py`, `tsm-export-inventory.lua`, `inventory.json` — TSM analysis/sync (run with WoW closed
   when they write SavedVariables). `tsm-analyze.py --item` for item questions.
-- `.claude/skills/wow-profession-plan` — profession leveling planner.
-- `.claude/skills/wow-dungeon-quests` — dungeon quest-chain notes → `notes/dungeons/<slug>.md`.
-  Quest completion is not in SavedVariables; use the skill's in-game `/run` check macro.
+- WoW skills live in the **`wow` plugin**: `~/.claude/skills/wow/` (dotfiles repo, auto-loads as
+  `wow@skills-dir`): `/wow:profession-plan`, `/wow:dungeon-quests`, `/wow:dungeon-cheatsheet`, `/wow:notes`. Scripts read this
+  repo via `WOW_REPO` (default `~/repositories/wow-forever-addon-settings`). Notes go to the Obsidian
+  vault `~/Documents/obsidian/gaming/Wow_FOREVER/` (one folder per dungeon: `dungeons/<Dungeon>/` with main note, `<Dungeon> tactics.md`, map; shared `items/` and `abilities/` cards).
+  Quest completion is not in SavedVariables; dungeon-quests prints an in-game `/run` check macro.
+  Best local Forever quest data: `Interface/AddOns/ForeverDungeonJournal/Data/Dungeons.lua` (per-dungeon
+  quests: faction, givers, levels, rewards, warnings) + `QuestChains.lua` (prereqs, e.g. Horde
+  Return of the Ring → Nogg's Ring Redo) — fills Zygor's gaps.
   Zygor dungeon quest guides skip class quests (e.g. warrior Brutal Armor). `yt-dlp` is installed
   (search works; auto-subs often HTTP 429).
+- YouTube transcripts that work: Claude in Chrome → open video, expand description, click
+  "Show transcript", then `get_page_text`. Caption `baseUrl` fetch returns empty. Chrome has a
+  user-set YouTube blocklist policy (`/etc/{opt/chrome,chromium}/policies/managed/block-youtube.json`);
+  the user moves it to `/etc/opt/chrome/policies/disabled/` (needs sudo in a real terminal) and
+  restarts Chrome.
 
 ## Commits
 
 Conventional commits, English. Large `dump` commits of WTF state are normal here.
+The repo is **public** (README.md is the public face). Client chat logs (`chat-cache.*`,
+`chat-frontend-cache.*`) hold whispers and are gitignored; they were purged from history on 2026-11-15
+(filter-branch + force-push). Keep anything private (chat, emails, real names) out of commits.
