@@ -4,13 +4,17 @@ local L = ns.L
 -- ==========================================
 -- PINES DEL MINIMAPA
 -- ==========================================
--- Lo que el escaner detecta ahora (o un companero de grupo), de las profesiones
--- que tienes, sale en el minimapa con el icono de lo que da y un aro del color
--- de la probabilidad de subir habilidad (rojo: aun no puedes). Lo recordado no
--- sale aqui: para eso esta el mapa del mundo. Un nodo nuevo late unos segundos.
+-- Cada nodo guardado cerca, de las profesiones que tienes, sale en el minimapa
+-- con el color de la probabilidad de subir habilidad (rojo: aun no puedes).
+-- Lo recordado sale como un aro hueco de ese color: si el nodo esta, el punto
+-- del juego se ve dentro; si el aro esta vacio, ya no esta. Al pasar el raton
+-- por el punto (o si lo ve el grupo) sale el icono de lo que da, mas grande y
+-- con brillo. Un nodo nuevo late unos segundos.
+-- Los pines dejan pasar el raton: debajo esta el punto del juego, cuyo tooltip
+-- da el nombre (Core/Scanner.lua).
 --
 -- Se recolocan solo si te mueves, giras o cambia el zoom, o cada LIVE_EVERY
--- segundos (lo detectado deja de estarlo).
+-- segundos (lo visto deja de estarlo).
 -- ponytail: solo los nodos del mapa en el que estas; en el borde entre dos
 -- zonas no salen los de la vecina.
 
@@ -19,6 +23,9 @@ local LIVE_EVERY = 0.5
 local MAX_PINS = 150
 local FLASH = 3 -- segundos que late un nodo nuevo
 local MASK = "Interface\\CharacterFrame\\TempPortraitAlphaMask"
+local HOLLOW = "Interface\\AddOns\\GatherRadar\\img\\ring_gr" -- aro blanco con borde oscuro
+local HOLLOW_SCALE = 1.6 -- el hueco tiene que dejar ver el punto del juego
+local LIVE_SCALE = 1.3 -- lo que esta ahora, mas grande
 
 local pins, used = {}, 0
 local elapsedSum, liveSum = 0, 0
@@ -48,16 +55,10 @@ function ns.NodeTooltip(owner, id, note)
     GameTooltip:Show()
 end
 
-local function ShowTooltip(pin)
-    ns.NodeTooltip(pin, pin.id, L.SEEN_NOW)
-end
-
 local function NewPin()
     local pin = CreateFrame("Frame", nil, Minimap)
     pin:SetFrameLevel(Minimap:GetFrameLevel() + 5)
-    pin:EnableMouse(true)
-    pin:SetScript("OnEnter", ShowTooltip)
-    pin:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    pin:EnableMouse(false)
 
     pin.glow = pin:CreateTexture(nil, "BACKGROUND")
     pin.glow:SetTexture("Interface\\Cooldown\\star4")
@@ -71,6 +72,9 @@ local function NewPin()
     fade:SetDuration(0.4)
 
     ns.AddPinArt(pin)
+    pin.hollow = pin:CreateTexture(nil, "ARTWORK")
+    pin.hollow:SetTexture(HOLLOW)
+    pin.hollow:SetPoint("CENTER")
     return pin
 end
 
@@ -129,19 +133,28 @@ function ns.RingColor(id)
     return 1, 1, 1
 end
 
-local function Place(kind, map, coord, id, px, py)
+local function Place(kind, map, coord, id, px, py, live)
     if used >= MAX_PINS then return end
     used = used + 1
     local pin = pins[used] or NewPin()
     pins[used] = pin
-    local size = ns.db.minimapSize
+    local size = ns.db.minimapSize * (live and LIVE_SCALE or 1)
     pin.id = id
     pin.glow:SetSize(size * 2.2, size * 2.2)
     ns.SetPinArt(pin, id, size) -- el aro cambia de color al subir habilidad
     pin.kind, pin.map, pin.coord = kind, map, coord
+    pin:SetAlpha(live and 1 or ns.db.rememberedAlpha)
+    -- Recordado: solo el aro hueco; lo que esta ahora: icono entero
+    pin.icon:SetShown(live or false)
+    pin.ring:SetShown(live or false)
+    pin.hollow:SetShown(not live)
+    if not live then
+        pin.hollow:SetSize(size * HOLLOW_SCALE, size * HOLLOW_SCALE)
+        pin.hollow:SetVertexColor(ns.RingColor(id))
+    end
     local until_ = flash[Key(kind, map, coord)]
     local flashing = until_ and until_ > GetTime()
-    pin.glow:SetShown(flashing or false)
+    pin.glow:SetShown(flashing or live or false) -- lo que esta ahora brilla; lo nuevo, ademas, late
     if flashing and not pin.pulse:IsPlaying() then pin.pulse:Play() end
     if not flashing and pin.pulse:IsPlaying() then pin.pulse:Stop() end
     pin:ClearAllPoints()
@@ -168,8 +181,8 @@ local function Update()
                     local east, north = (nx - x) * w, (y - ny) * h
                     if rotate then east, north = east * cos - north * sin, east * sin + north * cos end
                     local mx, my = east * scale, north * scale
-                    if mx * mx + my * my <= limit and ns.IsLive(kind, map, coord) then
-                        Place(kind, map, coord, id, mx, my)
+                    if mx * mx + my * my <= limit then
+                        Place(kind, map, coord, id, mx, my, ns.IsLive(kind, map, coord))
                     end
                 end)
             end

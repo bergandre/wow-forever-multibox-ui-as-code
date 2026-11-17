@@ -108,6 +108,11 @@ local function SetupMenu(button)
         root:CreateDivider()
         local shown = function() return ns.db.worldMap end
         root:CreateCheckbox(L.SHOW_WORLDMAP, shown, Toggle(shown, function(v) ns.db.worldMap = v end))
+        local arrowOn = function() return ns.db.arrow end
+        root:CreateCheckbox(L.SHOW_ARROW, arrowOn, function()
+            ns.db.arrow = not ns.db.arrow
+            ns.UpdateArrow()
+        end)
         root:CreateButton(L.MAP_MENU_OPTIONS, function()
             if not InCombatLockdown() then HideUIPanel(WorldMapFrame) end
             ns.OpenOptions()

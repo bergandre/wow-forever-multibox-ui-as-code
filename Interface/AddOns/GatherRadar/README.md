@@ -22,17 +22,17 @@
 
 ## What it does
 
-**GatherRadar** turns Find Herbs, Find Minerals, Find Treasure and Find Fish into a real gathering radar. Every node on your minimap gets the **icon of what it gives** (Peacebloom, Copper Ore, a chest...) with a ring that tells you your chance of a skill-up. The minimap shows only what is **detected right now** for the professions you know, and every node you gather or see is **remembered** on the **world map**, so you can plan your farming route at a glance.
+**GatherRadar** turns Find Herbs, Find Minerals, Find Treasure and Find Fish into a real gathering radar. Every saved node near you shows on the minimap as a **hollow ring** colored by your chance of a skill-up, for the professions you know: if the node is there, the tracking dot shows inside the ring. Move the mouse over a dot and GatherRadar puts the **icon of what it gives** on it (Peacebloom, Copper Ore, a chest...), bigger and glowing, and fixes its saved position. Every node you gather or see is **remembered** on the **world map**, so you can plan your farming route at a glance.
 
 ## Features
 
 - **Minimap icons**: the real item icon on every herb, vein, chest and fishing pool, round, with a ring colored like the profession window (orange, yellow, green, gray; red if your skill is too low).
-- **Remembers every node**: the ones you gather (exact position) and, optionally, the ones the scan sees on the minimap, to find them later on the world map.
+- **Remembers every node**: the ones you gather (exact position) and, optionally, the ones you mouse over on the minimap, to find them later on the world map.
 - **World map pins** for every saved node of the zone. Shift + right-click a pin to delete it.
 - **No duplicates**: two nodes of the same kind closer than 15 yards (you choose) are the same place and only one is kept.
 - **Known nodes included**: one click imports the WoW Forever herbs, ore and treasure (Wowhead data from GatherMate2_Data) and fishing pools you are missing, the kinds you choose, no other addon needed. Your own nodes are never replaced.
 - **Map filter**: a round button on the world map chooses which kinds (herbs, ore, treasure, fishing pools) are shown on the minimap and the world map. The arrow follows it too.
-- **Arrow to the nearest node** with its name and distance, preferring what is on the minimap right now.
+- **Arrow to the nearest node** with its name and distance, preferring what is here now.
 - **Party sharing**: group members with GatherRadar see the nodes you find, and you see theirs, live.
 - **Session panel**: nodes gathered and materials obtained, with icons, totals and per hour.
 - **Works in your language**: herbs, ore, treasure and fishing pools are recognized by their in-game name in every official language; nodes new to Forever are learned as you gather.
@@ -70,7 +70,7 @@ end
 
 ## Notes
 
-- Addons cannot ask the game where nodes are: GatherRadar reads the minimap with a virtual mouse, the same dots you see. Without a tracking spell turned on, GatherRadar shows nothing on the minimap; saved nodes are still on the world map.
+- Addons cannot ask the game where nodes are, and since Blizzard's API changes they cannot read the minimap on their own either: only your real mouse over a tracking dot tells GatherRadar what is there now. A remembered node is only a ring: an empty ring means someone may have gathered it.
 - Fishing pools are saved from the minimap only (fishing loot comes from the bobber, not the pool).
 - Nodes new to WoW Forever (Cold Iron Deposit, Dreamroot...) are recognized in English; in other languages their name is learned the first time you gather them. Herbs with an extra word in their name (Wilted Peacebloom) count as the herb.
 

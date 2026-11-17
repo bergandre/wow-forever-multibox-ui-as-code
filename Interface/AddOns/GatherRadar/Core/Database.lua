@@ -10,7 +10,8 @@ local ADDON_NAME, ns = ...
 -- Sin duplicados: dos nodos del mismo tipo a menos de db.dedupe yardas son el
 -- mismo sitio y se queda uno.
 --   gathered (recogido): la posicion buena; mueve el que hubiera ahi
---   seen (visto en el minimapa): actualiza que hay, sin mover el sitio
+--   seen (raton sobre su punto del minimapa): actualiza que hay y lo pone
+--     donde esta el punto, que es mas fiable que los datos importados
 --   shared / import (grupo, GatherMate2_Data): solo entra si falta
 --
 -- Con "Guardar nodos vistos" apagado lo visto va a ns.temp, que se borra al
@@ -93,8 +94,11 @@ function ns.AddNode(kind, map, x, y, id, source)
             Zone(ns.db.nodes, kind, map, true)[coord] = id
             inTemp = false
             ns.NodesChanged(map)
-        elseif source == "seen" and old ~= id then
-            here[coord] = id -- otro nodo del mismo punto de aparicion
+        elseif source == "seen" then
+            -- Otro nodo del mismo punto de aparicion, y en el sitio del punto
+            here[coord] = nil
+            coord = ns.Encode(x, y)
+            here[coord] = id
             ns.NodesChanged(map)
         end
         return coord, false, inTemp

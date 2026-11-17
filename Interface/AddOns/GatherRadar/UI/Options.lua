@@ -128,6 +128,8 @@ local function NewPanel(titleText)
     return ui
 end
 
+local function Percent(v) return math.floor(v * 100 + 0.5) .. "%" end
+
 local function CreateGeneral()
     local ui = NewPanel(L.OPTIONS_TITLE)
 
@@ -155,8 +157,9 @@ local function CreateGeneral()
     ui.Header(L.HEADER_LOOK, -366)
     ui.Slider("minimapSize", L.MINIMAP_SIZE, L.MINIMAP_SIZE_TOOLTIP, X, -400, 8, 28, 1)
     ui.Slider("worldMapSize", L.WORLDMAP_SIZE, L.WORLDMAP_SIZE_TOOLTIP, COL2, -400, 8, 32, 1)
+    ui.Slider("rememberedAlpha", L.REMEMBERED_ALPHA, L.REMEMBERED_ALPHA_TOOLTIP, X, -450, 0.1, 1, 0.05, Percent)
 
-    ui.Button(L.DEFAULTS, nil, X, -450, 180, function()
+    ui.Button(L.DEFAULTS, nil, X, -500, 180, function()
         ns.ResetSettings()
         ui.Refresh()
     end)

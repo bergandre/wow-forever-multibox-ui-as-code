@@ -129,6 +129,10 @@ Who.CLASSES = { 1, 2, 3, 4, 5, 7, 8, 9, 11 }
 Who.BOOK_TTL, Who.BOOK_MAX = 7 * 86400, 300
 -- 1.14.12: a player a search whispered is not whispered again for ASKED_FOR seconds unless it answered (Who.fresh)
 Who.ASKED_FOR, Who.ASKED_MAX = 6 * 3600, 3000
+-- The game lists at most LIST_CAP players per search. A full list means the zone holds more, and the next click can
+-- reach players this one did not show (13 Nov 2026, live, Westfall: the fourth click found a host none of the three
+-- before had listed). zoneFull: whether the last search of the whole zone (no class, no level band) was full.
+Who.LIST_CAP, Who.zoneFull = 50, {}
 -- 1.14.14: the names whispered lately (Who.sentTo[name] = GetTime()), for the game's "No player named ..." line:
 -- within GONE_WAIT seconds of our whisper that line is ours, not the player's own (Who.notPlaying)
 -- a known LayerSwap user the game could not find is left alone for GONE_FOR seconds, or until it answers (Adam,
@@ -669,6 +673,13 @@ local function invite(name, source)
   -- No hardware event is behind this call: it runs from a chat event or a timer.
   local called, err = pcall((C_PartyInfo and C_PartyInfo.InviteUnit) or InviteUnit, name)
   log("invite", name, called and "called" or ("error: " .. tostring(err)), source)
+  -- 1.14.21 measurement: does the game show a group right after the invite (the loot could then be set before the
+  -- guest is in it), and which loot has it?
+  C_Timer.After(0.5, function()
+    log("loot", "after an invite", IsInGroup() and "a group" or "no group yet", Host.lootName(Host.lootMethod()))
+    local m = groupMembers()
+    if hosting and m and IsInGroup() then Host.lootCheck(m, true) end
+  end)
   -- 1.14.14: no chat line for an invite or a guest who joins - the panel counts them, the log names them
 end
 
@@ -1189,6 +1200,94 @@ local guestSince = {}           -- [fullName] = GetTime() of the join, while in 
 -- with Host off by then, it is undone: no LayerSwap group with Host off (Adam, 11 Oct 2026).
 local LATE_ACCEPT = 300
 
+-- 1.14.21 measurement (Adam, 13 Nov 2026: a player asked for Free for All loot while hosting - a guest who joins while
+-- the host fights can take its loot under the party's default Group Loot). The game's loot call is marked restricted
+-- in all three clients, so it is tried in LayerSwap's own host group only, and logged: allowed or not, in combat or
+-- not, the loot before and after; once the game blocks it, no more tries this session.
+Host.LOOT_FFA, Host.LOOT_GROUP = 0, 3
+Host.LOOT_NAMES = { [0] = "free for all", [1] = "round robin", [2] = "master looter", [3] = "group loot",
+                    [4] = "need before greed", [5] = "personal" }
+Host.LOOT_WORDS = { [0] = "freeforall", [1] = "roundrobin", [2] = "master", [3] = "group", [4] = "needbeforegreed" }
+
+-- the group's loot as the enum number (the older clients' word turned into it); nil when it cannot be read
+function Host.lootMethod()
+  if type(C_PartyInfo) == "table" and type(C_PartyInfo.GetLootMethod) == "function" then
+    local ok, m = pcall(C_PartyInfo.GetLootMethod)
+    if ok and not isSecret(m) and type(m) == "number" then return m end
+  elseif type(GetLootMethod) == "function" then
+    local ok, m = pcall(GetLootMethod)
+    if ok and not isSecret(m) then
+      for n, w in pairs(Host.LOOT_WORDS) do if w == m then return n end end
+    end
+  end
+end
+
+function Host.lootName(m)
+  if m == nil then return "unknown" end
+  return Host.LOOT_NAMES[m] or ("method " .. tostring(m))
+end
+
+-- Asks the game for loot method m; logs the call at once and the group's loot 1.5 s later
+function Host.setLoot(m, why)
+  local fn, arg = type(C_PartyInfo) == "table" and C_PartyInfo.SetLootMethod, m
+  if type(fn) ~= "function" then fn, arg = SetLootMethod, Host.LOOT_WORDS[m] end
+  if type(fn) ~= "function" or arg == nil then
+    log("loot", why, "no loot call on this client")
+    return false
+  end
+  Host.lootCalling = true
+  local ok, err = pcall(fn, arg)
+  Host.lootCalling = nil
+  log("loot", why, ok and "called" or ("error: " .. tostring(err)),
+    (InCombatLockdown and InCombatLockdown()) and "in combat" or "out of combat", "now " .. Host.lootName(Host.lootMethod()))
+  C_Timer.After(1.5, function()
+    local now = Host.lootMethod()
+    log("loot", why .. " +1.5 s", Host.lootName(now), now == m and "taken" or "not taken")
+  end)
+  return ok
+end
+
+-- LayerSwap's own host group - the player leads, every other member one LayerSwap invited (early: right after an
+-- invite, before the guest is in it): Free for All once per group, the loot before kept; when someone joins that
+-- LayerSwap did not invite, that loot again. Nothing in a group the player made.
+function Host.lootCheck(members, early)
+  if not IsInGroup() then
+    -- one of ours ended with Free for All: the next group is looked at, in case the game keeps the loot for it
+    local g = Host.lootGroup
+    if g and g.ffa and not g.back then Host.lootAfter = true end
+    Host.lootGroup, Host.lootSeen = nil, nil
+    return
+  end
+  local first = not Host.lootSeen
+  Host.lootSeen = true
+  if not UnitIsGroupLeader("player") then return end
+  local ours = #members > 0 or early == true
+  for _, name in ipairs(members) do
+    if not hosted[name] then ours = false; break end
+  end
+  local g = Host.lootGroup
+  if ours and not g and hosting and not Host.lootBlocked then
+    local before = Host.lootMethod()
+    Host.lootGroup, Host.lootAfter = { was = before, ffa = true }, nil
+    log("loot", "host group", "before: " .. Host.lootName(before), early and "right after the invite" or "at the join")
+    if before ~= Host.LOOT_FFA then Host.setLoot(Host.LOOT_FFA, "free for all") end
+  elseif g and not ours and not g.back then
+    g.back = true
+    if g.was ~= nil and g.was ~= Host.LOOT_FFA and Host.lootMethod() == Host.LOOT_FFA then
+      Host.setLoot(g.was, "back to " .. Host.lootName(g.was))
+    else
+      log("loot", "not LayerSwap's group any more", "left as " .. Host.lootName(Host.lootMethod()))
+    end
+  elseif not g and not ours and first and Host.lootAfter and pendingCount() == 0 then
+    -- a group LayerSwap did not make, right after one of ours had Free for All (no invite of ours out): should the
+    -- game have kept the loot for it, the game's own Group Loot again
+    Host.lootAfter = nil
+    local now = Host.lootMethod()
+    log("loot", "a new group after one with free for all", "starts with " .. Host.lootName(now))
+    if now == Host.LOOT_FFA then Host.setLoot(Host.LOOT_GROUP, "a new group, group loot again") end
+  end
+end
+
 local function onRoster()
   local members = groupMembers()
   if not members then return end
@@ -1217,6 +1316,7 @@ local function onRoster()
       log("guestLeft", name, string.format("%d s after joining", math.floor(now - since + 0.5)))
     end
   end
+  Host.lootCheck(members, false)
   log("roster", table.concat(names, ", "), #members)
   refresh()
 end
@@ -2623,6 +2723,7 @@ function Who.ask(ask)
   if more and #more == 0 then more = nil end
   local p = { id = Who.count, from = ask.from, want = ask.want, via = ask.via, at = GetTime(), zone = Send.zoneKey(),
               zoneName = zone, line = askText(ask.want, nil, true, more), filter = label, sent = 0, rounds = 0, seen = more }
+  p.slice = filters and (Who.round or 0) or (Who.band or 0)
   Who.pending, Who.inFlight = p, p
   Who.hush()
   if type(C_FriendList.SetWhoToUi) == "function" then pcall(C_FriendList.SetWhoToUi, true) end
@@ -2663,6 +2764,13 @@ function Who.timeout(p)
   refresh()
 end
 
+-- Whether a click now can reach players the search did not show: its list was full, or it asked one class or level
+-- band of a zone whose whole list was full.
+function Who.more(p)
+  if type(p) ~= "table" then return false end
+  return p.full == true or (p.slice ~= nil and p.slice ~= 0 and Who.zoneFull[p.zone or "?"] == true)
+end
+
 -- The game's answer (WHO_LIST_UPDATE): the names, without our own, and the first burst. Only the
 -- answer to our own question in flight; one that comes after a stop or a timeout is swallowed. The
 -- players of our own zone go first: a host there can also say it stands on our layer (1.14.8).
@@ -2698,6 +2806,8 @@ function Who.results()
   local found = #names
   names = Who.fresh(names)
   local before = found - #names
+  p.full, p.before = n >= Who.LIST_CAP, before
+  if p.slice == 0 then Who.zoneFull[p.zone or "?"] = p.full end
   names = Who.known(names)
   p.names, p.total, p.queue = names, total, {}
   for i, name in ipairs(names) do p.queue[i] = name end
@@ -2712,10 +2822,12 @@ function Who.results()
   for i = 1, math.min(#list, 4) do parts[i] = list[i][1] .. " " .. list[i][2] end
   if #parts > 0 then log("whoAreas", table.concat(parts, ", "), #list > 4 and ((#list - 4) .. " more") or nil) end
   if #names == 0 and before > 0 then
-    -- everyone the search found was asked lately and did not answer: nothing is sent (1.14.12)
+    -- everyone the search found was asked lately and did not answer: nothing is sent (1.14.12). A full list leaves
+    -- players this one did not show - the next click (1.14.20)
     Who.pending = nil
     log("ask", "everyone asked before", current, p.want, p.via)
-    local line = "Everyone found was asked in the last " .. math.floor(Who.ASKED_FOR / 3600) .. " h - none answered. Try another zone."
+    local line = Who.more(p) and "All this search found were asked before. Click again to ask more players."
+      or ("Everyone here was asked within " .. math.floor(Who.ASKED_FOR / 3600) .. " h. Try later, a busier zone or /ls guild.")
     setNotice(line, 15)
     say(line)
     refresh()
@@ -3422,24 +3534,33 @@ local function statusLine()
       if swap.seen and known > 0 and other == 0 then
         return "No host on a new layer answered. Click a layer in the list to go back to one."
       end
+      -- 1.14.20: the search's list was full - the zone holds players it did not show, and a click asks them (13 Nov
+      -- 2026, live: the fourth click found a host none of the three before had listed); else everyone here was asked
+      local more = swap.where == "direct" and Who.more(swap.who)
+      local sent = swap.reach or 0
       if same > 0 then
+        if more then return "No host on another layer yet; " .. same .. " here " .. (same == 1 and "is" or "are") .. " on yours. Click again to ask more." end
         return "No host on another layer answered; " .. same .. " here " .. (same == 1 and "is" or "are") .. " on yours. Try a busier zone."
       end
       if n > 0 and h == 0 then
+        if more then return n .. (n == 1 and " LayerSwap user" or " LayerSwap users") .. " heard you, none hosts. Click again to ask more players." end
         return n .. (n == 1 and " LayerSwap user" or " LayerSwap users") .. " heard you, but none of them hosts. Try again in a moment."
       end
       if n > 0 and other == 0 then
         -- LayerSwap hosts heard it, and none of them is known to stand on another layer in our zone
+        if more then return "No host on another layer heard you. Click again to ask more players here." end
         if swap.where == "direct" and IsInGuild() then return "No host on another layer heard you. /ls guild asks your guild, on every layer." end
         return "No host on another layer heard you. Try again in a moment."
       end
       -- nobody among the players asked answered at all: none of them runs a LayerSwap that reads the ask
       -- (1.14.6 or newer, Host on or off) - said as such, so the player does not click on and on (Adam, 8 Nov 2026)
-      local sent = swap.reach or 0
+      -- where everyone here was asked; while the list was full, the next click reaches others (1.14.20)
       if swap.where == "direct" and n == 0 and sent > 0 then
-        if sent == 1 then return "The player asked does not run LayerSwap yet - try later, or /ls guild." end
-        return "None of the " .. sent .. " players runs LayerSwap yet - try later, or /ls guild."
+        if sent == 1 and not more then return "The player asked does not run LayerSwap yet - try later, or /ls guild." end
+        if more then return "None of the " .. sent .. " asked runs LayerSwap. Click again to ask more players here." end
+        return "Everyone in this zone has been asked. Try later, a busier zone or /ls guild."
       end
+      if more then return "No host on another layer answered. Click again to ask more players here." end
       if swap.where == "direct" and IsInGuild() then return "No host on another layer answered. /ls guild asks your guild, on every layer." end
       return "No host answered. Try again in a moment."
     end
@@ -3505,7 +3626,9 @@ local function askLine(now)
     reach = "LayerSwap's channel" .. guild
   elseif swap.where == "direct" then
     local n = swap.reach or 0
-    reach = n .. (n == 1 and " player" or " players") .. guild
+    -- 1.14.20: and the players the search found that were asked before, so a low count does not look like a fault
+    local before = type(swap.who) == "table" and swap.who.before or 0
+    reach = n .. (n == 1 and " player" or " players") .. (before > 0 and (", " .. before .. " asked before") or "") .. guild
   elseif others == 0 then
     reach = swap.guildAt and "your guild - nobody else is in the layer channel" or "nobody else in the layer channel"
   elseif others then
@@ -3666,6 +3789,7 @@ local function buildPanel()
     y = nextY - 3
   end
   y = y - 8
+  p.buttonY, p.guildShift = y, 35   -- in a guild the guild entry takes guildShift above the buttons (refresh)
 
   local buttonW = (PANEL_W - PAD * 2 - 8) / 2
   p.swapButton = CreateFrame("Button", "LayerSwapPanelSwapButton", p, "UIPanelButtonTemplate")
@@ -3692,14 +3816,85 @@ local function buildPanel()
   p.hostButton:SetSize(buttonW, 24)
   p.hostButton:SetPoint("TOPRIGHT", p, "TOPRIGHT", -PAD, y)
   p.hostButton:SetScript("OnClick", function() setHosting(not hosting) end)
+  -- 1.14.20: the guild entry asks the guild (Adam, 13 Nov 2026, picked from five drawn designs): the guild's round
+  -- emblem as Blizzard's guild window draws it, "Ask your guild" in gold - white under the mouse, as the buttons' labels
+  -- turn - and a line under it, one full-width row with the list rows' highlight, no tooltip. Shown only in a guild,
+  -- right above the buttons, which with the lines below them move down by guildShift for it (refresh).
+  local ge = CreateFrame("Button", "LayerSwapPanelGuildButton", p)
+  ge:SetPoint("TOPLEFT", p, "TOPLEFT", PAD - 4, y + 3)
+  ge:SetPoint("TOPRIGHT", p, "TOPRIGHT", -(PAD - 4), y + 3)
+  ge:SetHeight(32)
+  ge.circle = ge:CreateTexture(nil, "BACKGROUND")
+  ge.circle:SetSize(28, 28)
+  ge.circle:SetPoint("TOPLEFT", ge, "TOPLEFT", 4, -2)
+  ge.emblem = ge:CreateTexture(nil, "ARTWORK")
+  ge.emblem:SetPoint("CENTER", ge.circle, "CENTER", 0, -0.5)
+  ge.ring = ge:CreateTexture(nil, "OVERLAY")
+  ge.ring:SetSize(28, 27.5)
+  ge.ring:SetPoint("TOP", ge.circle, "TOP", 0, -0.5)
+  ge:SetNormalFontObject("GameFontNormal")
+  ge:SetHighlightFontObject("GameFontHighlight")
+  ge:SetText("Ask your guild")
+  local title = ge:GetFontString()
+  if type(title) == "table" then
+    title:ClearAllPoints()
+    title:SetPoint("TOPLEFT", ge, "TOPLEFT", 38, -4)
+    title:SetPoint("TOPRIGHT", ge, "TOPRIGHT", -4, -4)
+    title:SetJustifyH("LEFT")
+    title:SetWordWrap(false)
+  end
+  ge.line = ge:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  ge.line:SetPoint("TOPLEFT", ge, "TOPLEFT", 38, -18)
+  ge.line:SetPoint("TOPRIGHT", ge, "TOPRIGHT", -4, -18)
+  ge.line:SetJustifyH("LEFT")
+  ge.line:SetWordWrap(false)
+  ge.line:SetText("Guild chat reaches every layer")
+  local glow = ge:CreateTexture(nil, "HIGHLIGHT")
+  glow:SetAllPoints(ge)
+  glow:SetColorTexture(1, 1, 1, 0.08)
+  ge:SetScript("OnClick", function() requestGuild("button") end)
+  p.guildButton = ge
+  -- the guild's emblem: the circle and the ring out of Blizzard's guild window, coloured, with the emblem, by
+  -- SetLargeGuildTabardTextures; a guild that never designed a tabard - or a client that gives none - gets Blizzard's
+  -- own look for that, a grey circle with a helmet
+  p.applyTabard = function()
+    ge.at = GetTime()
+    ge.circle:SetTexture("Interface\\GuildFrame\\GuildFrame")
+    ge.circle:SetTexCoord(0.63183594, 0.69238281, 0.61914063, 0.74023438)
+    ge.ring:SetTexture("Interface\\GuildFrame\\GuildFrame")
+    ge.ring:SetTexCoord(0.63183594, 0.69238281, 0.74414063, 0.86523438)
+    ge.emblem:SetSize(26, 30)
+    local info
+    if type(C_GuildInfo) == "table" and type(C_GuildInfo.GetGuildTabardInfo) == "function" then
+      local ok, i = pcall(C_GuildInfo.GetGuildTabardInfo, "player")
+      if ok and not isSecret(i) and type(i) == "table" then info = i end
+    end
+    local drawn = false
+    if info and info.emblemFileID and type(SetLargeGuildTabardTextures) == "function" then
+      drawn = pcall(SetLargeGuildTabardTextures, "player", ge.emblem, ge.circle, ge.ring, info) and true or false
+    end
+    if not drawn then
+      ge.circle:SetVertexColor(0.2245, 0.2088, 0.1794)
+      ge.ring:SetVertexColor(0.2, 0.2, 0.2)
+      ge.emblem:SetTexture("Interface\\GuildFrame\\GuildLogo-NoLogo")
+      ge.emblem:SetTexCoord(0, 1, 0, 1)
+      ge.emblem:SetVertexColor(1, 1, 1)
+      ge.emblem:SetSize(21.5, 21.5)   -- the helmet square, as large on the circle as Blizzard draws it
+    end
+    ge.drawn = drawn
+  end
   y = y - 24 - 8
 
+  p.statusY = y
   p.status, y = addText(p, "GameFontHighlightSmall", y, 2)
   y = y - 6
+  p.hostLineY = y
   p.hostLine, y = addText(p, "GameFontDisableSmall", y, 3)
-  p:SetHeight(-y + 10)
+  p.baseHeight = -y + 10
+  p:SetHeight(p.baseHeight)
 
   p:SetScript("OnShow", function(self)
+    if self.guildShown then self.applyTabard() end   -- a tabard changed while the panel was closed
     refresh()
     self.ticker = self.ticker or C_Timer.NewTicker(1, refresh)
   end)
@@ -3746,6 +3941,35 @@ refresh = function()
   end
 
   p.lineButton:SetText((mini and mini:IsShown()) and "Mini bar: |cff40ff40ON|r" or "Mini bar: |cffa0a0a0OFF|r")
+  -- the guild entry: only in a guild, above the buttons - which, and the lines below them, move down for it (1.14.20)
+  local inGuild = IsInGuild() and true or false
+  if p.guildShown ~= inGuild then
+    p.guildShown = inGuild
+    p.guildButton:SetShown(inGuild)
+    local dy = inGuild and p.guildShift or 0
+    if p:IsShown() then
+      -- the panel grows and shrinks at its bottom: held by its top-left corner first, so the title stays put
+      local l, t = p:GetLeft(), p:GetTop()
+      if l and t then
+        p:ClearAllPoints()
+        p:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", l, t)
+      end
+    end
+    p.swapButton:ClearAllPoints()
+    p.swapButton:SetPoint("TOPLEFT", p, "TOPLEFT", PAD, p.buttonY - dy)
+    p.hostButton:ClearAllPoints()
+    p.hostButton:SetPoint("TOPRIGHT", p, "TOPRIGHT", -PAD, p.buttonY - dy)
+    for _, key in ipairs({ "status", "hostLine" }) do
+      local fs, fy = p[key], p[key .. "Y"]
+      fs:ClearAllPoints()
+      fs:SetPoint("TOPLEFT", p, "TOPLEFT", PAD, fy - dy)
+      fs:SetPoint("TOPRIGHT", p, "TOPRIGHT", -PAD, fy - dy)
+    end
+    p:SetHeight(p.baseHeight + dy)
+    if inGuild then p.applyTabard() end
+  elseif inGuild and not p.guildButton.drawn and GetTime() - (p.guildButton.at or 0) >= 5 then
+    p.applyTabard()   -- the guild's tabard can come a moment after login: looked for again while it is missing
+  end
   if swapGroup and hostOnOurLayer(now) then
     setButtonText(p.swapButton, "Leave and ask again")
     p.swapButton:SetEnabled(true)
@@ -4505,7 +4729,7 @@ local onEnterWorld   -- below the handler: login or reload, and the login line
 local f = CreateFrame("Frame")
 for _, ev in ipairs({ "PLAYER_LOGIN", "PLAYER_ENTERING_WORLD", "ZONE_CHANGED_NEW_AREA",
                       "CHAT_MSG_CHANNEL", "CHAT_MSG_WHISPER", "CHAT_MSG_GUILD", "CHAT_MSG_SYSTEM", "UI_ERROR_MESSAGE",
-                      "GROUP_ROSTER_UPDATE", "GROUP_JOINED", "GROUP_LEFT", "PARTY_INVITE_REQUEST",
+                      "GROUP_ROSTER_UPDATE", "GROUP_JOINED", "GROUP_LEFT", "PARTY_INVITE_REQUEST", "PARTY_LOOT_METHOD_CHANGED",
                       "SHARD_TRANSFER_IMMINENT", "SHARD_TRANSFER", "SHARD_TRANSFER_CANCELLED",
                       "NAME_PLATE_UNIT_ADDED", "PLAYER_TARGET_CHANGED", "UPDATE_MOUSEOVER_UNIT",
                       "ADDON_ACTION_FORBIDDEN", "ADDON_ACTION_BLOCKED", "CHAT_MSG_ADDON",
@@ -4529,7 +4753,7 @@ if FOREVER then
   end
 end
 
-f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, a6, zoneChannelID, a8, channelBaseName)
+f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, _, zoneChannelID, a8, channelBaseName)
   if ev == "NAME_PLATE_UNIT_ADDED" then
     if not isSecret(a1) and type(a1) == "string" then observe(a1) end
   elseif ev == "PLAYER_TARGET_CHANGED" then
@@ -4592,13 +4816,11 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, a6, zoneChannelID, a8,
     onChannelCount(ev, a1, a2)
   elseif ev == "GROUP_ROSTER_UPDATE" then
     onRoster()
+  elseif ev == "PARTY_LOOT_METHOD_CHANGED" then
+    log("loot", "the group's loot is now", Host.lootName(Host.lootMethod()))
   elseif ev == "PARTY_INVITE_REQUEST" then
     local now = GetTime()
     local name = not isSecret(a1) and type(a1) == "string" and a1 or nil
-    -- 13 Nov 2026 (Forever 70938): the 6th field says whether the inviter stands on another shard;
-    -- logged only, to learn whether it matches a move (read_log.py prints it against the transfer)
-    local cross = isSecret(a6) and "secret" or (a6 == true and "another shard") or (a6 == false and "same shard") or "no field"
-    log("inviteShard", name or "?", cross)
     local seen = name and sameHosts[name]
     if seen and not (current and Layer.same(seen.layer, current) and now - seen.at <= SAME_HOST_TTL) then seen = nil end
     local mins = seen and math.floor((now - seen.at) / 60)
@@ -4781,6 +5003,10 @@ f:SetScript("OnEvent", function(_, ev, a1, a2, a3, a4, _, a6, zoneChannelID, a8,
   elseif ev == "ADDON_ACTION_FORBIDDEN" or ev == "ADDON_ACTION_BLOCKED" then
     if a1 == ADDON then
       log("blocked", ev, a2)
+      if Host.lootCalling or (type(a2) == "string" and not isSecret(a2) and string.find(a2, "LootMethod", 1, true)) then
+        Host.lootBlocked = true
+        log("loot", "blocked by the game", tostring(a2), "no more tries this session")
+      end
       if sendingAsk then
         askHeldBack = true    -- a swap ask: requestSwap says it in plain words
       else
@@ -4957,6 +5183,27 @@ SlashCmdList["LAYERSWAP"] = function(msg)
     else say("no Layer " .. letter .. " seen in this zone - the panel lists the ones you can ask for.") end
   elseif msg == "kick" then
     kickHosted()
+  elseif msg == "loot" then
+    -- 1.14.21 measurement: the loot call once from this command (a key press behind it), and back 3 s later from a
+    -- timer (none), in a group the player leads - the two cases a host's group meets
+    if not IsInGroup() or not UnitIsGroupLeader("player") then
+      say("loot test: lead a group first - only the group's leader can set its loot.")
+    else
+      local was = Host.lootMethod()
+      local other = (was == Host.LOOT_FFA) and Host.LOOT_GROUP or Host.LOOT_FFA
+      say("loot test: the group has " .. Host.lootName(was) .. " - " .. Host.lootName(other) .. " now, " .. Host.lootName(was) .. " again in 3 s.")
+      Host.setLoot(other, "test by command")
+      C_Timer.After(1.5, function()
+        say("loot test, from the command: " .. (Host.lootMethod() == other and "the game took it." or "the game did not take it."))
+      end)
+      C_Timer.After(3, function()
+        if was == nil then return say("loot test: the group's loot could not be read, so it is not set back.") end
+        Host.setLoot(was, "test by timer")
+        C_Timer.After(1.5, function()
+          say("loot test, by itself (no key press): " .. (Host.lootMethod() == was and "the game took it." or "the game did not take it."))
+        end)
+      end)
+    end
   elseif msg == "status" then
     status()
   elseif msg == "mini" then
