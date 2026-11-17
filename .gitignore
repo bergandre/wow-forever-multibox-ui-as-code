@@ -3,3 +3,6 @@ chat-cache.*
 chat-frontend-cache.*
 
 __pycache__/
+
+# Prat per-character SavedVariables hold the chat scrollback (party/guild/whispers)
+WTF/Account/*/*/*/SavedVariables/Prat-3.0.lua*
